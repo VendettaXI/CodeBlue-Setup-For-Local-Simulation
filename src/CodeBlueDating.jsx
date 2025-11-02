@@ -26,6 +26,50 @@ function useCodeBlueTheme() {
         body { line-height: 1.5; letter-spacing: 0; font-feature-settings: 'liga' 1, 'kern' 1; }
         h1,h2,h3 { letter-spacing: -0.01em; }
         .cb-heading { letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; font-size: 0.875rem; }
+        
+        /* Enhanced Navigation Styling */
+        .cb-nav-tabs {
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(8px);
+          border-radius: 20px;
+          padding: 4px;
+          display: inline-flex;
+          gap: 4px;
+          border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .cb-nav-tab {
+          padding: 8px 16px;
+          border-radius: 16px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          position: relative;
+          color: #666;
+        }
+        
+        .cb-nav-tab.active {
+          color: #000;
+          background: #fff;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .cb-nav-tab:not(.active):hover {
+          background: rgba(0,0,0,0.05);
+        }
+        
+        .dark .cb-nav-tabs {
+          background: rgba(30,30,40,0.8);
+          border-color: rgba(255,255,255,0.1);
+        }
+        
+        .dark .cb-nav-tab {
+          color: #999;
+        }
+        
+        .dark .cb-nav-tab.active {
+          color: #fff;
+          background: rgba(255,255,255,0.1);
+        }
 
         :root{
           --cb-bg:#F8F7FB;
@@ -109,7 +153,18 @@ const CodeBlueDating = () => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
   const [currentScreen, setCurrentScreen] = useState('splash');
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState({
+    name: 'Venice Dawn',
+    role: 'Registered Nurse',
+    profileComplete: 75,
+    location: 'London, UK',
+    age: 24,
+    photos: ['👩‍⚕️', '🌙', '☕', '📚'],
+    bio: "Registered Nurse passionate about emergency care and animal welfare. Coffee enthusiast, yoga lover, and believer in work-life balance.",
+    prompts: [],
+    myVibe: [],
+    dealbreakers: []
+  });
   const [activeTab, setActiveTab] = useState('discover');
   const [currentMatch, setCurrentMatch] = useState(0);
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -161,24 +216,6 @@ const CodeBlueDating = () => {
     "Nature": ["Camping", "Gardening", "Beach", "Stargazing", "Animal Welfare", "Nature Walks"],
     "Learning": ["Language Learning", "DIY Projects", "Astronomy", "History", "Science", "Philosophy"]
   };
-
-{activeTab === 'discover' && (
-  <div className="relative">
-    <div className="absolute top-4 right-4 z-20">
-      <button
-        onClick={() => setShowFilters(!showFilters)}
-        className="cb-glass flex items-center gap-2 px-4 py-2 rounded-full transition-all select-none shadow-lg"
-        title="Filters"
-      >
-        <Filter className="w-5 h-5 text-gray-800 dark:text-gray-100" />
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Filters</span>
-      </button>
-    </div>
-
-    {/* existing Discover feed code here */}
-  </div>
-)}
-
 const sampleProfiles = [
     {
       id: 1,
@@ -894,7 +931,7 @@ const sampleProfiles = [
 
                   {/* Preview Card */}
                   <div className="bg-white rounded-3xl cb-shadow-card overflow-hidden cb-shadow-card">
-                    <div className="relative w-full h-[66vh] overflow-hidden rounded-none">
+                    <div className="relative w-full h-[66vh] overflow-hidden rounded-t-3xl">
                       <div className="absolute inset-0 flex items-center justify-center opacity-30">
                         <div className="text-9xl">{profilePhotos[0] || '👤'}</div>
                       </div>
@@ -1476,7 +1513,7 @@ const sampleProfiles = [
           <div className="space-y-4 mt-12">
             <button
               onClick={() => {
-                setUserProfile({ name: "Venice Dawn", role: "Registered Nurse", profileComplete: 75 });
+                setUserProfile(prev => ({ ...prev, name: "Venice Dawn", role: "Registered Nurse", profileComplete: 75 }));
                 setCurrentScreen('main');
               }}
               className="w-full bg-white text-blue-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 transition-all transform hover:scale-105 cb-shadow-card"
@@ -1485,7 +1522,7 @@ const sampleProfiles = [
             </button>
             <button
               onClick={() => {
-                setUserProfile({ name: "Venice Dawn", role: "Registered Nurse", profileComplete: 75 });
+                setUserProfile(prev => ({ ...prev, name: "Venice Dawn", role: "Registered Nurse", profileComplete: 75 }));
                 setCurrentScreen('main');
               }}
               className="w-full border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-900 transition-all cb-shadow-card"
@@ -1502,37 +1539,59 @@ const sampleProfiles = [
   if (currentScreen === 'main') {
     return (
       <div className="min-h-screen bg-[var(--cb-bg)] flex flex-col">
-        {/* Header removed per request — keep only a small spacer so page layout stays consistent.
-            The discover filter button lives inside the discover content area so it remains intact. */}
-        <div className="px-2 py-2 mx-0" />
+        {/* Enhanced header with sophisticated navigation */}
+        <div className="sticky top-0 z-30 bg-gradient-to-b from-white to-transparent dark:from-gray-900">
+          <div className="px-4 py-3 flex justify-center items-center relative">
+            <div className="cb-nav-tabs">
+              <button 
+                onClick={() => setActiveTab('discover')}
+                className={`cb-nav-tab ${activeTab === 'discover' ? 'active' : ''}`}
+              >
+                Discover
+              </button>
+              <button 
+                onClick={() => setActiveTab('matches')}
+                className={`cb-nav-tab ${activeTab === 'matches' ? 'active' : ''}`}
+              >
+                Matches
+              </button>
+            </div>
+            
+            {activeTab === 'discover' && (
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+              >
+                <Filter className="w-5 h-5 text-gray-700" />
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto pb-20">
           {activeTab === 'discover' && (
             <div className="min-h-full bg-[#FAFAFA]">{/* Hinge warm off-white */}
-              {/* Filter Pill Button - Better placement */}
+              {/* Enhanced Filter Button with Premium Design */}
               <div className="px-4 py-3 flex justify-between items-center">
-                
                 <button 
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md border border-gray-200 hover:bg-gray-50 transition-all"
+                  className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-full shadow-lg hover:shadow-xl border border-gray-100 hover:border-blue-100 transition-all"
                 >
-                  <svg className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="4" y1="6" x2="16" y2="6"/>
-                    <line x1="8" y1="12" x2="20" y2="12"/>
-                    <line x1="4" y1="18" x2="12" y2="18"/>
-                    <circle cx="18" cy="6" r="2"/>
-                    <circle cx="6" cy="12" r="2"/>
-                    <circle cx="14" cy="18" r="2"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-gray-700">Filters</span>
+                  <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                    <Filter className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">Filters</span>
+                  <div className="flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-bold text-blue-600">3</span>
+                  </div>
                 </button>
               </div>
 
               {sampleProfiles[currentMatch] ? (
-                <div className="max-w-2xl mx-auto">
+                <div className="max-w-2xl mx-auto rounded-[48px] overflow-hidden">
                   {/* Profile Photos Carousel - Beautiful Rounded Corners */}
-                  <div className="relative h-[500px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-3xl overflow-hidden mx-4">
+                  <div className="relative h-[500px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[48px] overflow-hidden mx-4">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-9xl">{sampleProfiles[currentMatch].photos[activePrompt]}</div>
                     </div>
@@ -1596,7 +1655,7 @@ const sampleProfiles = [
                   </div>
 
                   {/* Profile Details - Clean Icons without backgrounds */}
-                  <div className="p-6 bg-white mx-4 rounded-3xl -mt-6 relative z-10 cb-shadow-card mb-24">
+                  <div className="p-6 bg-white mx-4 rounded-[48px] -mt-6 relative z-10 cb-shadow-card mb-24">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h2 className="text-2xl font-bold text-gray-900">{sampleProfiles[currentMatch].name}, {sampleProfiles[currentMatch].age}</h2>
@@ -1898,7 +1957,28 @@ const sampleProfiles = [
           )}
 
           {activeTab === 'home' && (
-            <div className="px-6 py-6">
+            <div className="px-6 py-6 relative">
+              {/* Profile shortcut: circle button top-right navigates to profile */}
+              <button
+                onClick={() => setCurrentScreen('profile')}
+                title="Open profile"
+                className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center cb-shadow-card hover:scale-105 transition-transform"
+              >
+                {/* Avatar: prefer the first profile photo (emoji or image), fall back to icon */}
+                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 text-xl">
+                  {userProfile && userProfile.photos && userProfile.photos[0] ? (
+                    // If photos contain an emoji or simple string, render it; if it's a URL, render an <img>
+                    (typeof userProfile.photos[0] === 'string' && userProfile.photos[0].startsWith('http')) ? (
+                      <img src={userProfile.photos[0]} alt={userProfile.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg leading-none">{userProfile.photos[0]}</span>
+                    )
+                  ) : (
+                    <User className="w-6 h-6 text-gray-700" />
+                  )}
+                </div>
+              </button>
+
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back, Venice! 👋</h2>
                 <p className="text-gray-600">Here's what's happening today</p>
