@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun } from 'lucide-react';
+import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
+// Removed ActionTray import; buttons will be inlined below.
 
 /** Inject Inter + theme tokens without extra files */
 function useCodeBlueTheme() {
@@ -26,6 +27,20 @@ function useCodeBlueTheme() {
         body { line-height: 1.5; letter-spacing: 0; font-feature-settings: 'liga' 1, 'kern' 1; }
         h1,h2,h3 { letter-spacing: -0.01em; }
         .cb-heading { letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; font-size: 0.875rem; }
+        /* Typography hierarchy */
+        .cb-display{ font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+        .cb-title{ font-weight: 700; letter-spacing: -0.015em; }
+        .cb-subtitle{ font-weight: 600; letter-spacing: -0.01em; }
+        .cb-body{ font-weight: 500; letter-spacing: 0; }
+        .cb-meta{ font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.75rem; opacity:.75 }
+        .cb-eyebrow{ font-weight:700; letter-spacing:.18em; text-transform:uppercase; font-size:.8rem; color: #6B7280; }
+
+        /* Text shadow utilities for subtle depth */
+        .cb-textshadow-sm{ text-shadow: 0 1px 1px rgba(16,24,40,.18); }
+        .cb-textshadow{ text-shadow: 0 1px 2px rgba(16,24,40,.22); }
+        .cb-textshadow-lg{ text-shadow: 0 2px 8px rgba(16,24,40,.22), 0 1px 2px rgba(16,24,40,.28); }
+  /* A11y utility */
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
         
         /* Enhanced Navigation Styling */
         .cb-nav-tabs {
@@ -72,13 +87,35 @@ function useCodeBlueTheme() {
         }
 
         :root{
+          /* Colors */
           --cb-bg:#F8F7FB;
           --cb-navy-deep:#0F213A;
           --cb-navy:#14325A;
           --cb-navy-soft:#2A4F82;
           --cb-text:#111827;
+          
+          /* Z-index layers */
+          --z-header: 30;
+          --z-modal: 50;
+          --z-dropdown: 40;
+          --z-tooltip: 60;
+          
+          /* Transitions */
+          /* Transitions */
+          --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+          --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+          --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+          --transition-springy: 500ms cubic-bezier(0.5, 0, 0.5, 1.5);
+          
+          /* Animations */
+          --scale-hover: scale(1.05);
+          --scale-press: scale(0.98);
         }
-        html,body{ background:var(--cb-bg); color:var(--cb-text); }
+        html,body{ 
+          background:var(--cb-bg); 
+          color:var(--cb-text); 
+          transition: background-color var(--transition-base), color var(--transition-base);
+        }
         .cb-wordmark-blue{
           background:linear-gradient(90deg,var(--cb-navy-deep),var(--cb-navy),var(--cb-navy-soft));
           -webkit-background-clip:text; background-clip:text; color:transparent;
@@ -111,6 +148,9 @@ function useCodeBlueTheme() {
           border-color: rgba(255,255,255,0.2);
           box-shadow: 0 6px 25px rgba(0,0,0,0.5);
         }
+        /* Info chip for light cards */
+        .cb-chip-light{ background:linear-gradient(180deg,#FFFFFF, #F8FAFC); border:1px solid rgba(15,23,42,.08); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 6px 16px -8px rgba(15,23,42,.25); }
+        .cb-chip-light:hover{ box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 8px 22px -8px rgba(15,23,42,.32); }
               `;
       document.head.appendChild(style);
     }
@@ -1540,7 +1580,7 @@ const sampleProfiles = [
     return (
       <div className="min-h-screen bg-[var(--cb-bg)] flex flex-col">
         {/* Enhanced header with sophisticated navigation */}
-        <div className="sticky top-0 z-30 bg-gradient-to-b from-white to-transparent dark:from-gray-900">
+        <div className="sticky top-0 z-[var(--z-header)] bg-gradient-to-b from-white to-transparent dark:from-gray-900">
           <div className="px-4 py-3 flex justify-center items-center relative">
             <div className="cb-nav-tabs">
               <button 
@@ -1560,9 +1600,11 @@ const sampleProfiles = [
             {activeTab === 'discover' && (
               <button 
                 onClick={() => setShowFilters(!showFilters)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur rounded-full shadow-md hover:shadow-lg transition-all border border-gray-100"
               >
-                <Filter className="w-5 h-5 text-gray-700" />
+                <Filter className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-semibold text-gray-700">Filters</span>
+                <div className="flex items-center justify-center w-4 h-4 bg-blue-600 rounded-full text-[10px] font-bold text-white">3</div>
               </button>
             )}
           </div>
@@ -1572,124 +1614,170 @@ const sampleProfiles = [
         <div className="flex-1 overflow-y-auto pb-20">
           {activeTab === 'discover' && (
             <div className="min-h-full bg-[#FAFAFA]">{/* Hinge warm off-white */}
-              {/* Enhanced Filter Button with Premium Design */}
-              <div className="px-4 py-3 flex justify-between items-center">
-                <button 
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-full shadow-lg hover:shadow-xl border border-gray-100 hover:border-blue-100 transition-all"
-                >
-                  <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
-                    <Filter className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <span className="text-sm font-semibold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">Filters</span>
-                  <div className="flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full">
-                    <span className="text-xs font-bold text-blue-600">3</span>
-                  </div>
-                </button>
-              </div>
+              {/* Spacer for consistent layout */}
+              <div className="h-2"></div>
 
               {sampleProfiles[currentMatch] ? (
-                <div className="max-w-2xl mx-auto rounded-[48px] overflow-hidden">
-                  {/* Profile Photos Carousel - Beautiful Rounded Corners */}
-                  <div className="relative h-[500px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[48px] overflow-hidden mx-4">
+                <div className="max-w-2xl mx-auto">
+                  {/* Profile Photos Carousel - Enhanced with Premium Treatment */}
+                  <div className="relative h-[520px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[32px] mx-4 cb-shadow-card">
+                    {/* Gradient Overlay for Photo Enhancement */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30 rounded-[32px] overflow-hidden"></div>
+                    
+                    {/* Main Photo Display */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-9xl">{sampleProfiles[currentMatch].photos[activePrompt]}</div>
+                      <div className="text-9xl relative z-10 transform transition-transform duration-300 hover:scale-105">
+                        {sampleProfiles[currentMatch].photos[activePrompt]}
+                      </div>
                     </div>
                     
-                    {/* Photo Navigation Dots */}
+                    {/* Enhanced Photo Navigation */}
                     <div className="absolute top-4 left-0 right-0 flex justify-center gap-2 px-4">
-                      {sampleProfiles[currentMatch].photos.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setActivePrompt(idx)}
-                          className={`h-1 rounded-full transition-all ${
-                            activePrompt === idx ? 'bg-white flex-1' : 'bg-white bg-opacity-50 w-12'
-                          }`}
-                        />
-                      ))}
+                      <div className="bg-black/20 backdrop-blur-md rounded-full p-1.5 flex gap-1">
+                        {sampleProfiles[currentMatch].photos?.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setActivePrompt(idx)}
+                            className={`h-1 rounded-full transition-all ${
+                              activePrompt === idx 
+                                ? 'bg-white w-8' 
+                                : 'bg-white/40 w-4 hover:bg-white/60'
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
 
-                    {/* Top Badges */}
+                    {/* Enhanced Badges */}
                     <div className="absolute top-6 left-6 flex flex-col gap-2">
                       {sampleProfiles[currentMatch].verified && (
-                        <div className="cb-chip px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 cb-shadow-card border border-white/30">
-                          <Check className="w-4 h-4" />
+                        <div className="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-white/20 text-white">
+                          <Check className="w-4 h-4 text-blue-400" />
                           Verified
                         </div>
                       )}
                       {sampleProfiles[currentMatch].recentlyActive && (
-                        <div className="cb-chip px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 cb-shadow-card border border-white/30">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <div className="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-white/20 text-white">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                           Recently Active
                         </div>
                       )}
                     </div>
 
-                    {/* Compatibility Badge */}
-                    <div className="absolute top-6 right-6 cb-chip px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-1.5 cb-shadow-card border border-white/30">
-                      <Zap className="w-4 h-4" />
-                      {sampleProfiles[currentMatch].shiftCompatibility}% Match
+                    {/* Enhanced Compatibility Badge */}
+                    <div className="absolute top-6 right-6 bg-blue-500/90 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-blue-400/30 text-white">
+                      <Zap className="w-4 h-4 text-blue-200" />
+                      <span className="font-bold">{sampleProfiles[currentMatch].shiftCompatibility}% Match</span>
                     </div>
 
-                    {/* Action Buttons Overlay */}
-                    <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-6 px-6">
+                    {/* Sophisticated standalone action buttons */}
+                    {/* Inline action buttons (no ActionTray dependency) */}
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 bottom-24 flex items-center justify-center gap-6 pointer-events-auto"
+                      style={{ zIndex: 'var(--z-dropdown, 40)' }}
+                    >
                       <button
+                        aria-label="Pass"
                         onClick={() => setCurrentMatch((currentMatch + 1) % sampleProfiles.length)}
-                        className="w-16 h-16 bg-white rounded-full cb-shadow-card flex items-center justify-center text-gray-600 hover:scale-110 transition-transform"
+                        className="flex items-center justify-center rounded-full shadow-lg w-14 h-14 bg-white text-gray-600 border border-gray-100 transition-all duration-150 ease-out hover:shadow-xl hover:text-gray-900 hover:-translate-y-1 active:translate-y-0 active:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
                       >
-                        <X className="w-8 h-8" />
-                      </button>
-                      <button className="w-16 h-16 bg-blue-500 rounded-full cb-shadow-card flex items-center justify-center text-white hover:scale-110 transition-transform">
-                        <Star className="w-7 h-7" />
+                        <X className="w-6 h-6" />
                       </button>
                       <button
+                        aria-label="Favorite"
+                        onClick={() => {
+                          const name = sampleProfiles[currentMatch].name;
+                          alert(`Added ${name} to your favorites ⭐`);
+                        }}
+                        className="flex items-center justify-center rounded-full shadow-lg w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 text-white transition-all duration-150 ease-out hover:shadow-xl hover:from-blue-500 hover:to-blue-600 hover:-translate-y-1 active:translate-y-0 active:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
+                      >
+                        <Star className="w-6 h-6" />
+                      </button>
+                      <button
+                        aria-label="Connect"
                         onClick={() => {
                           alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
                           setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
                         }}
-                        className="w-20 h-20 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full cb-shadow-card flex items-center justify-center text-white hover:scale-110 transition-transform"
+                        className="flex items-center justify-center rounded-full shadow-lg w-16 h-16 bg-gradient-to-br from-blue-700 to-blue-900 text-white transition-all duration-150 ease-out shadow-[0_18px_36px_rgba(8,20,48,0.28)] hover:shadow-[0_22px_44px_rgba(8,20,48,0.32)] hover:-translate-y-1 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
                       >
-                        <Heart className="w-10 h-10 fill-current" />
+                        <Heart className="w-7 h-7" />
                       </button>
                     </div>
                   </div>
 
-                  {/* Profile Details - Clean Icons without backgrounds */}
-                  <div className="p-6 bg-white mx-4 rounded-[48px] -mt-6 relative z-10 cb-shadow-card mb-24">
+                  {/* Enhanced Profile Details Card */}
+                  <article aria-labelledby="profile-title" className="relative -mt-8 mx-4 bg-white/95 backdrop-blur-xl rounded-[32px] p-6 shadow-xl border border-white/50 mb-24">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h2 className="text-2xl font-bold text-gray-900">{sampleProfiles[currentMatch].name}, {sampleProfiles[currentMatch].age}</h2>
-                        <div className="flex items-center gap-2 text-gray-600 mt-1">
-                          <Briefcase className="w-4 h-4" />
-                          <span className="text-sm">{sampleProfiles[currentMatch].role}</span>
+                        <h2 id="profile-title" className="cb-display text-[28px] sm:text-[32px] bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent cb-textshadow">
+                          {sampleProfiles[currentMatch].name}
+                          <span className="text-slate-400">{`, ${sampleProfiles[currentMatch].age}`}</span>
+                        </h2>
+                        <div className="mt-1 flex items-center gap-2 text-slate-700">
+                          <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                            <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+                          </div>
+                          <p className="cb-subtitle text-sm sm:text-[15px] leading-tight">
+                            {sampleProfiles[currentMatch].role}
+                            {sampleProfiles[currentMatch].specialty ? <span className="text-slate-500">{` • ${sampleProfiles[currentMatch].specialty}`}</span> : null}
+                          </p>
                         </div>
                       </div>
-                      <button className="p-3 hover:bg-gray-50 rounded-full text-gray-600 transition-all">
-                        <MoreHorizontal className="w-6 h-6" />
+                      <button className="p-2 hover:bg-gray-50 rounded-full text-gray-600 transition-all border border-gray-100">
+                        <MoreHorizontal className="w-5 h-5" />
                       </button>
                     </div>
 
-                    {/* Quick Info - Clean Icons Only */}
-                    <div className="flex items-center gap-6 mb-6 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm font-semibold">{sampleProfiles[currentMatch].distance}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-purple-600" />
-                        <span className="text-sm font-semibold">{sampleProfiles[currentMatch].shift}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Users className="w-5 h-5 text-green-600" />
-                        <span className="text-sm font-semibold">{sampleProfiles[currentMatch].mutualConnections} mutual</span>
-                      </div>
+                    {/* Optimized Info Chips */}
+                    <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 gap-2" role="list" aria-label="Profile information">
+                      {[{
+                        icon: Stethoscope,
+                        color: 'text-blue-700',
+                        label: 'Specialty',
+                        value: sampleProfiles[currentMatch].specialty || '—'
+                      },{
+                        icon: Building2,
+                        color: 'text-slate-700',
+                        label: 'Hospital',
+                        value: sampleProfiles[currentMatch].hospital || '—'
+                      },{
+                        icon: Clock,
+                        color: 'text-purple-700',
+                        label: 'Shift',
+                        value: sampleProfiles[currentMatch].shift || '—'
+                      },{
+                        icon: MapPin,
+                        color: 'text-rose-700',
+                        label: 'Distance',
+                        value: sampleProfiles[currentMatch].distance || '—'
+                      },{
+                        icon: Users,
+                        color: 'text-emerald-700',
+                        label: 'Mutual',
+                        value: `${sampleProfiles[currentMatch].mutualConnections ?? 0} mutual`
+                      },
+                      ...(sampleProfiles[currentMatch].responseRate ? [{
+                        icon: Zap,
+                        color: 'text-amber-700',
+                        label: 'Response',
+                        value: sampleProfiles[currentMatch].responseRate
+                      }] : [])].map((item, idx) => (
+                        <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className="cb-chip-light rounded-xl px-3 py-2.5 flex items-center gap-2 min-w-0">
+                          <item.icon className={`w-4 h-4 ${item.color}`} />
+                          <div className="min-w-0">
+                            <div className="cb-meta text-[10px] text-slate-500/80">{item.label}</div>
+                            <div className="text-[13px] font-semibold text-slate-800 truncate">{item.value}</div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
 
                     {/* Prompts Section */}
                     <div className="space-y-4">
                       {sampleProfiles[currentMatch].prompts.map((prompt, idx) => (
                         <div key={idx} className="border-2 border-gray-200 rounded-2xl p-5 hover:border-blue-300 transition-all">
-                          <h3 className="text-sm font-bold text-gray-900 mb-3">{prompt.question}</h3>
+                          <h3 className="cb-eyebrow mb-2">{prompt.question}</h3>
                           {prompt.type === 'text' ? (
                             <p className="text-gray-700 leading-relaxed mb-4">{prompt.answer}</p>
                           ) : (
@@ -1704,11 +1792,11 @@ const sampleProfiles = [
                             </button>
                           )}
                           <div className="flex items-center gap-4 pt-3 border-t border-gray-100">
-                            <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all">
+                            <button aria-label={`Like prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all">
                               <ThumbsUp className="w-4 h-4" />
                               <span className="font-semibold">{prompt.likes}</span>
                             </button>
-                            <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all">
+                            <button aria-label={`Comment on prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all">
                               <MessageCircle className="w-4 h-4" />
                               <span className="font-semibold">Comment</span>
                             </button>
@@ -1720,7 +1808,7 @@ const sampleProfiles = [
                     {/* My Vibe Section */}
                     <div className="mt-6 space-y-4">
                       <div>
-                        <h3 className="text-sm font-bold text-gray-500 mb-3">My Vibe</h3>
+                        <h3 className="cb-eyebrow mb-3">My Vibe</h3>
                         <div className="flex flex-wrap gap-2">
                           {sampleProfiles[currentMatch].myVibe.map((vibe, idx) => (
                             <span key={idx} className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
@@ -1731,7 +1819,7 @@ const sampleProfiles = [
                       </div>
                       {sampleProfiles[currentMatch].dealbreakers.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-bold text-gray-500 mb-3">Dealbreakers</h3>
+                          <h3 className="cb-eyebrow mb-3">Dealbreakers</h3>
                           <div className="flex flex-wrap gap-2">
                             {sampleProfiles[currentMatch].dealbreakers.map((deal, idx) => (
                               <span key={idx} className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-medium">
@@ -1742,7 +1830,7 @@ const sampleProfiles = [
                         </div>
                       )}
                     </div>
-                  </div>
+                  </article>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-96 mb-24">
