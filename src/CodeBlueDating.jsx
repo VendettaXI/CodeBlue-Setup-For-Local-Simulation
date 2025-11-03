@@ -1,8 +1,84 @@
+/**
+ * ============================================================================
+ * CodeBlue Dating App - Main Component
+ * ============================================================================
+ * 
+ * A premium dating app for healthcare professionals with Hinge/Bumble-level UI.
+ * 
+ * ARCHITECTURE:
+ * - Single-file component (React hooks-based, no classes)
+ * - 5 main tabs: Discover, Matches, Home, Connect, Vent
+ * - Additional screens: Profile, EditProfile, Settings
+ * - Dark mode support with localStorage persistence
+ * - CSS-in-JS via injected style tag (see useCodeBlueTheme)
+ * 
+ * KEY FEATURES:
+ * - Profile swiping with like/pass actions
+ * - Match management and messaging
+ * - Anonymous support rooms (Vent tab)
+ * - Events and community features
+ * - User achievements and statistics
+ * - Premium subscription options
+ * 
+ * STATE MANAGEMENT:
+ * - All state managed via React useState hooks
+ * - No external state libraries (Redux/Zustand)
+ * - Local storage for dark mode and user preferences
+ * 
+ * STYLING:
+ * - TailwindCSS utility classes
+ * - Custom CSS variables (--cb-* prefix)
+ * - Inter font family from Google Fonts
+ * - Glassmorphism and shadow effects
+ * 
+ * ICONS:
+ * - Lucide React icon library (45+ icons imported)
+ * 
+ * EXPORTS:
+ * - CodeBlueDating (default): Main component
+ * - toggleCodeBlueTheme: Dark mode toggle utility
+ * ============================================================================
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
-// Removed ActionTray import; buttons will be inlined below.
 
-/** Inject Inter + theme tokens without extra files */
+// Note: ActionTray component removed - action buttons are now inline
+
+/**
+ * useCodeBlueTheme Hook
+ * =====================
+ * Injects Inter font and global CSS theme tokens into the document.
+ * 
+ * This hook dynamically creates and inserts:
+ * 1. Google Fonts link for Inter font family
+ * 2. Global CSS with custom properties and utility classes
+ * 
+ * CSS INJECTION APPROACH:
+ * - Creates <link> element for fonts
+ * - Creates <style> element with CSS variables and classes
+ * - Only injects once (checks for existing elements by ID)
+ * - Uses template literals for CSS content
+ * 
+ * CUSTOM PROPERTIES:
+ * - --cb-bg, --cb-navy-deep, --cb-navy, --cb-navy-soft: Brand colors
+ * - --cb-text, --cb-text-muted: Typography colors
+ * - --cb-surface, --cb-surface-muted, --cb-border: UI surfaces
+ * - --transition-fast/base/slow/springy: Animation timings
+ * - --z-header/modal/dropdown/tooltip: Z-index layers
+ * 
+ * UTILITY CLASSES:
+ * - .cb-wordmark-blue: Gradient text effect
+ * - .cb-shadow-card: Card shadow
+ * - .cb-glass: Glassmorphism effect
+ * - .cb-chip-light: Light chip style
+ * - .cb-reveal: Fade-up animation
+ * - Typography: .cb-display, .cb-title, .cb-subtitle, .cb-body, .cb-meta
+ * 
+ * DARK MODE:
+ * - Activated by adding .dark class to <html> element
+ * - Overrides colors and shadows for dark theme
+ */
 function useCodeBlueTheme() {
   useEffect(() => {
     // Inter font
@@ -169,16 +245,84 @@ function useCodeBlueTheme() {
   }, []);
 }
 
+/**
+ * ============================================================================
+ * CodeBlueDating Component (Main App)
+ * ============================================================================
+ * 
+ * Root component that manages the entire dating app experience.
+ * 
+ * SCREEN HIERARCHY:
+ * - 'splash': Initial landing screen with branding
+ * - 'main': Primary app with 5 tabs (discover, matches, home, connect, vent)
+ * - 'profile': View user profile details
+ * - 'edit-profile': Edit your own profile
+ * - 'settings': App settings and preferences
+ * 
+ * STATE ARCHITECTURE:
+ * This component uses 20+ useState hooks organized into logical groups:
+ * 
+ * 1. THEME & APPEARANCE
+ *    - darkMode: Boolean for dark/light theme
+ *    - toggleDarkMode(): Function to switch themes
+ * 
+ * 2. NAVIGATION
+ *    - currentScreen: Which top-level screen is active
+ *    - activeTab: Which tab in main screen (discover, matches, home, connect, vent)
+ *    - currentMatch: Index of currently displayed profile in Discover
+ *    - selectedMatch: Which match conversation is open
+ *    - ventRoom: Which vent support room is active
+ * 
+ * 3. USER PROFILE DATA
+ *    - userProfile: Current user's complete profile object
+ *    - profilePhotos: Array of up to 6 photo slots
+ *    - bio: User bio text
+ *    - selectedPrompts: User's prompt responses
+ *    - myVibe: Array of selected vibe tags
+ *    - dealbreakers: Array of selected dealbreaker tags
+ * 
+ * 4. UI STATES
+ *    - activePrompt: Which prompt is being displayed in swipe view
+ *    - showFilters: Discovery filters modal visibility
+ *    - editSection: Which profile edit section is active
+ * 
+ * 5. SETTINGS & PREFERENCES
+ *    - Privacy: showLastActive, pauseProfile, enableDiscovery
+ *    - Messaging: readReceipts
+ *    - Discovery: showDistance, maxDistance, ageRange
+ *    - Notifications: pushNotifications, emailNotifications
+ * 
+ * 6. DATA CONSTANTS (see below for full data structures)
+ *    - sampleProfiles: Array of profiles for Discover swiping
+ *    - myMatches: Array of matched users with messages
+ *    - whoLikesYou: Array of users who liked you (premium feature)
+ *    - ventTopics: Array of anonymous support room categories
+ *    - events: Array of community events
+ *    - achievements: User achievement badges
+ * 
+ * DESIGN PHILOSOPHY:
+ * - Premium feel with subtle animations and glassmorphism
+ * - Hinge/Bumble-inspired card-based layouts
+ * - Healthcare-focused features (shift scheduling, hospital search)
+ * - Mental health support via anonymous Vent rooms
+ * - Professional networking integrated with dating
+ */
 const CodeBlueDating = () => {
-  // Initialize theme
+  // ========================================================================
+  // THEME INITIALIZATION
+  // ========================================================================
   useCodeBlueTheme();
   
-  // Dark mode state
+  // ========================================================================
+  // DARK MODE STATE & MANAGEMENT
+  // ========================================================================
+  
+  // Dark mode state - initialized from localStorage
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('theme') === 'dark';
   });
 
-  // Toggle dark mode
+  // Toggle dark mode and persist to localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -186,8 +330,7 @@ const CodeBlueDating = () => {
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
-
-  // Detect system theme on first load if no choice saved
+  // Detect system theme preference on first load if no user preference saved
   useEffect(() => {
     try {
       const stored = localStorage.getItem('theme');
@@ -200,11 +343,24 @@ const CodeBlueDating = () => {
     } catch {}
   }, []);
 
-  // Apply dark mode on mount
+  // Apply dark mode class to HTML element whenever darkMode changes
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
+  
+  // ========================================================================
+  // NAVIGATION STATE
+  // ========================================================================
+  
+  // Controls which top-level screen is displayed
+  // Values: 'splash' | 'main' | 'profile' | 'edit-profile' | 'settings'
   const [currentScreen, setCurrentScreen] = useState('splash');
+  
+  // ========================================================================
+  // USER PROFILE STATE
+  // ========================================================================
+  
+  // Current user's complete profile data
   const [userProfile, setUserProfile] = useState({
     name: 'Venice Dawn',
     role: 'Registered Nurse',
@@ -217,28 +373,66 @@ const CodeBlueDating = () => {
     myVibe: [],
     dealbreakers: []
   });
+  
+  // ========================================================================
+  // TAB & NAVIGATION STATE (Main Screen)
+  // ========================================================================
+  
+  // Which tab is active in the main screen
+  // Values: 'discover' | 'matches' | 'home' | 'connect' | 'vent'
   const [activeTab, setActiveTab] = useState('discover');
+  
+  // Index of currently displayed profile in Discover swipe view
   const [currentMatch, setCurrentMatch] = useState(0);
+  
+  // Selected match for viewing conversation (null when no conversation open)
   const [selectedMatch, setSelectedMatch] = useState(null);
+  
+  // Active vent room for anonymous support (null when not in a room)
   const [ventRoom, setVentRoom] = useState(null);
+  
+  // Which prompt is being shown in Discover card view
   const [activePrompt, setActivePrompt] = useState(0);
+  
+  // Discovery filters modal visibility
   const [showFilters, setShowFilters] = useState(false);
 
-  // Settings States
-  const [showLastActive, setShowLastActive] = useState(true);
-  const [pauseProfile, setPauseProfile] = useState(false);
-  const [enableDiscovery, setEnableDiscovery] = useState(true);
-  const [readReceipts, setReadReceipts] = useState(true);
-  const [showDistance, setShowDistance] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [maxDistance, setMaxDistance] = useState(50);
-  const [ageRange, setAgeRange] = useState([25, 45]);
+  // ========================================================================
+  // SETTINGS STATE
+  // ========================================================================
+  
+  // Privacy Settings
+  const [showLastActive, setShowLastActive] = useState(true);  // Show "Active 2h ago" status
+  const [pauseProfile, setPauseProfile] = useState(false);     // Temporarily hide profile from discovery
+  const [enableDiscovery, setEnableDiscovery] = useState(true); // Allow others to discover your profile
+  
+  // Messaging Settings
+  const [readReceipts, setReadReceipts] = useState(true);      // Send read receipts in messages
+  
+  // Discovery Preferences
+  const [showDistance, setShowDistance] = useState(true);      // Show distance on profiles
+  const [maxDistance, setMaxDistance] = useState(50);          // Maximum distance for discovery (in miles/km)
+  const [ageRange, setAgeRange] = useState([25, 45]);          // Age range for discovery [min, max]
+  
+  // Notification Settings
+  const [pushNotifications, setPushNotifications] = useState(true);  // Enable push notifications
+  const [emailNotifications, setEmailNotifications] = useState(true); // Enable email notifications
 
-  // Edit Profile States
-  const [editSection, setEditSection] = useState(null); // null, 'photos', 'info', 'prompts', 'vibe', 'preview'
+  // ========================================================================
+  // EDIT PROFILE STATE
+  // ========================================================================
+  
+  // Which profile editing section is active
+  // Values: null | 'photos' | 'info' | 'prompts' | 'vibe' | 'preview'
+  const [editSection, setEditSection] = useState(null);
+  
+  // Profile photos array (up to 6 slots, empty string for unused slots)
   const [profilePhotos, setProfilePhotos] = useState(['👩‍⚕️', '🌙', '☕', '📚', '', '']);
+  
+  // User bio text
   const [bio, setBio] = useState("Registered Nurse passionate about emergency care and animal welfare. Coffee enthusiast, yoga lover, and believer in work-life balance.");
+  
+  // Selected prompt responses (array of objects with question, answer, type)
   const [selectedPrompts, setSelectedPrompts] = useState([
     { id: 1, question: "Typical Sunday", answer: "Helping walk the older pups at the shelter.", type: "text" },
     { id: 2, question: "I'm looking for", answer: "Someone who understands that 3am coffee dates might be our normal.", type: "text" },
@@ -247,6 +441,12 @@ const CodeBlueDating = () => {
   const [selectedVibe, setSelectedVibe] = useState(["Coffee", "Yoga", "Animal Welfare", "Reading"]);
   const [dealbreakers, setDealbreakers] = useState(["Smoking"]);
 
+  // ========================================================================
+  // DATA CONSTANTS - PROMPTS & VIBES
+  // ========================================================================
+  
+  // Available prompt questions for profile creation
+  // Users can select from these to showcase their personality
   const allPrompts = [
     "Typical Sunday", "I'm looking for", "Green flag I look for", "My ideal date",
     "I geek out on", "We'll get along if", "My simple pleasures", "Two truths and a lie",
@@ -259,6 +459,9 @@ const CodeBlueDating = () => {
     "I'm the type of texter who", "After work you'll find me", "A perfect day includes"
   ];
 
+  // Vibe categories for profile self-expression
+  // Organized by category with multiple options per category
+  // Users can select multiple vibes to showcase interests and lifestyle
   const vibeCategories = {
     "Wellness": ["Yoga", "Meditation", "Running", "Gym", "Cycling", "Swimming", "Hiking", "Dance"],
     "Food & Drink": ["Coffee", "Cooking", "Wine Tasting", "Baking", "Foodie Adventures", "Tea", "Craft Beer"],
@@ -268,6 +471,25 @@ const CodeBlueDating = () => {
     "Nature": ["Camping", "Gardening", "Beach", "Stargazing", "Animal Welfare", "Nature Walks"],
     "Learning": ["Language Learning", "DIY Projects", "Astronomy", "History", "Science", "Philosophy"]
   };
+  
+  // ========================================================================
+  // DATA CONSTANTS - SAMPLE PROFILES (Discover Tab)
+  // ========================================================================
+  
+  /**
+   * Sample profiles for the Discover/swipe feature.
+   * Each profile contains:
+   * - id: Unique identifier
+   * - name: User's first name
+   * - age: User's age
+   * - role: Healthcare professional role
+   * - hospital: Workplace
+   * - distance: Distance in km
+   * - photos: Array of photo emojis (placeholder for actual images)
+   * - prompts: Array of prompt responses {question, answer, type}
+   * - verified: Boolean for verification status
+   * - vibe: Array of interest tags
+   */
 const sampleProfiles = [
     {
       id: 1,
@@ -321,18 +543,54 @@ const sampleProfiles = [
     }
   ];
 
+  // ========================================================================
+  // DATA CONSTANTS - MATCHES & CONNECTIONS
+  // ========================================================================
+  
+  /**
+   * My Matches - Active conversations with matched users
+   * Each match contains:
+   * - id, name, role, photo: Basic profile info
+   * - lastMessage: Last message in conversation
+   * - unread: Boolean for unread status
+   * - time: Relative time of last message
+   * - online: Boolean for online status
+   * - yourTurn: Boolean indicating if it's your turn to respond
+   */
   const myMatches = [
     { id: 1, name: "Emma", role: "Paramedic", photo: "👩‍⚕️", lastMessage: "See you Friday! 😊", unread: false, time: "2h ago", online: true, yourTurn: false },
     { id: 2, name: "Alex", role: "Nurse", photo: "👨‍⚕️", lastMessage: "How was your shift?", unread: true, time: "5m ago", online: true, yourTurn: true },
     { id: 3, name: "Maya", role: "Doctor", photo: "👩‍⚕️", lastMessage: "That sounds amazing!", unread: false, time: "1d ago", online: false, yourTurn: false }
   ];
 
+  /**
+   * Who Likes You - Users who have liked your profile (Premium feature)
+   * Blurred until user upgrades to premium subscription
+   * Each entry contains:
+   * - name, role, photo: Basic profile info
+   * - preview: Snippet of their like/comment
+   * - compatibility: Percentage match score (algorithm-based)
+   */
   const whoLikesYou = [
     { name: "David", role: "Surgeon", photo: "👨‍⚕️", preview: "Loved your answer about...", compatibility: 92 },
     { name: "Lisa", role: "Pharmacist", photo: "👩‍⚕️", preview: "100% yes. I'm in.", compatibility: 88 },
     { name: "Tom", role: "Paramedic", photo: "👨‍⚕️", preview: "We should grab coffee...", compatibility: 85 }
   ];
 
+  // ========================================================================
+  // DATA CONSTANTS - VENT SUPPORT ROOMS
+  // ========================================================================
+  
+  /**
+   * Vent Topics - Anonymous support rooms for mental health
+   * Healthcare-specific categories for processing difficult experiences
+   * Each topic includes:
+   * - id, name, description: Room identification
+   * - icon: Emoji representation
+   * - active: Number of currently active users
+   * - gradient: Tailwind gradient classes for visual distinction
+   * - trending: Boolean for trending badge
+   */
   const ventTopics = [
     { id: 1, name: "Shift Burnout", description: "Share your exhaustion with others who get it", icon: "😮‍💨", active: 12, gradient: "from-orange-400 to-red-500", trending: true },
     { id: 2, name: "Difficult Cases", description: "Process challenging situations safely", icon: "💭", active: 8, gradient: "from-blue-700 to-blue-900", trending: false },
@@ -340,12 +598,34 @@ const sampleProfiles = [
     { id: 4, name: "Team Dynamics", description: "Navigate workplace relationships and stress", icon: "👥", active: 15, gradient: "from-green-500 to-emerald-600", trending: true }
   ];
 
+  // ========================================================================
+  // DATA CONSTANTS - COMMUNITY & EVENTS
+  // ========================================================================
+  
+  /**
+   * Events - Community events for healthcare professionals
+   * Facilitates in-person meetups and networking
+   * Each event includes:
+   * - id, title, date, time, location: Event details
+   * - attendees: Total number of people attending
+   * - going: Number of mutual connections attending
+   * - image: Emoji placeholder for event image
+   * - category: Event type (Wellness, Support, Social, etc.)
+   */
   const events = [
     { id: 1, title: "Healthcare Workers Yoga & Brunch", date: "Nov 2", time: "10:00 AM", location: "Hyde Park", attendees: 24, going: 3, image: "🧘", category: "Wellness" },
     { id: 2, title: "Mental Health Support Circle", date: "Nov 5", time: "7:00 PM", location: "Online", attendees: 45, going: 8, image: "🧠", category: "Support" },
     { id: 3, title: "Night Shift Coffee Meetup", date: "Nov 8", time: "11:00 PM", location: "Shoreditch", attendees: 18, going: 2, image: "☕", category: "Social" }
   ];
 
+  // ========================================================================
+  // DATA CONSTANTS - USER ANALYTICS & GAMIFICATION
+  // ========================================================================
+  
+  /**
+   * Daily Insights - Quick stats shown on Home tab
+   * Provides engagement metrics and personalized tips
+   */
   const dailyInsights = {
     profileViews: 23,
     newLikes: 5,
@@ -353,6 +633,12 @@ const sampleProfiles = [
     tip: "Complete your voice prompt to get 2x more matches!"
   };
 
+  /**
+   * Achievements - Gamification badges to encourage engagement
+   * Each achievement includes:
+   * - id, name, icon, description: Badge details
+   * - unlocked: Boolean indicating if user has earned it
+   */
   const achievements = [
     { id: 1, name: "First Match", icon: "💙", unlocked: true, description: "Made your first connection" },
     { id: 2, name: "Verified Hero", icon: "✅", unlocked: true, description: "Completed NHS verification" },
@@ -362,6 +648,11 @@ const sampleProfiles = [
     { id: 6, name: "Conversation Starter", icon: "💬", unlocked: true, description: "Send 50 messages" }
   ];
 
+  /**
+   * Weekly Activity - Chart data for profile engagement
+   * Shows daily views and likes for the past week
+   * Used to visualize profile performance trends
+   */
   const weeklyActivity = [
     { day: "Mon", views: 15, likes: 3 },
     { day: "Tue", views: 23, likes: 5 },
@@ -372,7 +663,17 @@ const sampleProfiles = [
     { day: "Sun", views: 20, likes: 3 }
   ];
 
-  // Toggle Switch Component
+  // ========================================================================
+  // UTILITY COMPONENTS
+  // ========================================================================
+  
+  /**
+   * ToggleSwitch Component
+   * Reusable iOS-style toggle switch for settings
+   * Props:
+   * - enabled: Boolean state
+   * - onChange: Callback function when toggled
+   */
   const ToggleSwitch = ({ enabled, onChange }) => (
     <button
       onClick={() => onChange(!enabled)}
@@ -388,7 +689,17 @@ const sampleProfiles = [
     </button>
   );
 
-  // Settings Item Component
+  /**
+   * SettingItem Component
+   * Reusable row component for settings screens
+   * Props:
+   * - icon: Lucide React icon component
+   * - label: Main text label
+   * - description: Optional secondary text
+   * - action: Right-side action element (toggle, button, etc.)
+   * - showChevron: Boolean to show/hide chevron icon
+   * - onClick: Optional click handler
+   */
   const SettingItem = ({ icon: Icon, label, description, action, showChevron = true, onClick }) => (
     <div 
       onClick={onClick}
@@ -408,7 +719,13 @@ const sampleProfiles = [
     </div>
   );
 
-  // Settings Section Component
+  /**
+   * Section Component
+   * Reusable section container for settings
+   * Props:
+   * - title: Section header text
+   * - children: Content to render inside section
+   */
   const Section = ({ title, children }) => (
     <div className="mb-6">
       <h2 className="cb-eyebrow mb-3 px-5">
@@ -1634,20 +1951,20 @@ const sampleProfiles = [
               {sampleProfiles[currentMatch] ? (
                 <div className="max-w-2xl mx-auto">
                   {/* Profile Photos Carousel - Enhanced with Premium Treatment */}
-                  <div className="relative h-[520px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[32px] mx-4 cb-shadow-card">
+                    <div className="relative h-[540px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[28px] mx-4 shadow-[0_8px_32px_-8px_rgba(16,24,40,0.12),0_20px_60px_-12px_rgba(16,24,40,0.18)]">
                     {/* Gradient Overlay for Photo Enhancement */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30 rounded-[32px] overflow-hidden"></div>
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40 rounded-[28px] overflow-hidden"></div>
                     
                     {/* Main Photo Display */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-9xl relative z-10 transform transition-transform duration-300 hover:scale-105">
+                        <div className="text-[140px] relative z-10 transform transition-transform duration-300 hover:scale-105 drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)]">
                         {sampleProfiles[currentMatch].photos[activePrompt]}
                       </div>
                     </div>
                     
                     {/* Enhanced Photo Navigation */}
                     <div className="absolute top-4 left-0 right-0 flex justify-center gap-2 px-4">
-                      <div className="bg-black/20 backdrop-blur-md rounded-full p-1.5 flex gap-1">
+                 <div className="bg-white/10 backdrop-blur-xl rounded-full p-1.5 flex gap-1 shadow-lg border border-white/20">
                         {sampleProfiles[currentMatch].photos?.map((_, idx) => (
                           <button
                             key={idx}
@@ -1665,22 +1982,27 @@ const sampleProfiles = [
                     {/* Enhanced Badges */}
                     <div className="absolute top-6 left-6 flex flex-col gap-2">
                       {sampleProfiles[currentMatch].verified && (
-                        <div className="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-white/20 text-white">
-                          <Check className="w-4 h-4 text-blue-400" />
+                          <div className="bg-white/20 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.3)_inset] border border-white/30 text-white">
+                            <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                              <Check className="w-3 h-3 text-blue-600" />
+                            </div>
                           Verified
                         </div>
                       )}
                       {sampleProfiles[currentMatch].recentlyActive && (
-                        <div className="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-white/20 text-white">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                          <div className="bg-white/20 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.3)_inset] border border-white/30 text-white">
+                            <div className="relative w-2 h-2">
+                              <div className="absolute w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                              <div className="absolute w-2 h-2 bg-green-400 rounded-full animate-ping opacity-75"></div>
+                            </div>
                           Recently Active
                         </div>
                       )}
                     </div>
 
                     {/* Enhanced Compatibility Badge */}
-                    <div className="absolute top-6 right-6 bg-blue-500/90 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg border border-blue-400/30 text-white">
-                      <Zap className="w-4 h-4 text-blue-200" />
+                      <div className="absolute top-6 right-6 bg-gradient-to-br from-blue-500 to-blue-600 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(37,99,235,0.4),0_0_0_1px_rgba(255,255,255,0.2)_inset] border border-blue-400/40 text-white">
+                        <Zap className="w-4 h-4 text-blue-100" />
                       <span className="font-bold">{sampleProfiles[currentMatch].shiftCompatibility}% Match</span>
                     </div>
 
@@ -1693,9 +2015,9 @@ const sampleProfiles = [
                       <button
                         aria-label="Pass"
                         onClick={() => setCurrentMatch((currentMatch + 1) % sampleProfiles.length)}
-                        className="flex items-center justify-center rounded-full shadow-lg w-14 h-14 bg-white text-gray-600 border border-gray-100 transition-all duration-150 ease-out hover:shadow-xl hover:text-gray-900 hover:-translate-y-1 active:translate-y-0 active:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
+                  className="flex items-center justify-center rounded-full w-16 h-16 bg-white text-gray-700 border-2 border-gray-100 shadow-[0_4px_16px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.02)] transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.12),0_4px_8px_rgba(0,0,0,0.06)] hover:text-gray-900 hover:scale-110 hover:-translate-y-1 hover:rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                       >
-                        <X className="w-6 h-6" />
+                  <X className="w-7 h-7" />
                       </button>
                       <button
                         aria-label="Favorite"
@@ -1703,9 +2025,9 @@ const sampleProfiles = [
                           const name = sampleProfiles[currentMatch].name;
                           alert(`Added ${name} to your favorites ⭐`);
                         }}
-                        className="flex items-center justify-center rounded-full shadow-lg w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 text-white transition-all duration-150 ease-out hover:shadow-xl hover:from-blue-500 hover:to-blue-600 hover:-translate-y-1 active:translate-y-0 active:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
+                  className="flex items-center justify-center rounded-full w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_6px_20px_rgba(59,130,246,0.35),0_2px_8px_rgba(37,99,235,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-all duration-300 ease-out hover:shadow-[0_8px_28px_rgba(59,130,246,0.45),0_4px_12px_rgba(37,99,235,0.3)] hover:from-blue-400 hover:to-blue-500 hover:scale-110 hover:-translate-y-1 hover:-rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                       >
-                        <Star className="w-6 h-6" />
+                  <Star className="w-7 h-7" />
                       </button>
                       <button
                         aria-label="Connect"
@@ -1713,28 +2035,28 @@ const sampleProfiles = [
                           alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
                           setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
                         }}
-                        className="flex items-center justify-center rounded-full shadow-lg w-16 h-16 bg-gradient-to-br from-blue-700 to-blue-900 text-white transition-all duration-150 ease-out shadow-[0_18px_36px_rgba(8,20,48,0.28)] hover:shadow-[0_22px_44px_rgba(8,20,48,0.32)] hover:-translate-y-1 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400/70"
+                  className="flex items-center justify-center rounded-full w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-[0_8px_28px_rgba(236,72,153,0.4),0_4px_12px_rgba(219,39,119,0.25),0_0_0_1px_rgba(255,255,255,0.15)_inset] transition-all duration-300 ease-out hover:shadow-[0_12px_36px_rgba(236,72,153,0.5),0_6px_16px_rgba(219,39,119,0.35)] hover:from-pink-400 hover:to-pink-500 hover:scale-110 hover:-translate-y-1.5 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
                       >
-                        <Heart className="w-7 h-7" />
+                  <Heart className="w-8 h-8" />
                       </button>
                     </div>
                   </div>
 
                   {/* Enhanced Profile Details Card */}
-                  <article aria-labelledby="profile-title" className="relative -mt-8 mx-4 cb-card rounded-[32px] p-6 shadow-xl mb-24">
+                    <article aria-labelledby="profile-title" className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] mb-24 z-40">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h2 id="profile-title" className="cb-display text-[28px] sm:text-[32px] bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent cb-textshadow">
+                          <h2 id="profile-title" className="text-[32px] sm:text-[36px] font-black tracking-tight leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
                           {sampleProfiles[currentMatch].name}
-                          <span className="text-slate-400">{`, ${sampleProfiles[currentMatch].age}`}</span>
+                            <span className="text-gray-500 font-bold">{`, ${sampleProfiles[currentMatch].age}`}</span>
                         </h2>
-                        <div className="mt-1 flex items-center gap-2 text-slate-700">
-                          <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
-                            <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+                          <div className="mt-2 flex items-center gap-2 text-gray-700">
+                            <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shadow-sm">
+                              <Briefcase className="w-3.5 h-3.5 text-blue-700" />
                           </div>
-                          <p className="cb-subtitle text-sm sm:text-[15px] leading-tight">
+                            <p className="text-[15px] sm:text-base font-bold leading-tight tracking-tight">
                             {sampleProfiles[currentMatch].role}
-                            {sampleProfiles[currentMatch].specialty ? <span className="text-slate-500">{` • ${sampleProfiles[currentMatch].specialty}`}</span> : null}
+                              {sampleProfiles[currentMatch].specialty ? <span className="text-gray-500 font-semibold">{` • ${sampleProfiles[currentMatch].specialty}`}</span> : null}
                           </p>
                         </div>
                       </div>
@@ -1748,34 +2070,54 @@ const sampleProfiles = [
                       {[{
                         icon: Stethoscope,
                         label: 'Specialty',
-                        value: sampleProfiles[currentMatch].specialty || '—'
+                          value: sampleProfiles[currentMatch].specialty || '—',
+                          gradient: 'from-blue-50 to-blue-100/50',
+                          iconBg: 'bg-blue-100',
+                          iconColor: 'text-blue-700'
                       },{
                         icon: Building2,
                         label: 'Hospital',
-                        value: sampleProfiles[currentMatch].hospital || '—'
+                          value: sampleProfiles[currentMatch].hospital || '—',
+                          gradient: 'from-purple-50 to-purple-100/50',
+                          iconBg: 'bg-purple-100',
+                          iconColor: 'text-purple-700'
                       },{
                         icon: Clock,
                         label: 'Shift',
-                        value: sampleProfiles[currentMatch].shift || '—'
+                          value: sampleProfiles[currentMatch].shift || '—',
+                          gradient: 'from-amber-50 to-amber-100/50',
+                          iconBg: 'bg-amber-100',
+                          iconColor: 'text-amber-700'
                       },{
                         icon: MapPin,
                         label: 'Distance',
-                        value: sampleProfiles[currentMatch].distance || '—'
+                          value: sampleProfiles[currentMatch].distance || '—',
+                          gradient: 'from-green-50 to-green-100/50',
+                          iconBg: 'bg-green-100',
+                          iconColor: 'text-green-700'
                       },{
                         icon: Users,
                         label: 'Mutual',
-                        value: `${sampleProfiles[currentMatch].mutualConnections ?? 0} mutual`
+                          value: `${sampleProfiles[currentMatch].mutualConnections ?? 0} mutual`,
+                          gradient: 'from-indigo-50 to-indigo-100/50',
+                          iconBg: 'bg-indigo-100',
+                          iconColor: 'text-indigo-700'
                       },
                       ...(sampleProfiles[currentMatch].responseRate ? [{
                         icon: Zap,
                         label: 'Response',
-                        value: sampleProfiles[currentMatch].responseRate
+                          value: sampleProfiles[currentMatch].responseRate,
+                          gradient: 'from-pink-50 to-pink-100/50',
+                          iconBg: 'bg-pink-100',
+                          iconColor: 'text-pink-700'
                       }] : [])].map((item, idx) => (
-                        <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className="cb-chip-light rounded-xl px-3 py-2.5 flex items-center gap-2 min-w-0 cb-reveal" style={{animationDelay: `${idx * 60}ms`}}>
-                          <item.icon className="w-4 h-4 text-slate-600" />
+                          <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className={`bg-gradient-to-br ${item.gradient} rounded-xl px-3 py-2.5 flex items-center gap-2.5 min-w-0 shadow-sm border border-white/60 hover:scale-105 transition-transform duration-200 cb-reveal`} style={{animationDelay: `${idx * 60}ms`}}>
+                            <div className={`w-7 h-7 ${item.iconBg} rounded-lg flex items-center justify-center shadow-sm`}>
+                              <item.icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
+                            </div>
                           <div className="min-w-0">
-                            <div className="cb-meta text-[10px] text-slate-500/80">{item.label}</div>
-                            <div className="text-[13px] font-semibold text-slate-800 truncate">{item.value}</div>
+                              <div className="text-[10px] font-bold tracking-wider uppercase text-gray-500">{item.label}</div>
+                              <div className="text-[13px] font-bold text-gray-900 truncate">{item.value}</div>
                           </div>
                         </div>
                       ))}
@@ -1784,28 +2126,32 @@ const sampleProfiles = [
                     {/* Prompts Section */}
                     <div className="space-y-4">
                       {sampleProfiles[currentMatch].prompts.map((prompt, idx) => (
-                        <div key={idx} className="cb-card rounded-2xl p-5 hover:border-blue-300 transition-all cb-reveal" style={{animationDelay: `${idx * 70}ms`}}>
-                          <h3 className="cb-eyebrow mb-2">{prompt.question}</h3>
+                          <div key={idx} className="cb-card rounded-2xl p-6 border border-gray-100 group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 transition-all duration-300 cb-reveal" style={{animationDelay: `${idx * 70}ms`}}>
+                            <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3 leading-tight">{prompt.question}</h3>
                           {prompt.type === 'text' ? (
-                            <p className="text-gray-700 leading-relaxed mb-4">{prompt.answer}</p>
+                              <p className="text-gray-900 leading-relaxed mb-5 text-[15px] font-medium">{prompt.answer}</p>
                           ) : (
-                            <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 dark:from-indigo-500 dark:to-fuchsia-600 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 hover:from-blue-700 hover:to-blue-800 transition-all cb-shadow-card mb-4">
-                              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                              <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 dark:from-indigo-500 dark:to-fuchsia-600 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 hover:from-blue-700 hover:to-blue-800 hover:scale-105 transition-all shadow-[0_4px_16px_rgba(37,99,235,0.25)] mb-5">
+                                <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
                                 <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-white border-b-8 border-b-transparent ml-1"></div>
                               </div>
                               <div className="text-left">
-                                <div className="text-sm font-semibold">{prompt.answer}</div>
-                                <div className="text-xs opacity-80">{prompt.duration}</div>
+                                  <div className="text-sm font-bold">{prompt.answer}</div>
+                                  <div className="text-xs opacity-90 font-medium">{prompt.duration}</div>
                               </div>
                             </button>
                           )}
-                          <div className="flex items-center gap-4 pt-3 border-t border-gray-100">
-                            <button aria-label={`Like prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all">
-                              <ThumbsUp className="w-4 h-4" />
+                            <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                              <button aria-label={`Like prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all group/like">
+                                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/like:bg-pink-50 transition-colors">
+                                  <ThumbsUp className="w-4 h-4" />
+                                </div>
                               <span className="font-semibold">{prompt.likes}</span>
                             </button>
-                            <button aria-label={`Comment on prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all">
-                              <MessageCircle className="w-4 h-4" />
+                              <button aria-label={`Comment on prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all group/comment">
+                                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/comment:bg-blue-50 transition-colors">
+                                  <MessageCircle className="w-4 h-4" />
+                                </div>
                               <span className="font-semibold">Comment</span>
                             </button>
                           </div>
@@ -1816,10 +2162,10 @@ const sampleProfiles = [
                     {/* My Vibe Section */}
                     <div className="mt-6 space-y-4">
                       <div>
-                        <h3 className="cb-eyebrow mb-3">My Vibe</h3>
+                          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">My Vibe</h3>
                         <div className="flex flex-wrap gap-2">
                           {sampleProfiles[currentMatch].myVibe.map((vibe, idx) => (
-                            <span key={idx} className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                              <span key={idx} className="bg-gradient-to-br from-blue-50 to-blue-100/60 text-blue-700 px-4 py-2.5 rounded-full text-sm font-bold border border-blue-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200">
                               {vibe}
                             </span>
                           ))}
@@ -1827,10 +2173,10 @@ const sampleProfiles = [
                       </div>
                       {sampleProfiles[currentMatch].dealbreakers.length > 0 && (
                         <div>
-                          <h3 className="cb-eyebrow mb-3">Dealbreakers</h3>
+                            <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">Dealbreakers</h3>
                           <div className="flex flex-wrap gap-2">
                             {sampleProfiles[currentMatch].dealbreakers.map((deal, idx) => (
-                              <span key={idx} className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-medium">
+                                <span key={idx} className="bg-gradient-to-br from-red-50 to-red-100/60 text-red-700 px-4 py-2.5 rounded-full text-sm font-bold border border-red-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200">
                                 {deal}
                               </span>
                             ))}
@@ -2561,9 +2907,113 @@ const sampleProfiles = [
   return null;
 };
 
+// ============================================================================
+// EXPORTS & DEVELOPER NOTES
+// ============================================================================
+
+/**
+ * DEVELOPER ROADMAP & FUTURE ENHANCEMENTS
+ * ========================================
+ * 
+ * RECOMMENDED REFACTORING (if file grows beyond 3000 lines):
+ * 1. Extract data constants to separate files:
+ *    - src/data/profiles.js (sampleProfiles)
+ *    - src/data/matches.js (myMatches, whoLikesYou)
+ *    - src/data/ventTopics.js (ventTopics)
+ *    - src/data/events.js (events)
+ * 
+ * 2. Split screens into separate components:
+ *    - src/screens/SplashScreen.jsx
+ *    - src/screens/DiscoverTab.jsx
+ *    - src/screens/MatchesTab.jsx
+ *    - src/screens/HomeTab.jsx
+ *    - src/screens/ConnectTab.jsx
+ *    - src/screens/VentTab.jsx
+ *    - src/screens/ProfileScreen.jsx
+ *    - src/screens/EditProfileScreen.jsx
+ *    - src/screens/SettingsScreen.jsx
+ * 
+ * 3. Move utility components to src/components/:
+ *    - src/components/ToggleSwitch.jsx
+ *    - src/components/SettingItem.jsx
+ *    - src/components/Section.jsx
+ * 
+ * 4. Extract hooks:
+ *    - src/hooks/useCodeBlueTheme.js
+ *    - src/hooks/useDarkMode.js
+ * 
+ * 5. Move CSS to separate file:
+ *    - src/styles/codeblue-theme.css
+ *    - Import via normal CSS instead of template literal injection
+ * 
+ * BACKEND INTEGRATION CHECKLIST:
+ * - [ ] Replace sample data with API calls
+ * - [ ] Implement authentication (NHS verification)
+ * - [ ] Set up real-time messaging (Socket.io or similar)
+ * - [ ] Integrate image upload for profile photos
+ * - [ ] Connect to matching algorithm service
+ * - [ ] Implement push notifications
+ * - [ ] Add payment gateway for premium subscriptions
+ * - [ ] Set up analytics tracking
+ * 
+ * FEATURE ADDITIONS TO CONSIDER:
+ * - Voice prompts (audio recordings on profiles)
+ * - Video chat integration
+ * - Advanced filters (hospital, specialization, shift patterns)
+ * - Shared shift calendar for date planning
+ * - Group events and RSVP system
+ * - Report/block functionality
+ * - Profile verification flow
+ * - In-app safety resources
+ * 
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Implement React.memo for expensive components
+ * - Add useMemo for computed values
+ * - Lazy load tab content
+ * - Virtualize long lists (matches, profiles)
+ * - Optimize image loading with lazy loading
+ * 
+ * ACCESSIBILITY IMPROVEMENTS:
+ * - Add ARIA labels to all interactive elements
+ * - Implement keyboard navigation
+ * - Test with screen readers
+ * - Add focus management for modals
+ * - Ensure color contrast meets WCAG AA standards
+ * 
+ * TESTING STRATEGY:
+ * - Unit tests for utility functions
+ * - Component tests with React Testing Library
+ * - E2E tests for critical user flows (sign up, match, message)
+ * - Visual regression tests for UI consistency
+ * 
+ * STATE MANAGEMENT MIGRATION (if needed):
+ * If state becomes too complex, consider:
+ * - Zustand (lightweight, recommended)
+ * - Redux Toolkit (if complex async logic needed)
+ * - React Query (for server state)
+ * 
+ * KNOWN LIMITATIONS:
+ * - Sample data only (no real matching algorithm)
+ * - No real-time updates (requires WebSocket)
+ * - Emoji placeholders instead of actual images
+ * - No actual NHS verification process
+ * - localStorage only (no persistent backend)
+ * - No error boundaries
+ * - No loading states for async operations
+ */
+
 export default CodeBlueDating;
 
-/** Non-breaking alias expected by design brief */
+/**
+ * toggleCodeBlueTheme Utility Function
+ * =====================================
+ * Programmatically toggles dark/light theme
+ * Can be called from outside the component (e.g., browser console, tests)
+ * 
+ * Usage:
+ * import { toggleCodeBlueTheme } from './CodeBlueDating';
+ * toggleCodeBlueTheme(); // Switches theme
+ */
 export const toggleCodeBlueTheme = () => {
   try {
     const isDark = document.documentElement.classList.contains('dark');
