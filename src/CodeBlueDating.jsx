@@ -39,6 +39,12 @@ function useCodeBlueTheme() {
         .cb-textshadow-sm{ text-shadow: 0 1px 1px rgba(16,24,40,.18); }
         .cb-textshadow{ text-shadow: 0 1px 2px rgba(16,24,40,.22); }
         .cb-textshadow-lg{ text-shadow: 0 2px 8px rgba(16,24,40,.22), 0 1px 2px rgba(16,24,40,.28); }
+  /* Reveal animation */
+  @keyframes cb-fade-up{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+  .cb-reveal{ animation: cb-fade-up var(--transition-base) both; }
+  @media (prefers-reduced-motion: reduce){
+    .cb-reveal{ animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
   /* A11y utility */
   .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
         
@@ -93,6 +99,10 @@ function useCodeBlueTheme() {
           --cb-navy:#14325A;
           --cb-navy-soft:#2A4F82;
           --cb-text:#111827;
+          --cb-surface:#FFFFFF;
+          --cb-surface-muted:#F8FAFC;
+          --cb-border: rgba(15,23,42,.08);
+          --cb-text-muted:#6B7280;
           
           /* Z-index layers */
           --z-header: 30;
@@ -122,7 +132,7 @@ function useCodeBlueTheme() {
         }
         .cb-shadow-card{ box-shadow:0 1px 2px rgba(16,24,40,.06), 0 8px 24px -8px rgba(16,24,40,.08); }
         .cb-chip{ backdrop-filter:blur(8px); background:rgba(255,255,255,.2); color:#fff }
-        .cb-divider{ border-top:1px solid rgba(17,24,39,.08); }
+  .cb-divider{ border-top:1px solid var(--cb-border); }
         /* Optional dark mode (toggle by adding/removing .dark on <html>) */
         html.dark, .dark body{ background:#0F213A; color:#E5E7EB; }
         .dark .cb-wordmark-blue{
@@ -148,9 +158,11 @@ function useCodeBlueTheme() {
           border-color: rgba(255,255,255,0.2);
           box-shadow: 0 6px 25px rgba(0,0,0,0.5);
         }
-        /* Info chip for light cards */
-        .cb-chip-light{ background:linear-gradient(180deg,#FFFFFF, #F8FAFC); border:1px solid rgba(15,23,42,.08); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 6px 16px -8px rgba(15,23,42,.25); }
-        .cb-chip-light:hover{ box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 8px 22px -8px rgba(15,23,42,.32); }
+  /* Info chip for light cards (uniform, Hinge-like) */
+  .cb-chip-light{ background:linear-gradient(180deg,var(--cb-surface), var(--cb-surface-muted)); border:1px solid var(--cb-border); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 6px 16px -8px rgba(15,23,42,.15); }
+    .cb-chip-light:hover{ box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 8px 22px -8px rgba(15,23,42,.28); }
+    /* Neutral card surface */
+    .cb-card{ background:var(--cb-surface); border:1px solid var(--cb-border); }
               `;
       document.head.appendChild(style);
     }
@@ -399,10 +411,10 @@ const sampleProfiles = [
   // Settings Section Component
   const Section = ({ title, children }) => (
     <div className="mb-6">
-      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-5">
+      <h2 className="cb-eyebrow mb-3 px-5">
         {title}
       </h2>
-      <div className="bg-white rounded-lg px-5 cb-shadow-card">
+      <div className="cb-card rounded-lg px-5 cb-shadow-card">
         {children}
       </div>
     </div>
@@ -1092,9 +1104,9 @@ const sampleProfiles = [
           </div>
 
           {/* Weekly Activity Dashboard */}
-          <div className="bg-white rounded-3xl cb-shadow-card p-6 mb-6 cb-shadow-card">
+          <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="cb-title text-lg font-bold text-gray-900 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-blue-700" />
                 Weekly Activity
               </h3>
@@ -1134,17 +1146,17 @@ const sampleProfiles = [
           </div>
 
           {/* Best Performing Content */}
-          <div className="rounded-3xl p-6 mb-6 text-gray-900 cb-shadow-card bg-white border border-gray-100">
+          <div className="cb-card rounded-3xl p-6 mb-6 text-gray-900 cb-shadow-card">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <Flame className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold">Your Best Content</h3>
+                <h3 className="cb-title text-lg font-bold">Your Best Content</h3>
                 <p className="text-sm opacity-90">This week's top performer</p>
               </div>
             </div>
-            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4">
+            <div className="rounded-xl p-4 border" style={{borderColor:'var(--cb-border)', background:'var(--cb-surface)'}}>
               <p className="text-sm mb-2 opacity-90">"Typical Sunday" prompt</p>
               <p className="font-semibold mb-3">"Helping walk the older pups at the shelter..."</p>
               <div className="flex items-center gap-4 text-sm">
@@ -1161,10 +1173,10 @@ const sampleProfiles = [
           </div>
 
           {/* Achievements */}
-          <div className="bg-white rounded-3xl cb-shadow-card p-6 mb-6 cb-shadow-card">
+          <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Trophy className="w-5 h-5 text-yellow-600" />
-              <h3 className="text-lg font-bold text-gray-900">Achievements</h3>
+              <h3 className="cb-title text-lg font-bold text-gray-900">Achievements</h3>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {achievements.map(achievement => (
@@ -1172,8 +1184,8 @@ const sampleProfiles = [
                   key={achievement.id}
                   className={`rounded-xl p-4 text-center transition-all ${
                     achievement.unlocked 
-                      ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200' 
-                      : 'bg-gray-50 border-2 border-gray-200 opacity-50'
+                      ? 'bg-slate-50 border border-[color:var(--cb-border)]' 
+                      : 'bg-slate-50 border border-[color:var(--cb-border)] opacity-60'
                   }`}
                 >
                   <div className="text-3xl mb-2">{achievement.icon}</div>
@@ -1208,16 +1220,16 @@ const sampleProfiles = [
           </div>
 
           {/* Who Likes You Preview */}
-          <div className="bg-white rounded-3xl cb-shadow-card p-6 mb-6 cb-shadow-card">
+          <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Who Likes You</h3>
+              <h3 className="cb-title text-lg font-bold text-gray-900">Who Likes You</h3>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </div>
             <div className="flex gap-3">
               {whoLikesYou.slice(0, 3).map((person, idx) => (
                 <div key={idx} className="flex-1 relative">
-                  <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center text-5xl backdrop-blur-xl">
-                    <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <div className="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-5xl">
+                    <div className="absolute inset-0 bg-black/30 rounded-2xl flex items-center justify-center">
                       <Lock className="w-8 h-8 text-white" />
                     </div>
                   </div>
@@ -1229,36 +1241,38 @@ const sampleProfiles = [
             </button>
           </div>
 
-          {/* Subscription Status */}
-          <div className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 rounded-3xl p-6 text-white cb-shadow-card">
+          {/* Subscription Status (neutral) */}
+          <div className="cb-card rounded-3xl p-6 cb-shadow-card">
             <div className="flex items-center gap-3 mb-4">
-              <Crown className="w-10 h-10 text-yellow-400" />
+              <div className="w-10 h-10 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center">
+                <Crown className="w-6 h-6" />
+              </div>
               <div>
-                <h3 className="text-xl font-bold">Upgrade to Premium</h3>
-                <p className="text-sm text-blue-200">Unlock exclusive features</p>
+                <h3 className="cb-title text-xl font-bold text-gray-900">Upgrade to Premium</h3>
+                <p className="text-sm text-gray-600">Unlock exclusive features</p>
               </div>
             </div>
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-4 text-gray-800">
               <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 text-emerald-600" />
                 <span>See everyone who likes you</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 text-emerald-600" />
                 <span>Unlimited likes & super likes</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 text-emerald-600" />
                 <span>Advanced matching filters</span>
               </div>
             </div>
-            <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 py-3 rounded-xl font-bold hover:from-yellow-300 hover:to-yellow-400 transition-all cb-shadow-card">
+            <button className="w-full bg-blue-900 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-all cb-shadow-card">
               View Plans
             </button>
           </div>
 
           {/* Account Links */}
-          <div className="mt-6 bg-white rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
+          <div className="mt-6 cb-card rounded-2xl overflow-hidden cb-shadow-card">
             <button 
               onClick={() => setCurrentScreen('settings')}
               className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-all border-b border-gray-100"
@@ -1707,7 +1721,7 @@ const sampleProfiles = [
                   </div>
 
                   {/* Enhanced Profile Details Card */}
-                  <article aria-labelledby="profile-title" className="relative -mt-8 mx-4 bg-white/95 backdrop-blur-xl rounded-[32px] p-6 shadow-xl border border-white/50 mb-24">
+                  <article aria-labelledby="profile-title" className="relative -mt-8 mx-4 cb-card rounded-[32px] p-6 shadow-xl mb-24">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h2 id="profile-title" className="cb-display text-[28px] sm:text-[32px] bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent cb-textshadow">
@@ -1733,38 +1747,32 @@ const sampleProfiles = [
                     <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 gap-2" role="list" aria-label="Profile information">
                       {[{
                         icon: Stethoscope,
-                        color: 'text-blue-700',
                         label: 'Specialty',
                         value: sampleProfiles[currentMatch].specialty || '—'
                       },{
                         icon: Building2,
-                        color: 'text-slate-700',
                         label: 'Hospital',
                         value: sampleProfiles[currentMatch].hospital || '—'
                       },{
                         icon: Clock,
-                        color: 'text-purple-700',
                         label: 'Shift',
                         value: sampleProfiles[currentMatch].shift || '—'
                       },{
                         icon: MapPin,
-                        color: 'text-rose-700',
                         label: 'Distance',
                         value: sampleProfiles[currentMatch].distance || '—'
                       },{
                         icon: Users,
-                        color: 'text-emerald-700',
                         label: 'Mutual',
                         value: `${sampleProfiles[currentMatch].mutualConnections ?? 0} mutual`
                       },
                       ...(sampleProfiles[currentMatch].responseRate ? [{
                         icon: Zap,
-                        color: 'text-amber-700',
                         label: 'Response',
                         value: sampleProfiles[currentMatch].responseRate
                       }] : [])].map((item, idx) => (
-                        <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className="cb-chip-light rounded-xl px-3 py-2.5 flex items-center gap-2 min-w-0">
-                          <item.icon className={`w-4 h-4 ${item.color}`} />
+                        <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className="cb-chip-light rounded-xl px-3 py-2.5 flex items-center gap-2 min-w-0 cb-reveal" style={{animationDelay: `${idx * 60}ms`}}>
+                          <item.icon className="w-4 h-4 text-slate-600" />
                           <div className="min-w-0">
                             <div className="cb-meta text-[10px] text-slate-500/80">{item.label}</div>
                             <div className="text-[13px] font-semibold text-slate-800 truncate">{item.value}</div>
@@ -1776,7 +1784,7 @@ const sampleProfiles = [
                     {/* Prompts Section */}
                     <div className="space-y-4">
                       {sampleProfiles[currentMatch].prompts.map((prompt, idx) => (
-                        <div key={idx} className="border-2 border-gray-200 rounded-2xl p-5 hover:border-blue-300 transition-all">
+                        <div key={idx} className="cb-card rounded-2xl p-5 hover:border-blue-300 transition-all cb-reveal" style={{animationDelay: `${idx * 70}ms`}}>
                           <h3 className="cb-eyebrow mb-2">{prompt.question}</h3>
                           {prompt.type === 'text' ? (
                             <p className="text-gray-700 leading-relaxed mb-4">{prompt.answer}</p>
@@ -1971,7 +1979,7 @@ const sampleProfiles = [
 
           {activeTab === 'matches' && (
             <div className="px-6 py-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Messages</h2>
+              <h2 className="cb-title text-2xl font-bold text-gray-900 mb-6">Messages</h2>
               
               {/* Who Likes You Section */}
               <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 rounded-2xl p-6 mb-6 text-white cb-shadow-card">
@@ -1989,7 +1997,7 @@ const sampleProfiles = [
                 </div>
                 <div className="flex gap-3 overflow-x-auto pb-2">
                   {whoLikesYou.map((person, idx) => (
-                    <div key={idx} className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-4 min-w-[200px]">
+                        <div key={idx} className="cb-card rounded-2xl p-4 min-w-[200px] bg-white">
                       <div className="text-4xl mb-2">{person.photo}</div>
                       <h4 className="font-bold text-lg">{person.name}</h4>
                       <p className="text-sm opacity-90 mb-2">{person.role}</p>
@@ -2004,12 +2012,12 @@ const sampleProfiles = [
               </div>
 
               {/* Matches List */}
-              <div className="space-y-3 mb-24">
+                  <div className="space-y-3 mb-24">
                 {myMatches.map(match => (
                   <button
                     key={match.id}
                     onClick={() => setSelectedMatch(match)}
-                    className="w-full bg-white border-2 border-gray-200 rounded-2xl p-4 cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all text-left"
+                        className="w-full cb-card rounded-2xl p-4 cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all text-left"
                   >
                     <div className="flex items-center gap-4">
                       <div className="relative">

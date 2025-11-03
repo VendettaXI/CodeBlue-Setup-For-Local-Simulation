@@ -1,0 +1,35 @@
+/* Coolors Exported Palette - https://coolors.co/133c55-386fa4-59a5d8-84d2f6-91e5f6 */
+
+- Tailwind
+
+{ 'indigo_dye': { DEFAULT: '#133c55', 100: '#040c11', 200: '#081721', 300: '#0b2332', 400: '#0f2f43', 500: '#133c55', 600: '#226996', 700: '#3797d2', 800: '#7ab9e1', 900: '#bcdcf0' }, 'bice_blue': { DEFAULT: '#386fa4', 100: '#0b1621', 200: '#162d41', 300: '#224362', 400: '#2d5983', 500: '#386fa4', 600: '#528dc4', 700: '#7da9d3', 800: '#a8c6e1', 900: '#d4e2f0' }, 'picton_blue': { DEFAULT: '#59a5d8', 100: '#0c2232', 200: '#174563', 300: '#236795', 400: '#2f8ac6', 500: '#59a5d8', 600: '#7bb8e0', 700: '#9cc9e8', 800: '#bddbef', 900: '#deedf7' }, 'pale_azure': { DEFAULT: '#84d2f6', 100: '#053246', 200: '#0b638c', 300: '#1095d3', 400: '#3db8f0', 500: '#84d2f6', 600: '#9cdbf8', 700: '#b5e4f9', 800: '#ceedfb', 900: '#e6f6fd' }, 'non_photo_blue': { DEFAULT: '#91e5f6', 100: '#063e49', 200: '#0c7b91', 300: '#12b9da', 400: '#4ad5f0', 500: '#91e5f6', 600: '#a8ebf8', 700: '#bef0fa', 800: '#d4f5fb', 900: '#e9fafd' } }
+
+- CSV
+
+133c55,386fa4,59a5d8,84d2f6,91e5f6
+
+- With #
+
+#133c55, #386fa4, #59a5d8, #84d2f6, #91e5f6
+
+- Array
+
+["133c55","386fa4","59a5d8","84d2f6","91e5f6"]
+
+- Object
+
+{"Indigo dye":"133c55","Bice blue":"386fa4","Picton Blue":"59a5d8","Pale azure":"84d2f6","Non Photo blue":"91e5f6"}
+
+- Extended Array
+
+[{"name":"Indigo dye","hex":"133c55","rgb":[19,60,85],"cmyk":[78,29,0,67],"hsb":[203,78,33],"hsl":[203,63,20],"lab":[24,-5,-19]},{"name":"Bice blue","hex":"386fa4","rgb":[56,111,164],"cmyk":[66,32,0,36],"hsb":[209,66,64],"hsl":[209,49,43],"lab":[45,-1,-34]},{"name":"Picton Blue","hex":"59a5d8","rgb":[89,165,216],"cmyk":[59,24,0,15],"hsb":[204,59,85],"hsl":[204,62,60],"lab":[65,-9,-33]},{"name":"Pale azure","hex":"84d2f6","rgb":[132,210,246],"cmyk":[46,15,0,4],"hsb":[199,46,96],"hsl":[199,86,74],"lab":[81,-15,-25]},{"name":"Non Photo blue","hex":"91e5f6","rgb":[145,229,246],"cmyk":[41,7,0,4],"hsb":[190,41,96],"hsl":[190,85,77],"lab":[86,-21,-16]}]
+
+- XML
+
+<palette>
+  <color name="Indigo dye" hex="133c55" r="19" g="60" b="85" />
+  <color name="Bice blue" hex="386fa4" r="56" g="111" b="164" />
+  <color name="Picton Blue" hex="59a5d8" r="89" g="165" b="216" />
+  <color name="Pale azure" hex="84d2f6" r="132" g="210" b="246" />
+  <color name="Non Photo blue" hex="91e5f6" r="145" g="229" b="246" />
+</palette>
