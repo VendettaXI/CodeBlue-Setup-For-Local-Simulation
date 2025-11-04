@@ -72,8 +72,8 @@
  * ============================================================================
  */
 
-import React from 'react';
-import { Check, Zap } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Check, Zap, Heart, X, Star } from 'lucide-react';
 
 export function PhotoCard({
   photos = [],
@@ -85,8 +85,113 @@ export function PhotoCard({
   imageErrors = {},
   onImageError,
   profileName = '',
-  currentProfileIndex = 0
+  currentProfileIndex = 0,
+  onSwipeLeft,
+  onSwipeRight,
+  onSwipeUp
 }) {
+  // Swipe state management
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef(null);
+  const dragStartTimeRef = useRef(0);
+  
+  // Swipe thresholds
+  const SWIPE_THRESHOLD = 150;
+  const SWIPE_UP_THRESHOLD = 120;
+  const ROTATION_FACTOR = 0.1;
+  const MAX_ROTATION = 15;
+  const TAP_MAX_MOVEMENT = 10;
+  const TAP_MAX_DURATION = 300; // ms
+  
+  // Handle drag start (mouse & touch)
+  const handleDragStart = (e) => {
+    // Prevent default browser behavior (image drag, text selection)
+    e.preventDefault();
+    
+    setIsDragging(true);
+    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    setStartPos({ x: clientX, y: clientY });
+    dragStartTimeRef.current = Date.now();
+  };
+  
+  // Handle drag move
+  const handleDragMove = (e) => {
+    if (!isDragging) return;
+    
+    // Prevent default to stop image ghosting
+    e.preventDefault();
+    
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    
+    const deltaX = clientX - startPos.x;
+    const deltaY = clientY - startPos.y;
+    
+    setDragOffset({ x: deltaX, y: deltaY });
+  };
+  
+  // Handle drag end
+  const handleDragEnd = (e) => {
+    if (!isDragging) return;
+
+    const absX = Math.abs(dragOffset.x);
+    const absY = Math.abs(dragOffset.y);
+
+    const endTs = Date.now();
+    const duration = endTs - dragStartTimeRef.current;
+
+    // 1) Vertical swipe up for Super Like
+    if (absY > absX && dragOffset.y < -SWIPE_UP_THRESHOLD) {
+      console.log('Swiped UP - Super Like!');
+      onSwipeUp && onSwipeUp();
+      setDragOffset({ x: 0, y: 0 });
+      setIsDragging(false);
+      return;
+    }
+
+    // 2) Horizontal left/right like/pass
+    if (absX > SWIPE_THRESHOLD) {
+      if (dragOffset.x > 0) {
+        console.log('Swiped RIGHT - Like!');
+        onSwipeRight && onSwipeRight();
+      } else {
+        console.log('Swiped LEFT - Pass!');
+        onSwipeLeft && onSwipeLeft();
+      }
+      setDragOffset({ x: 0, y: 0 });
+      setIsDragging(false);
+      return;
+    }
+
+    // 3) Treat as a tap (next/prev photo) when small movement & short duration
+    if (absX < TAP_MAX_MOVEMENT && absY < TAP_MAX_MOVEMENT && duration < TAP_MAX_DURATION) {
+      const isTouchEnd = e.type === 'touchend';
+      const clientX = isTouchEnd ? (e.changedTouches && e.changedTouches[0]?.clientX) : e.clientX;
+      if (clientX != null && cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const relativeX = clientX - rect.left;
+        const half = rect.width / 2;
+        if (relativeX < half) {
+          // Tap left = previous photo
+          if (onPhotoChange) onPhotoChange(Math.max(0, activePhotoIndex - 1));
+        } else {
+          // Tap right = next photo
+          if (onPhotoChange) onPhotoChange(Math.min(photos.length - 1, activePhotoIndex + 1));
+        }
+      }
+    }
+
+    // 4) Otherwise snap back
+    setDragOffset({ x: 0, y: 0 });
+    setIsDragging(false);
+  };
+  
+  // Calculate rotation
+  const rotation = Math.min(Math.max(dragOffset.x * ROTATION_FACTOR, -MAX_ROTATION), MAX_ROTATION);
+  
   if (!photos || photos.length === 0) {
     return (
       <div className="relative h-[540px] bg-gradient-to-br from-gray-200 to-gray-300 rounded-[28px] mx-4 flex items-center justify-center">
@@ -99,8 +204,29 @@ export function PhotoCard({
   const photoKey = `${currentProfileIndex}-${activePhotoIndex}`;
   const hasError = imageErrors[photoKey];
 
+  // Dynamic transform style
+  const cardStyle = {
+    transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y * 0.1}px) rotate(${rotation}deg)`,
+    cursor: isDragging ? 'grabbing' : 'grab',
+    transition: isDragging ? 'none' : 'transform 0.3s ease-out',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    touchAction: 'none'
+  };
+
   return (
-    <div className="relative h-[540px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[28px] mx-4 shadow-[0_8px_32px_-8px_rgba(16,24,40,0.12),0_20px_60px_-12px_rgba(16,24,40,0.18)] overflow-hidden">
+    <div 
+      ref={cardRef}
+      className="relative h-[540px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[28px] mx-4 shadow-[0_8px_32px_-8px_rgba(16,24,40,0.12),0_20px_60px_-12px_rgba(16,24,40,0.18)] overflow-hidden select-none"
+      style={cardStyle}
+      onMouseDown={handleDragStart}
+      onMouseMove={handleDragMove}
+      onMouseUp={handleDragEnd}
+      onMouseLeave={handleDragEnd}
+      onTouchStart={handleDragStart}
+      onTouchMove={handleDragMove}
+      onTouchEnd={handleDragEnd}
+    >
       {/* Gradient Overlay for Photo Enhancement */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40 rounded-[28px] z-10 pointer-events-none"></div>
       
@@ -111,8 +237,9 @@ export function PhotoCard({
             src={currentPhoto.url}
             alt={currentPhoto.alt || `${profileName} - Photo ${activePhotoIndex + 1}`}
             onError={() => onImageError && onImageError(photoKey)}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover pointer-events-none"
             loading="lazy"
+            draggable="false"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -130,7 +257,12 @@ export function PhotoCard({
             {photos.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => onPhotoChange && onPhotoChange(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPhotoChange && onPhotoChange(idx);
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
                 aria-label={`View photo ${idx + 1} of ${photos.length}`}
                 className={`h-1 rounded-full transition-all ${
                   activePhotoIndex === idx 

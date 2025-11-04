@@ -64,6 +64,21 @@ export function DiscoverTab({
               onImageError={(photoKey) => setImageErrors(prev => ({ ...prev, [photoKey]: true }))}
               profileName={sampleProfiles[currentMatch].name}
               currentProfileIndex={currentMatch}
+              onSwipeLeft={() => {
+                console.log('👈 Swiped LEFT - Pass on', sampleProfiles[currentMatch].name);
+                setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
+              }}
+              onSwipeRight={() => {
+                console.log('👉 Swiped RIGHT - Like', sampleProfiles[currentMatch].name);
+                alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
+                setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
+              }}
+              onSwipeUp={() => {
+                const name = sampleProfiles[currentMatch].name;
+                console.log('⬆️ Swiped UP - Super Like', name);
+                alert(`Super Liked ⭐ ${name}`);
+                setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
+              }}
             />
             
             <ActionButtons
