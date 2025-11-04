@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "status": "node -e \"console.log('Open PROJECT_STATUS.md for current project status and next steps.')\"",
+    "status:open": "powershell -NoProfile -ExecutionPolicy Bypass -Command Start-Process -FilePath PROJECT_STATUS.md"
   },
   "dependencies": {
     "lucide-react": "^0.552.0",
