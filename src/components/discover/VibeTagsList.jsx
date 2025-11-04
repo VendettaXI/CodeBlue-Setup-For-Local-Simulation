@@ -25,10 +25,14 @@
  * @param {string[]} vibes - Array of vibe tags (interests, traits)
  * @param {string[]} dealbreakers - Array of dealbreaker tags (optional)
  * 
+ * TYPOGRAPHY SYSTEM:
+ * - Section headers: 15px, font-medium (500), tracking-wide, uppercase
+ * - Tag text: 15px, font-light (300), tracking-wide
+ * - Rounded-full pills with gradient backgrounds
+ * 
  * STYLING:
  * - Vibe tags: Blue gradient (from-blue-50 to-blue-100/60)
  * - Dealbreaker tags: Red gradient (from-red-50 to-red-100/60)
- * - Font: 14px bold, rounded-full pills
  * - Padding: px-4 py-2.5
  * - Gap: 0.5rem (8px)
  * 
@@ -55,14 +59,14 @@ export function VibeTagsList({ vibes = [], dealbreakers = [] }) {
       {/* My Vibe Section */}
       {vibes.length > 0 && (
         <div>
-          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3">
+          <h3 className="text-[15px] font-medium tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3">
             My Vibe
           </h3>
           <div className="flex flex-wrap gap-2">
             {vibes.map((vibe, idx) => (
               <span 
                 key={idx}
-                className="bg-gradient-to-br from-blue-50 to-blue-100/60 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-700 dark:text-blue-300 px-4 py-2.5 rounded-full text-sm font-bold border border-blue-200/60 dark:border-blue-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+                className="bg-gradient-to-br from-blue-50 to-blue-100/60 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-700 dark:text-blue-300 px-4 py-2.5 rounded-full text-[15px] font-light tracking-wide border border-blue-200/60 dark:border-blue-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
               >
                 {vibe}
               </span>
@@ -74,14 +78,14 @@ export function VibeTagsList({ vibes = [], dealbreakers = [] }) {
       {/* Dealbreakers Section */}
       {dealbreakers.length > 0 && (
         <div>
-          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3">
+          <h3 className="text-[15px] font-medium tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3">
             Dealbreakers
           </h3>
           <div className="flex flex-wrap gap-2">
             {dealbreakers.map((deal, idx) => (
               <span 
                 key={idx}
-                className="bg-gradient-to-br from-red-50 to-red-100/60 dark:from-red-900/30 dark:to-red-800/20 text-red-700 dark:text-red-300 px-4 py-2.5 rounded-full text-sm font-bold border border-red-200/60 dark:border-red-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+                className="bg-gradient-to-br from-red-50 to-red-100/60 dark:from-red-900/30 dark:to-red-800/20 text-red-700 dark:text-red-300 px-4 py-2.5 rounded-full text-[15px] font-light tracking-wide border border-red-200/60 dark:border-red-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
               >
                 {deal}
               </span>

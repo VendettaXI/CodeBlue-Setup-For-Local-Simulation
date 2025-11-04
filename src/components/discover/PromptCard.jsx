@@ -3,18 +3,17 @@
  * PromptCard Component
  * ============================================================================
  * 
- * Hinge-style prompt card with question/answer and social interactions.
+ * Hinge-style prompt card with question/answer and message interaction.
  * 
  * WHAT IT DISPLAYS:
- * - Prompt question (uppercase, small, gray)
- * - Text answer OR voice note button
- * - Like button with count
- * - Comment button
+ * - Prompt question (15px, Sans-Serif Medium, slightly spaced)
+ * - Text answer OR voice note button (17px, Sans-Serif Light, slightly spaced)
+ * - Message button (pink heart icon on right side)
  * 
  * FEATURES:
- * - Text prompts: Display answer as paragraph
+ * - Text prompts: Display answer as justified paragraph
  * - Voice prompts: Gradient button with play icon, duration
- * - Like/Comment buttons with hover states
+ * - Message button (heart icon) with hover states
  * - Staggered reveal animation
  * - Border changes on hover (gray → blue)
  * - Scale animation on hover (1.01)
@@ -28,18 +27,21 @@
  * @param {string} answer - Answer text or voice note title
  * @param {'text'|'voice'} type - Answer type
  * @param {string} duration - Voice note duration (e.g., "0:48")
- * @param {number} likes - Number of likes
  * @param {number} index - Card index for animation delay
- * @param {function} onLike - Like button handler
- * @param {function} onComment - Comment button handler
+ * @param {function} onComment - Message button (heart icon) handler
  * @param {function} onPlayVoice - Voice note play handler (optional)
+ * 
+ * TYPOGRAPHY SYSTEM:
+ * - Question: 15px, font-medium (500), tracking-wide, gray-600
+ * - Answer: 17px, font-light (300), tracking-wide, gray-900
+ * - Voice button: Gradient blue, play icon, shadow
+ * - System font stack for body text (Inter fallback chain)
  * 
  * STYLING:
  * - Card: White bg, rounded-2xl, border, shadow-lg on hover
- * - Question: 13px bold uppercase, gray-600
- * - Text answer: 15px medium, gray-900
+ * - Message icon: Pink heart outline (#ec4899), 38x38px
+ * - Answer text: Justified alignment, Light weight
  * - Voice button: Gradient blue, play icon, shadow
- * - Action buttons: Gray-50 bg → pink/blue on hover
  * 
  * EXAMPLE USAGE:
  * ```jsx
@@ -47,15 +49,13 @@
  *   question="My perfect Sunday is..."
  *   answer="Brunch with friends, a long walk in the park..."
  *   type="text"
- *   likes={12}
  *   index={0}
- *   onLike={() => console.log('liked')}
- *   onComment={() => console.log('comment')}
+ *   onComment={() => console.log('message')}
  * />
  * ```
  * 
  * ACCESSIBILITY:
- * - aria-label on like/comment buttons
+ * - aria-label on message button
  * - Semantic button elements
  * - Keyboard accessible
  * ============================================================================
@@ -81,16 +81,30 @@ export function PromptCard({
       className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal" 
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      {/* Question */}
-      <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3 leading-tight">
+      {/* Question - Sans-Serif Medium 15px, slightly spaced */}
+      <h3 className="text-[15px] font-medium text-gray-600 dark:text-gray-400 mb-2 leading-tight tracking-wide">
         {question}
       </h3>
 
-      {/* Answer - Text or Voice */}
+      {/* Answer - Sans-Serif Light 17px, slightly spaced */}
       {type === 'text' ? (
-        <p className="text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-[15px] font-medium">
-          {answer}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-[17px] font-light text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-justify tracking-wide">
+            {answer}
+          </p>
+          {/* Message Button - right side with heart icon */}
+          <button 
+            onClick={onComment}
+            aria-label={`Message about prompt: ${question}`}
+            className="ml-3 flex items-center justify-center transition-all hover:scale-110"
+            style={{ minWidth: '2.8rem' }}
+          >
+            {/* Pink heart outline icon */}
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="#ec4899" strokeWidth="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
       ) : (
         <button 
           onClick={onPlayVoice}
@@ -101,7 +115,6 @@ export function PromptCard({
           <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
             <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-white border-b-8 border-b-transparent ml-1"></div>
           </div>
-          
           {/* Voice Note Info */}
           <div className="text-left">
             <div className="text-sm font-bold">{answer}</div>
@@ -110,32 +123,8 @@ export function PromptCard({
         </button>
       )}
 
-      {/* Action Buttons */}
-      <div className="flex items-center gap-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-        {/* Like Button */}
-        <button 
-          onClick={onLike}
-          aria-label={`Like prompt: ${question}`}
-          className={`flex items-center gap-2 text-sm transition-all group/like ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'}`}
-        >
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isLiked ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-gray-50 dark:bg-gray-800 group-hover/like:bg-blue-50 dark:group-hover/like:bg-blue-900/30'}`} style={{ animation: isLiked ? 'cb-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1) both' : 'none' }}>
-            <ThumbsUp className={`w-4 h-4 ${isLiked ? 'text-blue-600 dark:text-blue-400' : ''}`} />
-          </div>
-          <span className="font-semibold">{likes}</span>
-        </button>
-
-        {/* Comment Button */}
-        <button 
-          onClick={onComment}
-          aria-label={`Comment on prompt: ${question}`}
-          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all group/comment"
-        >
-          <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center group-hover/comment:bg-cyan-50 dark:group-hover/comment:bg-cyan-900/30 transition-colors">
-            <MessageCircle className="w-4 h-4" />
-          </div>
-          <span className="font-semibold">Comment</span>
-        </button>
-      </div>
+      {/* Only Comment Button for voice type, no like */}
+      {/* No like button or count */}
     </div>
   );
 }

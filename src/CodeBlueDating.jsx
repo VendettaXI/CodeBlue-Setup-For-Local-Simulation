@@ -2031,19 +2031,38 @@ const sampleProfiles = [
   if (currentScreen === 'main') {
     return (
       <div className="min-h-screen bg-[var(--cb-bg)] flex flex-col">
+        {/* Skip to main content link for keyboard navigation */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
+
         {/* Enhanced header with sophisticated navigation */}
-        <div className="sticky top-0 z-[var(--z-header)] bg-gradient-to-b from-white to-transparent dark:from-gray-900">
+        <header 
+          className="sticky top-0 z-[var(--z-header)] bg-gradient-to-b from-white to-transparent dark:from-gray-900"
+          role="banner"
+        >
           <div className="px-4 py-3 flex justify-center items-center relative">
-            <div className="cb-nav-tabs">
+            <div className="cb-nav-tabs" role="tablist" aria-label="Content sections">
+              {/* Discover tab - Sans-Serif Medium 15px, slightly spaced */}
               <button 
                 onClick={() => setActiveTab('discover')}
-                className={`cb-nav-tab cb-nav-tab--discover ${activeTab === 'discover' ? 'active' : ''}`}
+                role="tab"
+                aria-selected={activeTab === 'discover'}
+                aria-controls="discover-panel"
+                className={`cb-nav-tab cb-nav-tab--discover text-[15px] font-medium tracking-wide ${activeTab === 'discover' ? 'active' : ''}`}
               >
                 Discover
               </button>
+              {/* Matches tab - Sans-Serif Medium 15px, slightly spaced */}
               <button 
                 onClick={() => setActiveTab('matches')}
-                className={`cb-nav-tab cb-nav-tab--matches ${activeTab === 'matches' ? 'active' : ''}`}
+                role="tab"
+                aria-selected={activeTab === 'matches'}
+                aria-controls="matches-panel"
+                className={`cb-nav-tab cb-nav-tab--matches text-[15px] font-medium tracking-wide ${activeTab === 'matches' ? 'active' : ''}`}
               >
                 Matches
               </button>
@@ -2052,18 +2071,25 @@ const sampleProfiles = [
             {activeTab === 'discover' && (
               <button 
                 onClick={() => setShowFilters(!showFilters)}
+                aria-label={showFilters ? "Close filters" : "Open filters (3 active)"}
+                aria-expanded={showFilters}
                 className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors border-2 text-[#122c34] border-[#122c34] bg-transparent hover:bg-[rgba(18,44,52,0.06)] focus:outline-none focus:ring-2 focus:ring-[#4ea5d9]/40"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span className="text-sm font-medium">Filters</span>
-                <div className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border border-[#122c34] text-[#122c34]">3</div>
+                <div className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border border-[#122c34] text-[#122c34]" aria-hidden="true">3</div>
               </button>
             )}
           </div>
-        </div>
+        </header>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto pb-20">
+        <main 
+          id="main-content" 
+          className="flex-1 overflow-y-auto pb-20"
+          role="main"
+          aria-live="polite"
+        >
           {activeTab === 'discover' && (
             <DiscoverTab
               sampleProfiles={sampleProfiles}
@@ -2115,15 +2141,21 @@ const sampleProfiles = [
               ventTopics={ventTopics}
             />
           )}
-        </div>
+        </main>
 
         {/* Bottom Tab Navigation - Modern Nested Pill Design */}
         {/* Inspired by iOS/Instagram pattern: colored container with white active pill */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 pb-6 px-4">
+        <nav 
+          className="fixed bottom-0 left-0 right-0 z-40 pb-6 px-4"
+          role="navigation"
+          aria-label="Main navigation"
+        >
           <div className="max-w-md mx-auto">
             {/* Gunmetal container with nested white active pill */}
             <div 
               className="rounded-full px-3 py-3"
+              role="tablist"
+              aria-label="Main tabs"
               style={{
                 background: '#122c34', // Gunmetal
                 boxShadow: '0 10px 40px rgba(18, 44, 52, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)'
@@ -2134,7 +2166,11 @@ const sampleProfiles = [
                 {/* Discover */}
                 <button
                   onClick={() => setActiveTab('discover')}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
+                  role="tab"
+                  aria-selected={activeTab === 'discover'}
+                  aria-label="Discover profiles"
+                  tabIndex={activeTab === 'discover' ? 0 : -1}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
                   style={{
                     background: activeTab === 'discover' 
                       ? '#ffffff'
@@ -2153,7 +2189,11 @@ const sampleProfiles = [
                 {/* Matches */}
                 <button
                   onClick={() => setActiveTab('matches')}
-                  className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
+                  role="tab"
+                  aria-selected={activeTab === 'matches'}
+                  aria-label="View matches (3 new messages)"
+                  tabIndex={activeTab === 'matches' ? 0 : -1}
+                  className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
                   style={{
                     background: activeTab === 'matches' 
                       ? '#ffffff'
@@ -2172,6 +2212,7 @@ const sampleProfiles = [
                     <span 
                       className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white"
                       style={{ backgroundColor: '#44cfcb', border: '2px solid #122c34' }}
+                      aria-label="3 new"
                     >
                       3
                     </span>
@@ -2181,7 +2222,11 @@ const sampleProfiles = [
                 {/* Home */}
                 <button
                   onClick={() => setActiveTab('home')}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
+                  role="tab"
+                  aria-selected={activeTab === 'home'}
+                  aria-label="Home dashboard"
+                  tabIndex={activeTab === 'home' ? 0 : -1}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
                   style={{
                     background: activeTab === 'home' 
                       ? '#ffffff'
@@ -2200,7 +2245,11 @@ const sampleProfiles = [
                 {/* Connect */}
                 <button
                   onClick={() => setActiveTab('connect')}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
+                  role="tab"
+                  aria-selected={activeTab === 'connect'}
+                  aria-label="Events and connections"
+                  tabIndex={activeTab === 'connect' ? 0 : -1}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
                   style={{
                     background: activeTab === 'connect' 
                       ? '#ffffff'
@@ -2219,7 +2268,11 @@ const sampleProfiles = [
                 {/* Vent */}
                 <button
                   onClick={() => setActiveTab('vent')}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
+                  role="tab"
+                  aria-selected={activeTab === 'vent'}
+                  aria-label="Anonymous vent space"
+                  tabIndex={activeTab === 'vent' ? 0 : -1}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
                   style={{
                     background: activeTab === 'vent' 
                       ? '#ffffff'
@@ -2237,7 +2290,7 @@ const sampleProfiles = [
               </div>
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* 
         ================================================================

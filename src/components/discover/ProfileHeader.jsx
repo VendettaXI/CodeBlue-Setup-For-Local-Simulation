@@ -3,20 +3,19 @@
  * ProfileHeader Component
  * ============================================================================
  * 
- * Displays the profile name, age, role, and specialty with premium typography.
+ * Displays the profile name, age, role, and specialty with refined typography.
  * 
  * WHAT IT DISPLAYS:
- * - Name (32-36px, bold, gradient text)
- * - Age (gray, next to name)
+ * - Name (28px, Sans-Serif Medium with gradient, slightly spaced)
+ * - Age (gray, same as name, Sans-Serif Medium)
  * - Role icon (Briefcase in blue circle)
- * - Role and specialty text
+ * - Role and specialty text (17px, Sans-Serif Light, slightly spaced)
  * - More options button (3 dots)
  * 
  * FEATURES:
  * - Premium gradient text on name (gray-900 → gray-700)
- * - Tight tracking for modern look
  * - Icon container with subtle shadow
- * - Responsive text sizing (32px → 36px on larger screens)
+ * - Consistent typography hierarchy
  * - More menu button for future actions (report, share, etc.)
  * 
  * USED IN:
@@ -30,11 +29,16 @@
  * @param {string} specialty - Specialty or department (optional, e.g., "Emergency Department")
  * @param {function} onMoreClick - Called when more options button is clicked (optional)
  * 
+ * TYPOGRAPHY SYSTEM:
+ * - Name/Age: 28px, font-medium (500), tracking-wide, gradient
+ * - Role/Specialty: 17px, font-light (300), tracking-wide
+ * - Icon: 24px circle, blue-50 background, blue-700 icon
+ * 
  * STYLING:
- * - Name: 32-36px, font-black, tracking-tight, gradient
- * - Age: gray-500, bold, comma-separated
- * - Role: 15-16px, bold, with icon
- * - Specialty: gray-500, separated by bullet
+ * - Name: 28px Medium, tracking-wide, gradient
+ * - Age: gray-500, Medium, comma-separated
+ * - Role: 17px Light, tracking-wide, with icon
+ * - Specialty: gray-500, Light, separated by bullet
  * - Icon: 24px circle, blue-50 background, blue-700 icon
  * 
  * EXAMPLE USAGE:
@@ -53,12 +57,6 @@
  * - Clear visual hierarchy
  * - High contrast text
  * - Touch-friendly more button (40x40px tap target)
- * 
- * TYPOGRAPHY:
- * - Font weight: 900 (black) for name
- * - Letter spacing: -0.025em (tight tracking)
- * - Line height: 1 (leading-none) for compact display
- * - Gradient: Creates depth and premium feel
  * ============================================================================
  */
 
@@ -75,18 +73,18 @@ export function ProfileHeader({
   return (
     <div className="flex items-center justify-between mb-4">
       <div>
-        {/* Name & Age with Premium Gradient */}
+        {/* Name & Age - Sans-Serif Medium with gradient, slightly spaced */}
         <h2 
           id="profile-title" 
-          className="text-[32px] sm:text-[36px] font-black tracking-tight leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:from-gray-100 dark:via-gray-200 dark:to-gray-300 bg-clip-text text-transparent"
+          className="text-[28px] font-medium tracking-wide leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:from-gray-100 dark:via-gray-200 dark:to-gray-300 bg-clip-text text-transparent"
         >
           {name}
           {age && (
-            <span className="text-gray-500 dark:text-gray-400 font-bold">{`, ${age}`}</span>
+            <span className="text-gray-500 dark:text-gray-400 font-medium">{`, ${age}`}</span>
           )}
         </h2>
         
-        {/* Role & Specialty with Icon */}
+        {/* Role & Specialty - Sans-Serif Light 17px, slightly spaced */}
         {role && (
           <div className="mt-2 flex items-center gap-2 text-gray-700 dark:text-gray-300">
             {/* Briefcase Icon Container */}
@@ -95,10 +93,10 @@ export function ProfileHeader({
             </div>
             
             {/* Role & Specialty Text */}
-            <p className="text-[15px] sm:text-base font-bold leading-tight tracking-tight">
+            <p className="text-[17px] font-light leading-tight tracking-wide">
               {role}
               {specialty && (
-                <span className="text-gray-500 dark:text-gray-400 font-semibold">{` • ${specialty}`}</span>
+                <span className="text-gray-500 dark:text-gray-400 font-light">{` • ${specialty}`}</span>
               )}
             </p>
           </div>

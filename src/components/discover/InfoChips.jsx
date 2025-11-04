@@ -3,7 +3,7 @@
  * InfoChips Component
  * ============================================================================
  * 
- * Grid of colorful information chips displaying profile details.
+ * Grid of colorful information chips displaying profile details with gradients.
  * 
  * WHAT IT DISPLAYS:
  * - Specialty (blue gradient)
@@ -14,7 +14,9 @@
  * - Response rate (pink gradient, conditional)
  * 
  * FEATURES:
- * - Category-colored gradients per chip type
+ * - Enhanced category-colored gradients per chip type (more visible)
+ * - Compact chip size
+ * - Typography hierarchy with Medium labels, Light values
  * - Icon containers with matching colors
  * - Hover scale animation (1.05)
  * - Staggered reveal animation (60ms delay per chip)
@@ -33,13 +35,17 @@
  * @param {number} mutualConnections - Number of mutual connections
  * @param {string} responseRate - Response time description (optional)
  * 
+ * TYPOGRAPHY SYSTEM:
+ * - Labels: 15px, font-medium (500), tracking-wide, uppercase, gray-600
+ * - Values: 17px, font-light (300), tracking-wide, gray-900
+ * - System font stack ensures consistent reading experience
+ * 
  * STYLING:
  * - Grid: 2 cols (mobile) → 3 cols (sm+)
  * - Gap: 0.5rem (8px)
- * - Chip: Gradient background, rounded-xl, shadow-sm
+ * - Chip: More visible gradient background, rounded-xl, compact padding
  * - Icon: 28px square, rounded-lg, category color
- * - Label: 10px, bold, uppercase, tracking-wide
- * - Value: 13px, bold, truncated
+ * - Padding: px-2.5 py-1.5 (compact)
  * 
  * EXAMPLE USAGE:
  * ```jsx
@@ -84,50 +90,56 @@ export function InfoChips({
       icon: Stethoscope,
       label: 'Specialty',
       value: specialty || '—',
-      gradient: 'from-blue-50 to-blue-100/50',
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-700'
+      gradient: 'from-blue-100 to-indigo-100',
+      darkGradient: 'dark:from-blue-900/40 dark:to-indigo-900/40',
+      iconBg: 'bg-blue-100 dark:bg-blue-800/50',
+      iconColor: 'text-blue-700 dark:text-blue-400'
     },
     {
       icon: Building2,
       label: 'Hospital',
       value: hospital || '—',
-      gradient: 'from-purple-50 to-purple-100/50',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-700'
+      gradient: 'from-purple-100 to-pink-100',
+      darkGradient: 'dark:from-purple-900/40 dark:to-pink-900/40',
+      iconBg: 'bg-purple-100 dark:bg-purple-800/50',
+      iconColor: 'text-purple-700 dark:text-purple-400'
     },
     {
       icon: Clock,
       label: 'Shift',
       value: shift || '—',
-      gradient: 'from-amber-50 to-amber-100/50',
-      iconBg: 'bg-amber-100',
-      iconColor: 'text-amber-700'
+      gradient: 'from-amber-100 to-orange-100',
+      darkGradient: 'dark:from-amber-900/40 dark:to-orange-900/40',
+      iconBg: 'bg-amber-100 dark:bg-amber-800/50',
+      iconColor: 'text-amber-700 dark:text-amber-400'
     },
     {
       icon: MapPin,
       label: 'Distance',
       value: distance || '—',
-      gradient: 'from-green-50 to-green-100/50',
-      iconBg: 'bg-green-100',
-      iconColor: 'text-green-700'
+      gradient: 'from-green-100 to-emerald-100',
+      darkGradient: 'dark:from-green-900/40 dark:to-emerald-900/40',
+      iconBg: 'bg-green-100 dark:bg-green-800/50',
+      iconColor: 'text-green-700 dark:text-green-400'
     },
     {
       icon: Users,
       label: 'Mutual',
       value: `${mutualConnections} mutual`,
-      gradient: 'from-indigo-50 to-indigo-100/50',
-      iconBg: 'bg-indigo-100',
-      iconColor: 'text-indigo-700'
+      gradient: 'from-indigo-100 to-blue-100',
+      darkGradient: 'dark:from-indigo-900/40 dark:to-blue-900/40',
+      iconBg: 'bg-indigo-100 dark:bg-indigo-800/50',
+      iconColor: 'text-indigo-700 dark:text-indigo-400'
     },
     // Conditionally add response rate chip
     ...(responseRate ? [{
       icon: Zap,
       label: 'Response',
       value: responseRate,
-      gradient: 'from-pink-50 to-pink-100/50',
-      iconBg: 'bg-pink-100',
-      iconColor: 'text-pink-700'
+      gradient: 'from-pink-100 to-rose-100',
+      darkGradient: 'dark:from-pink-900/40 dark:to-rose-900/40',
+      iconBg: 'bg-pink-100 dark:bg-pink-800/50',
+      iconColor: 'text-pink-700 dark:text-pink-400'
     }] : [])
   ];
 
@@ -142,7 +154,7 @@ export function InfoChips({
           key={idx}
           role="listitem"
           aria-label={`${item.label}: ${item.value}`}
-          className={`bg-gradient-to-br ${item.gradient} rounded-xl px-3 py-2.5 flex items-center gap-2.5 min-w-0 shadow-sm border border-white/60 hover:scale-105 transition-transform duration-200 cb-reveal`}
+          className={`bg-gradient-to-br ${item.gradient} ${item.darkGradient} rounded-xl px-2.5 py-1.5 flex items-center gap-2.5 min-w-0 shadow-sm border border-white/60 dark:border-gray-700/50 hover:scale-105 transition-transform duration-200 cb-reveal`}
           style={{ animationDelay: `${idx * 60}ms` }}
         >
           {/* Icon Container */}
@@ -150,12 +162,12 @@ export function InfoChips({
             <item.icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
           </div>
           
-          {/* Label & Value */}
+          {/* Label & Value - Medium 15px labels, Light 17px values, slightly spaced */}
           <div className="min-w-0">
-            <div className="text-[10px] font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400">
+            <div className="text-[15px] font-medium tracking-wide uppercase text-gray-600 dark:text-gray-400">
               {item.label}
             </div>
-            <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 truncate">
+            <div className="text-[17px] font-light text-gray-900 dark:text-gray-100 truncate tracking-wide">
               {item.value}
             </div>
           </div>
