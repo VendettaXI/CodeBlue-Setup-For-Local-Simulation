@@ -152,10 +152,10 @@ export function InfoChips({
           
           {/* Label & Value */}
           <div className="min-w-0">
-            <div className="text-[10px] font-bold tracking-wider uppercase text-gray-500">
+            <div className="text-[10px] font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400">
               {item.label}
             </div>
-            <div className="text-[13px] font-bold text-gray-900 truncate">
+            <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 truncate">
               {item.value}
             </div>
           </div>

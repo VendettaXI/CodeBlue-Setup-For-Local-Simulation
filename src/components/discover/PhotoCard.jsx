@@ -96,6 +96,9 @@ export function PhotoCard({
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
   const dragStartTimeRef = useRef(0);
+  const [flyOut, setFlyOut] = useState(null); // 'left' | 'right' | 'up'
+  const pendingActionRef = useRef(null); // 'left' | 'right' | 'up'
+  const transitionHandledRef = useRef(false);
   
   // Swipe thresholds
   const SWIPE_THRESHOLD = 150;
@@ -107,6 +110,7 @@ export function PhotoCard({
   
   // Handle drag start (mouse & touch)
   const handleDragStart = (e) => {
+    if (flyOut) return; // ignore new drags during fly-out
     // Prevent default browser behavior (image drag, text selection)
     e.preventDefault();
     
@@ -145,24 +149,25 @@ export function PhotoCard({
 
     // 1) Vertical swipe up for Super Like
     if (absY > absX && dragOffset.y < -SWIPE_UP_THRESHOLD) {
-      console.log('Swiped UP - Super Like!');
-      onSwipeUp && onSwipeUp();
-      setDragOffset({ x: 0, y: 0 });
+      // Animate card flying up, then notify parent
+      pendingActionRef.current = 'up';
+      transitionHandledRef.current = false;
       setIsDragging(false);
+      setFlyOut('up');
       return;
     }
 
     // 2) Horizontal left/right like/pass
     if (absX > SWIPE_THRESHOLD) {
-      if (dragOffset.x > 0) {
-        console.log('Swiped RIGHT - Like!');
-        onSwipeRight && onSwipeRight();
-      } else {
-        console.log('Swiped LEFT - Pass!');
-        onSwipeLeft && onSwipeLeft();
-      }
-      setDragOffset({ x: 0, y: 0 });
+      transitionHandledRef.current = false;
       setIsDragging(false);
+      if (dragOffset.x > 0) {
+        pendingActionRef.current = 'right';
+        setFlyOut('right');
+      } else {
+        pendingActionRef.current = 'left';
+        setFlyOut('left');
+      }
       return;
     }
 
@@ -188,9 +193,48 @@ export function PhotoCard({
     setDragOffset({ x: 0, y: 0 });
     setIsDragging(false);
   };
+
+  // Transition end handler to invoke parent callbacks after fly-out completes
+  const handleTransitionEnd = (e) => {
+    if (!flyOut) return;
+    if (transitionHandledRef.current) return;
+    if (e.propertyName !== 'transform') return;
+    transitionHandledRef.current = true;
+    const action = pendingActionRef.current;
+    pendingActionRef.current = null;
+
+    // Call corresponding callback after animation
+    if (action === 'right') {
+      onSwipeRight && onSwipeRight();
+    } else if (action === 'left') {
+      onSwipeLeft && onSwipeLeft();
+    } else if (action === 'up') {
+      onSwipeUp && onSwipeUp();
+    }
+
+    // Reset internal state (in case component persists)
+    setDragOffset({ x: 0, y: 0 });
+    setIsDragging(false);
+    setFlyOut(null);
+  };
   
   // Calculate rotation
   const rotation = Math.min(Math.max(dragOffset.x * ROTATION_FACTOR, -MAX_ROTATION), MAX_ROTATION);
+  // Overlay opacities (show earlier with a subtle baseline so it's noticeable)
+  const baseVis = 0.18; // minimum visibility once movement starts
+  const likeProgressRaw = dragOffset.x > 0 ? Math.min(dragOffset.x / SWIPE_THRESHOLD, 1) : 0;
+  const passProgressRaw = dragOffset.x < 0 ? Math.min(Math.abs(dragOffset.x) / SWIPE_THRESHOLD, 1) : 0;
+  const superProgressRaw = dragOffset.y < 0 ? Math.min(Math.abs(dragOffset.y) / SWIPE_UP_THRESHOLD, 1) : 0;
+  const likeOpacity = likeProgressRaw > 0.05 ? Math.min(baseVis + likeProgressRaw * (1 - baseVis), 1) : 0;
+  const passOpacity = passProgressRaw > 0.05 ? Math.min(baseVis + passProgressRaw * (1 - baseVis), 1) : 0;
+  const superOpacity = superProgressRaw > 0.05 ? Math.min(baseVis + superProgressRaw * (1 - baseVis), 1) : 0;
+  const likeActive = likeProgressRaw > 0.05;
+  const passActive = passProgressRaw > 0.05;
+  const superActive = superProgressRaw > 0.05;
+  // Micro-haptic scale as user approaches thresholds
+  const likeScale = 1 + Math.min(likeProgressRaw, 1) * 0.06;
+  const passScale = 1 + Math.min(passProgressRaw, 1) * 0.06;
+  const superScale = 1 + Math.min(superProgressRaw, 1) * 0.06;
   
   if (!photos || photos.length === 0) {
     return (
@@ -205,10 +249,19 @@ export function PhotoCard({
   const hasError = imageErrors[photoKey];
 
   // Dynamic transform style
+  let transformValue = `translateX(${dragOffset.x}px) translateY(${dragOffset.y * 0.1}px) rotate(${rotation}deg)`;
+  if (flyOut === 'right') {
+    transformValue = 'translateX(140%) rotate(12deg)';
+  } else if (flyOut === 'left') {
+    transformValue = 'translateX(-140%) rotate(-12deg)';
+  } else if (flyOut === 'up') {
+    transformValue = 'translateY(-140%) rotate(0deg)';
+  }
   const cardStyle = {
-    transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y * 0.1}px) rotate(${rotation}deg)`,
+    transform: transformValue,
     cursor: isDragging ? 'grabbing' : 'grab',
-    transition: isDragging ? 'none' : 'transform 0.3s ease-out',
+    transition: isDragging ? 'none' : (flyOut ? 'transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 380ms ease-out' : 'transform 0.3s ease-out'),
+    opacity: flyOut ? 0 : 1,
     userSelect: 'none',
     WebkitUserSelect: 'none',
     touchAction: 'none'
@@ -226,7 +279,47 @@ export function PhotoCard({
       onTouchStart={handleDragStart}
       onTouchMove={handleDragMove}
       onTouchEnd={handleDragEnd}
+      onTransitionEnd={handleTransitionEnd}
     >
+      {/* Icon-only swipe feedback overlays */}
+      {/* LIKE (top-left) */}
+      <div
+        className="absolute top-6 left-6 z-30 pointer-events-none"
+        style={{ opacity: likeOpacity, transform: `rotate(-8deg) scale(${likeScale})`, transition: 'opacity 150ms ease' }}
+        aria-hidden="true"
+      >
+        <Heart
+          className="w-20 h-20 text-emerald-300 drop-shadow-[0_6px_16px_rgba(16,185,129,0.55)]"
+          strokeWidth={2.8}
+          style={{ animation: likeActive ? 'cb-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1) both' : 'none' }}
+        />
+      </div>
+
+      {/* NOPE (top-right) */}
+      <div
+        className="absolute top-6 right-6 z-30 pointer-events-none"
+        style={{ opacity: passOpacity, transform: `rotate(8deg) scale(${passScale})`, transition: 'opacity 150ms ease' }}
+        aria-hidden="true"
+      >
+        <X
+          className="w-20 h-20 text-rose-300 drop-shadow-[0_6px_16px_rgba(244,63,94,0.55)]"
+          strokeWidth={2.8}
+          style={{ animation: passActive ? 'cb-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1) both' : 'none' }}
+        />
+      </div>
+
+      {/* SUPER LIKE (top-center) */}
+      <div
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+        style={{ opacity: superOpacity, transform: `scale(${superScale})`, transition: 'opacity 150ms ease' }}
+        aria-hidden="true"
+      >
+        <Star
+          className="w-20 h-20 text-sky-300 drop-shadow-[0_6px_16px_rgba(56,189,248,0.55)]"
+          strokeWidth={2.8}
+          style={{ animation: superActive ? 'cb-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1) both' : 'none' }}
+        />
+      </div>
       {/* Gradient Overlay for Photo Enhancement */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40 rounded-[28px] z-10 pointer-events-none"></div>
       

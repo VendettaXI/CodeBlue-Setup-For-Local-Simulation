@@ -11,12 +11,12 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
       {!ventRoom ? (
         <>
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Anonymous Vent Space 💭</h2>
-            <p className="text-gray-600">A safe space to release and be heard</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Anonymous Vent Space 💭</h2>
+            <p className="text-gray-600 dark:text-gray-400">A safe space to release and be heard</p>
           </div>
 
           {/* Vent Stats */}
-          <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white mb-6 cb-shadow-card">
+          <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white mb-6 cb-shadow-card dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
             <h3 className="text-xl font-bold mb-4">Community Support 24/7</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
@@ -54,7 +54,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
               <button
                 key={topic.id}
                 onClick={() => setVentRoom(topic)}
-                className="w-full bg-white border-2 border-gray-200 rounded-2xl p-6 cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all text-left"
+                className="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all text-left"
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-16 h-16 bg-gradient-to-br ${topic.gradient} rounded-2xl flex items-center justify-center text-3xl cb-shadow-card flex-shrink-0`}>
@@ -62,7 +62,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-xl font-bold text-gray-900">{topic.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{topic.name}</h3>
                       {topic.trending && (
                         <span className="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />
@@ -70,13 +70,13 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{topic.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{topic.description}</p>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="font-semibold text-blue-600">{topic.active} people online</span>
-                      <span className="text-gray-500">• Active now</span>
+                      <span className="font-semibold text-blue-600 dark:text-blue-400">{topic.active} people online</span>
+                      <span className="text-gray-500 dark:text-gray-400">• Active now</span>
                     </div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-gray-400" />
+                  <ChevronRight className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                 </div>
               </button>
             ))}
@@ -118,13 +118,13 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
         <div className="mb-24">
           <button
             onClick={() => setVentRoom(null)}
-            className="flex items-center gap-2 text-gray-600 mb-4 hover:text-gray-900 font-semibold"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-4 hover:text-gray-900 dark:hover:text-gray-100 font-semibold"
           >
             <ChevronRight className="w-5 h-5 rotate-180" />
             Back to rooms
           </button>
 
-          <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden cb-shadow-card">
+          <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
             <div className={`bg-gradient-to-r ${ventRoom.gradient} px-6 py-5 flex items-center gap-4 text-white`}>
               <div className={`w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-sm`}>
                 {ventRoom.icon}
@@ -141,7 +141,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
               )}
             </div>
 
-            <div className="h-96 p-6 overflow-y-auto bg-gray-50 space-y-4">
+            <div className="h-96 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900/50 space-y-4">
               <div className="bg-blue-600 text-white rounded-2xl p-5 max-w-sm shadow-md">
                 <div className="flex items-center justify-between mb-2">
                   <div className="font-bold text-sm">Nurse_42</div>
@@ -165,14 +165,14 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
               </div>
             </div>
 
-            <div className="p-4 bg-white border-t-2 border-gray-100">
+            <div className="p-4 bg-white dark:bg-gray-800 border-t-2 border-gray-100 dark:border-gray-700">
               <div className="flex gap-3">
                 <input
                   type="text"
                   placeholder="Type anonymously..."
-                  className="flex-1 px-5 py-3 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-5 py-3 bg-gray-100 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-700 transition-all">
+                <button className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all">
                   Send
                 </button>
               </div>

@@ -70,6 +70,7 @@ export function PromptCard({
   type = 'text',
   duration,
   likes = 0,
+  isLiked = false,
   index = 0,
   onLike,
   onComment,
@@ -77,17 +78,17 @@ export function PromptCard({
 }) {
   return (
     <div 
-      className="cb-card rounded-2xl p-6 border border-gray-100 group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 transition-all duration-300 cb-reveal" 
+      className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal" 
       style={{ animationDelay: `${index * 70}ms` }}
     >
       {/* Question */}
-      <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3 leading-tight">
+      <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 dark:text-gray-400 mb-3 leading-tight">
         {question}
       </h3>
 
       {/* Answer - Text or Voice */}
       {type === 'text' ? (
-        <p className="text-gray-900 leading-relaxed mb-5 text-[15px] font-medium">
+        <p className="text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-[15px] font-medium">
           {answer}
         </p>
       ) : (
@@ -110,15 +111,15 @@ export function PromptCard({
       )}
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+      <div className="flex items-center gap-4 pt-4 border-t border-gray-100 dark:border-gray-700">
         {/* Like Button */}
         <button 
           onClick={onLike}
           aria-label={`Like prompt: ${question}`}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all group/like"
+          className={`flex items-center gap-2 text-sm transition-all group/like ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'}`}
         >
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/like:bg-blue-50 transition-colors">
-            <ThumbsUp className="w-4 h-4" />
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isLiked ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-gray-50 dark:bg-gray-800 group-hover/like:bg-blue-50 dark:group-hover/like:bg-blue-900/30'}`} style={{ animation: isLiked ? 'cb-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1) both' : 'none' }}>
+            <ThumbsUp className={`w-4 h-4 ${isLiked ? 'text-blue-600 dark:text-blue-400' : ''}`} />
           </div>
           <span className="font-semibold">{likes}</span>
         </button>
@@ -127,9 +128,9 @@ export function PromptCard({
         <button 
           onClick={onComment}
           aria-label={`Comment on prompt: ${question}`}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600 transition-all group/comment"
+          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all group/comment"
         >
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/comment:bg-cyan-50 transition-colors">
+          <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center group-hover/comment:bg-cyan-50 dark:group-hover/comment:bg-cyan-900/30 transition-colors">
             <MessageCircle className="w-4 h-4" />
           </div>
           <span className="font-semibold">Comment</span>

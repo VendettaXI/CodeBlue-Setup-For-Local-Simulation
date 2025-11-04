@@ -20,7 +20,7 @@ export function HomeTab({
         title="Open profile"
         className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center cb-shadow-card hover:scale-105 transition-transform"
       >
-        <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 text-xl">
+        <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-xl">
           {userProfile && userProfile.photos && userProfile.photos[0] ? (
             (typeof userProfile.photos[0] === 'string' && userProfile.photos[0].startsWith('http')) ? (
               <img src={userProfile.photos[0]} alt={userProfile.name} className="w-full h-full object-cover" />
@@ -28,14 +28,14 @@ export function HomeTab({
               <span className="text-lg leading-none">{userProfile.photos[0]}</span>
             )
           ) : (
-            <User className="w-6 h-6 text-gray-700" />
+            <User className="w-6 h-6 text-gray-700 dark:text-gray-300" />
           )}
         </div>
       </button>
 
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back, Venice! 👋</h2>
-        <p className="text-gray-600">Here's what's happening today</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Welcome Back, Venice! 👋</h2>
+        <p className="text-gray-600 dark:text-gray-400">Here's what's happening today</p>
       </div>
 
       {/* Quick Stats */}
@@ -59,10 +59,10 @@ export function HomeTab({
       </div>
 
       {/* Top Match Highlight */}
-      <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 mb-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 mb-6 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-yellow-500" />
-          <h3 className="text-lg font-bold text-gray-900">Your Top Match Today</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Your Top Match Today</h3>
         </div>
         <div className="flex items-center gap-4 mb-4">
           <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-400 to-purple-400 flex-shrink-0">
@@ -82,8 +82,8 @@ export function HomeTab({
             </div>
           </div>
           <div className="flex-1">
-            <h4 className="text-xl font-bold text-gray-900">{sampleProfiles[0].name}, {sampleProfiles[0].age}</h4>
-            <p className="text-sm text-gray-600 mb-2">{sampleProfiles[0].role}</p>
+            <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100">{sampleProfiles[0].name}, {sampleProfiles[0].age}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{sampleProfiles[0].role}</p>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-full">
                 <Zap className="w-3 h-3 text-green-600" />
@@ -132,7 +132,7 @@ export function HomeTab({
               <span>Add your vibe</span>
             </div>
           </div>
-          <button className="w-full bg-white text-purple-600 py-3 rounded-xl font-bold mt-4 hover:bg-gray-50 transition-all">
+          <button className="w-full bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 py-3 rounded-xl font-bold mt-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
             Continue Setup
           </button>
         </div>

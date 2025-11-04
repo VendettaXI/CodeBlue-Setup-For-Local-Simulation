@@ -78,27 +78,27 @@ export function ProfileHeader({
         {/* Name & Age with Premium Gradient */}
         <h2 
           id="profile-title" 
-          className="text-[32px] sm:text-[36px] font-black tracking-tight leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent"
+          className="text-[32px] sm:text-[36px] font-black tracking-tight leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:from-gray-100 dark:via-gray-200 dark:to-gray-300 bg-clip-text text-transparent"
         >
           {name}
           {age && (
-            <span className="text-gray-500 font-bold">{`, ${age}`}</span>
+            <span className="text-gray-500 dark:text-gray-400 font-bold">{`, ${age}`}</span>
           )}
         </h2>
         
         {/* Role & Specialty with Icon */}
         {role && (
-          <div className="mt-2 flex items-center gap-2 text-gray-700">
+          <div className="mt-2 flex items-center gap-2 text-gray-700 dark:text-gray-300">
             {/* Briefcase Icon Container */}
-            <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shadow-sm">
-              <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+            <div className="w-6 h-6 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shadow-sm">
+              <Briefcase className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             </div>
             
             {/* Role & Specialty Text */}
             <p className="text-[15px] sm:text-base font-bold leading-tight tracking-tight">
               {role}
               {specialty && (
-                <span className="text-gray-500 font-semibold">{` • ${specialty}`}</span>
+                <span className="text-gray-500 dark:text-gray-400 font-semibold">{` • ${specialty}`}</span>
               )}
             </p>
           </div>
@@ -110,7 +110,7 @@ export function ProfileHeader({
         <button 
           onClick={onMoreClick}
           aria-label="More options"
-          className="p-2 hover:bg-gray-50 rounded-full text-gray-600 transition-all border border-gray-100"
+          className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-400 transition-all border border-gray-100 dark:border-gray-700"
         >
           <MoreHorizontal className="w-5 h-5" />
         </button>

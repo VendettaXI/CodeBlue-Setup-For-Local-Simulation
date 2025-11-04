@@ -255,6 +255,33 @@ function useCodeBlueTheme() {
           -webkit-background-clip:text; background-clip:text; color:transparent;
         }
         .dark .cb-shadow-card{ box-shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px -8px rgba(0,0,0,.5); }
+        
+        /* Dark mode color overrides */
+        .dark {
+          --cb-bg: #0F213A;
+          --cb-text: #E5E7EB;
+          --cb-text-muted: #9CA3AF;
+          --cb-surface: #1E293B;
+          --cb-surface-muted: #334155;
+          --cb-border: rgba(255,255,255,0.1);
+        }
+        
+        /* Dark mode component overrides */
+        .dark .cb-card {
+          background: var(--cb-surface);
+          border-color: var(--cb-border);
+        }
+        .dark .cb-chip-light {
+          background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 6px 16px -8px rgba(0,0,0,0.3);
+        }
+        .dark .cb-chip-light:hover {
+          box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 8px 22px -8px rgba(0,0,0,0.4);
+        }
+        .dark .cb-eyebrow {
+          color: #9CA3AF;
+        }
 
         .cb-glass {
           backdrop-filter: blur(14px);
@@ -438,6 +465,48 @@ const CodeBlueDating = () => {
   
   // Discovery filters modal visibility
   const [showFilters, setShowFilters] = useState(false);
+
+  // ========================================================================
+  // PROMPT INTERACTIONS STATE (Likes & Comments) with persistence
+  // ========================================================================
+
+  const [likedPrompts, setLikedPrompts] = useState(() => {
+    try {
+      const raw = localStorage.getItem('likedPrompts');
+      const arr = raw ? JSON.parse(raw) : [];
+      return new Set(arr);
+    } catch {
+      return new Set();
+    }
+  });
+
+  const [promptComments, setPromptComments] = useState(() => {
+    try {
+      const raw = localStorage.getItem('promptComments');
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const togglePromptLike = (key) => {
+    setLikedPrompts(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      try { localStorage.setItem('likedPrompts', JSON.stringify([...next])); } catch {}
+      return next;
+    });
+  };
+
+  const addPromptComment = (key, text) => {
+    setPromptComments(prev => {
+      const existing = prev[key] || [];
+      const next = { ...prev, [key]: [...existing, { text, ts: Date.now() }] };
+      try { localStorage.setItem('promptComments', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
 
   // ========================================================================
   // SETTINGS STATE
@@ -2010,6 +2079,10 @@ const sampleProfiles = [
               setMaxDistance={setMaxDistance}
               ageRange={ageRange}
               setAgeRange={setAgeRange}
+              likedPrompts={likedPrompts}
+              togglePromptLike={togglePromptLike}
+              promptComments={promptComments}
+              addPromptComment={addPromptComment}
             />
           )}
 
