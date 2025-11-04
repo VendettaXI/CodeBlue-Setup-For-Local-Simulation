@@ -91,7 +91,7 @@ export function ProfileHeader({
           <div className="mt-2 flex items-center gap-2 text-gray-700">
             {/* Briefcase Icon Container */}
             <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shadow-sm">
-              <Briefcase className="w-3.5 h-3.5 text-blue-700" />
+              <Briefcase className="w-3.5 h-3.5 text-blue-600" />
             </div>
             
             {/* Role & Specialty Text */}

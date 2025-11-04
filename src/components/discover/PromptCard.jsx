@@ -115,9 +115,9 @@ export function PromptCard({
         <button 
           onClick={onLike}
           aria-label={`Like prompt: ${question}`}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all group/like"
+          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all group/like"
         >
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/like:bg-pink-50 transition-colors">
+          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/like:bg-blue-50 transition-colors">
             <ThumbsUp className="w-4 h-4" />
           </div>
           <span className="font-semibold">{likes}</span>
@@ -127,9 +127,9 @@ export function PromptCard({
         <button 
           onClick={onComment}
           aria-label={`Comment on prompt: ${question}`}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all group/comment"
+          className="flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600 transition-all group/comment"
         >
-          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/comment:bg-blue-50 transition-colors">
+          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/comment:bg-cyan-50 transition-colors">
             <MessageCircle className="w-4 h-4" />
           </div>
           <span className="font-semibold">Comment</span>

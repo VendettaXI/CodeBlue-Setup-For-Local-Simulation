@@ -41,7 +41,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
+import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, SlidersHorizontal, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
 
 // Component imports
 import { ActionButtons } from './components/discover/ActionButtons';
@@ -141,7 +141,7 @@ function useCodeBlueTheme() {
         .cb-nav-tabs {
           background: rgba(255, 255, 255, 0.8);
           backdrop-filter: blur(8px);
-          border-radius: 20px;
+          border-radius: 9999px; /* Fully rounded pill */
           padding: 4px;
           display: inline-flex;
           gap: 4px;
@@ -150,21 +150,47 @@ function useCodeBlueTheme() {
         
         .cb-nav-tab {
           padding: 8px 16px;
-          border-radius: 16px;
+          border-radius: 9999px; /* Fully rounded pill */
           font-weight: 600;
           transition: all 0.3s ease;
           position: relative;
           color: #666;
         }
         
+        /* Active state defaults (fallback) */
         .cb-nav-tab.active {
-          color: #000;
-          background: #fff;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          color: #fff;
+          background: linear-gradient(135deg, #4ea5d9, #44cfcb);
+          border: none;
+          box-shadow: 0 4px 12px rgba(78,165,217,0.35), 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Variant: Discover active */
+        .cb-nav-tab.cb-nav-tab--discover.active{
+          background: linear-gradient(135deg, #4ea5d9, #44cfcb); /* Picton → Robin egg */
+        }
+
+        /* Variant: Matches active */
+        .cb-nav-tab.cb-nav-tab--matches.active{
+          background: linear-gradient(135deg, #224870, #4ea5d9); /* Indigo dye → Picton */
+          box-shadow: 0 4px 12px rgba(34,72,112,0.35), 0 2px 4px rgba(0,0,0,0.12);
         }
         
-        .cb-nav-tab:not(.active):hover {
-          background: rgba(0,0,0,0.05);
+        /* Default hover (for Discover) */
+        .cb-nav-tab.cb-nav-tab--discover:not(.active):hover {
+          background: linear-gradient(135deg, #44cfcb, #4ea5d9); /* Robin egg blue to Picton Blue */
+          color: #fff;
+        }
+
+        /* Variant hover for Matches - must be after default */
+        .cb-nav-tab.cb-nav-tab--matches:not(.active):hover{
+          background: linear-gradient(135deg, #224870, #4ea5d9); /* Indigo → Picton - same as active */
+          color: #fff;
+        }
+
+        .cb-nav-tab:focus-visible{
+          outline: 2px solid #4ea5d9;
+          outline-offset: 2px;
         }
         
         .dark .cb-nav-tabs {
@@ -1942,13 +1968,13 @@ const sampleProfiles = [
             <div className="cb-nav-tabs">
               <button 
                 onClick={() => setActiveTab('discover')}
-                className={`cb-nav-tab ${activeTab === 'discover' ? 'active' : ''}`}
+                className={`cb-nav-tab cb-nav-tab--discover ${activeTab === 'discover' ? 'active' : ''}`}
               >
                 Discover
               </button>
               <button 
                 onClick={() => setActiveTab('matches')}
-                className={`cb-nav-tab ${activeTab === 'matches' ? 'active' : ''}`}
+                className={`cb-nav-tab cb-nav-tab--matches ${activeTab === 'matches' ? 'active' : ''}`}
               >
                 Matches
               </button>
@@ -1957,11 +1983,11 @@ const sampleProfiles = [
             {activeTab === 'discover' && (
               <button 
                 onClick={() => setShowFilters(!showFilters)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur rounded-full shadow-md hover:shadow-lg transition-all border border-gray-100"
+                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors border-2 text-[#122c34] border-[#122c34] bg-transparent hover:bg-[rgba(18,44,52,0.06)] focus:outline-none focus:ring-2 focus:ring-[#4ea5d9]/40"
               >
-                <Filter className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-semibold text-gray-700">Filters</span>
-                <div className="flex items-center justify-center w-4 h-4 bg-blue-600 rounded-full text-[10px] font-bold text-white">3</div>
+                <SlidersHorizontal className="w-4 h-4" />
+                <span className="text-sm font-medium">Filters</span>
+                <div className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border border-[#122c34] text-[#122c34]">3</div>
               </button>
             )}
           </div>
@@ -2018,101 +2044,158 @@ const sampleProfiles = [
           )}
         </div>
 
-        {/* Bottom Tab Navigation - Floating Ultra Rounded */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-5">
+        {/* Bottom Tab Navigation - Modern Nested Pill Design */}
+        {/* Inspired by iOS/Instagram pattern: colored container with white active pill */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 pb-6 px-4">
           <div className="max-w-md mx-auto">
-            {/* Floating neumorphic container with ultra-round corners */}
-            <div className="relative overflow-visible cb-shadow-card" style={{
-              borderRadius: '60px',
-              background: 'linear-gradient(145deg, var(--cb-navy-soft), var(--cb-navy))',
-              boxShadow: '0 30px 60px rgba(26, 77, 122, 0.6), 0 15px 30px rgba(0,0,0,0.3), inset 0 -3px 6px rgba(0,0,0,0.3), inset 0 3px 6px rgba(255,255,255,0.05)'
-            }}>
+            {/* Gunmetal container with nested white active pill */}
+            <div 
+              className="rounded-full px-3 py-3"
+              style={{
+                background: '#122c34', // Gunmetal
+                boxShadow: '0 10px 40px rgba(18, 44, 52, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)'
+              }}
+            >
               {/* Navigation items */}
-              <div className="flex justify-around items-center px-4 py-4 relative z-10">
+              <div className="flex justify-around items-center gap-1">
+                {/* Discover */}
                 <button
                   onClick={() => setActiveTab('discover')}
-                  className={`w-14 h-14 rounded-full transition-all transform hover:-translate-y-1 hover:scale-105 ${
-                    activeTab === 'discover' 
-                      ? 'shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(26,77,122,0.3)]' 
-                      : 'shadow-[4px_4px_12px_rgba(0,0,0,0.4),-2px_-2px_8px_rgba(255,255,255,0.05),0_10px_20px_rgba(26,77,122,0.4)]'
-                  }`}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
                   style={{
                     background: activeTab === 'discover' 
-                      ? 'linear-gradient(145deg, #2563a0, #1a4d7a)' 
-                      : 'linear-gradient(145deg, #1a4d7a, #143d62)'
+                      ? '#ffffff'
+                      : 'transparent',
+                    boxShadow: activeTab === 'discover' 
+                      ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      : 'none'
                   }}
                 >
-                  <Heart className={`w-6 h-6 text-white mx-auto ${activeTab === 'discover' ? 'fill-current' : ''}`} />
+                  <Heart className={`w-5 h-5 transition-all ${activeTab === 'discover' ? 'text-[#ec4899] fill-[#ec4899]' : 'text-white/70'}`} />
+                  {activeTab === 'discover' && (
+                    <span className="text-sm font-semibold text-[#122c34]">Discover</span>
+                  )}
                 </button>
 
+                {/* Matches */}
                 <button
                   onClick={() => setActiveTab('matches')}
-                  className={`relative w-14 h-14 rounded-full transition-all transform hover:-translate-y-1 hover:scale-105 ${
-                    activeTab === 'matches' 
-                      ? 'shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(26,77,122,0.3)]' 
-                      : 'shadow-[4px_4px_12px_rgba(0,0,0,0.4),-2px_-2px_8px_rgba(255,255,255,0.05),0_10px_20px_rgba(26,77,122,0.4)]'
-                  }`}
+                  className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
                   style={{
                     background: activeTab === 'matches' 
-                      ? 'linear-gradient(145deg, #2563a0, #1a4d7a)' 
-                      : 'linear-gradient(145deg, #1a4d7a, #143d62)'
+                      ? '#ffffff'
+                      : 'transparent',
+                    boxShadow: activeTab === 'matches' 
+                      ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      : 'none'
                   }}
                 >
-                  <MessageCircle className="w-6 h-6 text-white mx-auto" />
-                  {activeTab !== 'matches' && <span className="absolute top-0 right-0 w-3 h-3 bg-pink-500 rounded-full border-2 border-[#1e5688]"></span>}
+                  <MessageCircle className={`w-5 h-5 transition-all ${activeTab === 'matches' ? 'text-[#44cfcb] fill-[#44cfcb]' : 'text-white/70'}`} />
+                  {activeTab === 'matches' && (
+                    <span className="text-sm font-semibold text-[#44cfcb]">Matches</span>
+                  )}
+                  {/* Notification Badge */}
+                  {activeTab !== 'matches' && (
+                    <span 
+                      className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white"
+                      style={{ backgroundColor: '#44cfcb', border: '2px solid #122c34' }}
+                    >
+                      3
+                    </span>
+                  )}
                 </button>
 
+                {/* Home */}
                 <button
                   onClick={() => setActiveTab('home')}
-                  className={`w-14 h-14 rounded-full transition-all transform hover:-translate-y-1 hover:scale-105 ${
-                    activeTab === 'home' 
-                      ? 'shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(26,77,122,0.3)]' 
-                      : 'shadow-[4px_4px_12px_rgba(0,0,0,0.4),-2px_-2px_8px_rgba(255,255,255,0.05),0_10px_20px_rgba(26,77,122,0.4)]'
-                  }`}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
                   style={{
                     background: activeTab === 'home' 
-                      ? 'linear-gradient(145deg, #2563a0, #1a4d7a)' 
-                      : 'linear-gradient(145deg, #1a4d7a, #143d62)'
+                      ? '#ffffff'
+                      : 'transparent',
+                    boxShadow: activeTab === 'home' 
+                      ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      : 'none'
                   }}
                 >
-                  <Home className="w-6 h-6 text-white mx-auto" />
+                  <Home className={`w-5 h-5 transition-all ${activeTab === 'home' ? 'text-[#4ea5d9] fill-[#4ea5d9]' : 'text-white/70'}`} />
+                  {activeTab === 'home' && (
+                    <span className="text-sm font-semibold text-[#4ea5d9]">Home</span>
+                  )}
                 </button>
 
+                {/* Connect */}
                 <button
                   onClick={() => setActiveTab('connect')}
-                  className={`w-14 h-14 rounded-full transition-all transform hover:-translate-y-1 hover:scale-105 ${
-                    activeTab === 'connect' 
-                      ? 'shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(26,77,122,0.3)]' 
-                      : 'shadow-[4px_4px_12px_rgba(0,0,0,0.4),-2px_-2px_8px_rgba(255,255,255,0.05),0_10px_20px_rgba(26,77,122,0.4)]'
-                  }`}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
                   style={{
                     background: activeTab === 'connect' 
-                      ? 'linear-gradient(145deg, #2563a0, #1a4d7a)' 
-                      : 'linear-gradient(145deg, #1a4d7a, #143d62)'
+                      ? '#ffffff'
+                      : 'transparent',
+                    boxShadow: activeTab === 'connect' 
+                      ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      : 'none'
                   }}
                 >
-                  <Users className="w-6 h-6 text-white mx-auto" />
+                  <Users className={`w-5 h-5 transition-all ${activeTab === 'connect' ? 'text-[#10b981] fill-[#10b981]' : 'text-white/70'}`} />
+                  {activeTab === 'connect' && (
+                    <span className="text-sm font-semibold text-[#10b981]">Connect</span>
+                  )}
                 </button>
 
+                {/* Vent */}
                 <button
                   onClick={() => setActiveTab('vent')}
-                  className={`w-14 h-14 rounded-full transition-all transform hover:-translate-y-1 hover:scale-105 ${
-                    activeTab === 'vent' 
-                      ? 'shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(26,77,122,0.3)]' 
-                      : 'shadow-[4px_4px_12px_rgba(0,0,0,0.4),-2px_-2px_8px_rgba(255,255,255,0.05),0_10px_20px_rgba(26,77,122,0.4)]'
-                  }`}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px]"
                   style={{
                     background: activeTab === 'vent' 
-                      ? 'linear-gradient(145deg, #2563a0, #1a4d7a)' 
-                      : 'linear-gradient(145deg, #1a4d7a, #143d62)'
+                      ? '#ffffff'
+                      : 'transparent',
+                    boxShadow: activeTab === 'vent' 
+                      ? '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      : 'none'
                   }}
                 >
-                  <Cloud className="w-6 h-6 text-white mx-auto" />
+                  <Cloud className={`w-5 h-5 transition-all ${activeTab === 'vent' ? 'text-[#6366f1] fill-[#6366f1]' : 'text-white/70'}`} />
+                  {activeTab === 'vent' && (
+                    <span className="text-sm font-semibold text-[#6366f1]">Vent</span>
+                  )}
                 </button>
               </div>
             </div>
           </div>
         </div>
+
+        {/* 
+        ================================================================
+        GLASS MORPHISM BACKUP (OPTION 3) - Uncomment to restore
+        ================================================================
+        
+        <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6">
+          <div className="max-w-md mx-auto">
+            <div 
+              className="relative overflow-hidden rounded-3xl"
+              style={{
+                background: 'rgba(255, 255, 255, 0.75)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+              }}
+            >
+              <div className="flex justify-around items-center px-3 py-4">
+                <button onClick={() => setActiveTab('discover')} className="flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all duration-300" style={{ background: activeTab === 'discover' ? '#4ea5d9' : 'transparent', boxShadow: activeTab === 'discover' ? '0 4px 16px rgba(78, 165, 217, 0.3)' : 'none' }}>
+                  <Heart className={`w-6 h-6 transition-all ${activeTab === 'discover' ? 'text-white fill-white' : 'text-gray-500'}`} />
+                  {activeTab === 'discover' && <span className="text-xs font-medium text-white">Discover</span>}
+                </button>
+                (repeat pattern for other tabs)
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        ================================================================
+        */}
       </div>
     );
   }

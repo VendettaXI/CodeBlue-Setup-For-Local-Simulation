@@ -1,10 +1,10 @@
 :root {
-  /* Primary brand */
-  --cb-primary: #2563eb; /* replace with your Primary */
-  --cb-primary-600: #2563eb; /* Tailwind blue-600 */
-  --cb-primary-700: #1d4ed8; /* Tailwind blue-700 */
-  --cb-secondary: #7c3aed; /* purple-600 */
-  --cb-accent: #06b6d4; /* cyan-500 */
+  /* Default theme fallbacks (safe defaults) */
+  --cb-primary: #2563eb;
+  --cb-primary-600: #2563eb;
+  --cb-primary-700: #1d4ed8;
+  --cb-secondary: #7c3aed;
+  --cb-accent: #06b6d4;
 
   /* Status colors */
   --cb-success: #16a34a; /* green-600 */
@@ -35,25 +35,75 @@
   --cb-muted: #9ca3af;
 }
 
+/* Navy/Yellow Palette (Coolors set) — opt-in via .theme-navy-yellow on <body> */
+.theme-navy-yellow {
+  /* Palette vars for easy swapping */
+  --cb-sky: #8ecae6;              /* Sky blue */
+  --cb-primary: #219ebc;          /* Blue Green (brand) */
+  --cb-primary-600: #219ebc;      /* base */
+  --cb-primary-700: #145d70;      /* darker (from blue_green 300) */
+  --cb-primary-800: #0d3e4b;      /* darker (200) */
+  --cb-primary-900: #071f25;      /* darkest (100) */
+
+  --cb-secondary: #ffb703;        /* Selective yellow */
+  --cb-secondary-600: #ffc637;    /* hover */
+  --cb-secondary-700: #ffd569;    /* lighter */
+
+  --cb-accent: #fb8500;           /* UT orange */
+  --cb-accent-600: #ff9e2f;
+  --cb-accent-700: #ffb663;
+
+  --cb-bg: #023047;               /* Prussian blue as deep bg */
+  --cb-surface: #ffffff;
+  --cb-surface-2: #f8fafc;
+  --cb-border: #e5e7eb;
+  --cb-text: #0f172a;
+  --cb-text-inverse: #ffffff;
+
+  /* Default gradient: brand to yellow for vibrant CTAs */
+  --cb-grad-start: var(--cb-primary);
+  --cb-grad-end: var(--cb-secondary);
+
+  /* Bottom nav theming */
+  --cb-nav-container-start: color-mix(in srgb, var(--cb-bg) 85%, black);
+  --cb-nav-container-end: color-mix(in srgb, var(--cb-primary-800) 70%, black);
+  --cb-nav-pill-active-start: color-mix(in srgb, var(--cb-primary) 80%, #134053);
+  --cb-nav-pill-active-end: color-mix(in srgb, var(--cb-primary-700) 90%, #0f3240);
+  --cb-nav-pill-inactive-start: color-mix(in srgb, var(--cb-primary-800) 80%, #0e2b38);
+  --cb-nav-pill-inactive-end: color-mix(in srgb, var(--cb-primary-900) 85%, #0b232e);
+  --cb-nav-badge-border: color-mix(in srgb, var(--cb-primary-700) 60%, #0b2a39);
+
+  /* Legacy aliases to avoid breaking inline styles (if present) */
+  --cb-navy: var(--cb-primary-800);
+  --cb-navy-soft: color-mix(in srgb, var(--cb-primary-800) 60%, var(--cb-bg));
+}
+
 /* Convenience CSS vars mapped utilities (non-breaking; used incrementally) */
-.cb-bg {
-  background-color: var(--cb-bg);
-}
-.cb-surface {
-  background-color: var(--cb-surface);
-}
-.cb-text {
-  color: var(--cb-text);
-}
-.cb-text-inverse {
-  color: var(--cb-text-inverse);
-}
-.cb-border {
-  border-color: var(--cb-border);
-}
-.cb-primary {
-  color: var(--cb-primary);
-}
-.cb-gradient {
-  background-image: linear-gradient(135deg, var(--cb-grad-start), var(--cb-grad-end));
-}
+.cb-bg { background-color: var(--cb-bg); }
+.cb-surface { background-color: var(--cb-surface); }
+.cb-text { color: var(--cb-text); }
+.cb-text-inverse { color: var(--cb-text-inverse); }
+.cb-border { border-color: var(--cb-border); }
+.cb-primary { color: var(--cb-primary); }
+.cb-gradient { background-image: linear-gradient(135deg, var(--cb-grad-start), var(--cb-grad-end)); }
+
+/* Scoped overrides that gently retheme common Tailwind blue utilities under this theme */
+.theme-navy-yellow .bg-blue-600 { background-color: var(--cb-primary) !important; }
+.theme-navy-yellow .bg-blue-700 { background-color: var(--cb-primary-700) !important; }
+.theme-navy-yellow .hover\:bg-blue-700:hover { background-color: var(--cb-primary-700) !important; }
+.theme-navy-yellow .text-blue-600 { color: var(--cb-primary) !important; }
+.theme-navy-yellow .text-blue-700 { color: var(--cb-primary-700) !important; }
+.theme-navy-yellow .text-blue-900 { color: var(--cb-primary-900) !important; }
+.theme-navy-yellow .bg-blue-50 { background-color: color-mix(in srgb, var(--cb-primary) 8%, white) !important; }
+.theme-navy-yellow .border-blue-200 { border-color: color-mix(in srgb, var(--cb-primary) 30%, white) !important; }
+
+/* Gradient token overrides: Tailwind uses CSS vars for gradients — adjust the from/via/to scopes */
+.theme-navy-yellow .from-blue-900 { --tw-gradient-from: var(--cb-bg) var(--tw-gradient-from-position); --tw-gradient-to: color-mix(in srgb, var(--cb-bg), transparent 100%) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.theme-navy-yellow .via-blue-800 { --tw-gradient-stops: var(--tw-gradient-from), var(--cb-primary-800) var(--tw-gradient-via-position), var(--tw-gradient-to); }
+.theme-navy-yellow .to-blue-950 { --tw-gradient-to: var(--cb-primary-900) var(--tw-gradient-to-position); }
+
+/* Utility for buttons */
+.btn-brand { background-color: var(--cb-primary); color: var(--cb-text-inverse); }
+.btn-brand:hover { background-color: var(--cb-primary-700); }
+.btn-accent { background-color: var(--cb-accent); color: var(--cb-text-inverse); }
+.btn-accent:hover { background-color: var(--cb-accent-600); }
