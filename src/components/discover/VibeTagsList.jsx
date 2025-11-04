@@ -1,0 +1,96 @@
+/**
+ * ============================================================================
+ * VibeTagsList Component
+ * ============================================================================
+ * 
+ * Display lists of vibe tags and dealbreakers with gradient styling.
+ * 
+ * WHAT IT DISPLAYS:
+ * - "My Vibe" section: Blue gradient tags
+ * - "Dealbreakers" section: Red gradient tags (conditional)
+ * - Section headers with uppercase styling
+ * 
+ * FEATURES:
+ * - Responsive flex-wrap layout
+ * - Hover scale animation (1.05)
+ * - Color-coded gradients (blue for vibes, red for dealbreakers)
+ * - Border and shadow effects
+ * - Conditional rendering of dealbreakers
+ * 
+ * USED IN:
+ * - DiscoverTab (below prompts)
+ * - Profile view, Match details
+ * 
+ * PROPS:
+ * @param {string[]} vibes - Array of vibe tags (interests, traits)
+ * @param {string[]} dealbreakers - Array of dealbreaker tags (optional)
+ * 
+ * STYLING:
+ * - Vibe tags: Blue gradient (from-blue-50 to-blue-100/60)
+ * - Dealbreaker tags: Red gradient (from-red-50 to-red-100/60)
+ * - Font: 14px bold, rounded-full pills
+ * - Padding: px-4 py-2.5
+ * - Gap: 0.5rem (8px)
+ * 
+ * EXAMPLE USAGE:
+ * ```jsx
+ * <VibeTagsList
+ *   vibes={['Coffee addict', 'Night shift warrior', 'Bookworm']}
+ *   dealbreakers={['Smoking', 'Poor communication']}
+ * />
+ * ```
+ * 
+ * ACCESSIBILITY:
+ * - Semantic HTML with proper heading hierarchy
+ * - Screen reader friendly tag lists
+ * - Clear visual distinction between vibes and dealbreakers
+ * ============================================================================
+ */
+
+import React from 'react';
+
+export function VibeTagsList({ vibes = [], dealbreakers = [] }) {
+  return (
+    <div className="mt-6 space-y-4">
+      {/* My Vibe Section */}
+      {vibes.length > 0 && (
+        <div>
+          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">
+            My Vibe
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {vibes.map((vibe, idx) => (
+              <span 
+                key={idx}
+                className="bg-gradient-to-br from-blue-50 to-blue-100/60 text-blue-700 px-4 py-2.5 rounded-full text-sm font-bold border border-blue-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+              >
+                {vibe}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Dealbreakers Section */}
+      {dealbreakers.length > 0 && (
+        <div>
+          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">
+            Dealbreakers
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {dealbreakers.map((deal, idx) => (
+              <span 
+                key={idx}
+                className="bg-gradient-to-br from-red-50 to-red-100/60 text-red-700 px-4 py-2.5 rounded-full text-sm font-bold border border-red-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+              >
+                {deal}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default VibeTagsList;

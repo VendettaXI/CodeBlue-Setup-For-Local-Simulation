@@ -1,0 +1,59 @@
+:root {
+  /* Primary brand */
+  --cb-primary: #2563eb; /* replace with your Primary */
+  --cb-primary-600: #2563eb; /* Tailwind blue-600 */
+  --cb-primary-700: #1d4ed8; /* Tailwind blue-700 */
+  --cb-secondary: #7c3aed; /* purple-600 */
+  --cb-accent: #06b6d4; /* cyan-500 */
+
+  /* Status colors */
+  --cb-success: #16a34a; /* green-600 */
+  --cb-warning: #d97706; /* amber-600 */
+  --cb-danger: #dc2626; /* red-600 */
+
+  /* Surfaces & text */
+  --cb-bg: #0b1220; /* app background (dark gradient ends) */
+  --cb-surface: #ffffff; /* cards / panels */
+  --cb-surface-2: #f8fafc; /* subtle surface */
+  --cb-border: #e5e7eb; /* gray-200 */
+  --cb-muted: #64748b; /* slate-500 */
+  --cb-text: #0f172a; /* slate-900 */
+  --cb-text-inverse: #ffffff;
+
+  /* Gradients */
+  --cb-grad-start: var(--cb-primary-600);
+  --cb-grad-end: var(--cb-secondary);
+}
+
+/* Optional dark theme overrides */
+[data-theme="dark"] {
+  --cb-bg: #0b1220;
+  --cb-surface: #0f172a;
+  --cb-surface-2: #111827;
+  --cb-border: #1f2937;
+  --cb-text: #e5e7eb;
+  --cb-muted: #9ca3af;
+}
+
+/* Convenience CSS vars mapped utilities (non-breaking; used incrementally) */
+.cb-bg {
+  background-color: var(--cb-bg);
+}
+.cb-surface {
+  background-color: var(--cb-surface);
+}
+.cb-text {
+  color: var(--cb-text);
+}
+.cb-text-inverse {
+  color: var(--cb-text-inverse);
+}
+.cb-border {
+  border-color: var(--cb-border);
+}
+.cb-primary {
+  color: var(--cb-primary);
+}
+.cb-gradient {
+  background-image: linear-gradient(135deg, var(--cb-grad-start), var(--cb-grad-end));
+}

@@ -43,7 +43,20 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
 
-// Note: ActionTray component removed - action buttons are now inline
+// Component imports
+import { ActionButtons } from './components/discover/ActionButtons';
+import { PhotoCard } from './components/discover/PhotoCard';
+import { ProfileHeader } from './components/discover/ProfileHeader';
+import { InfoChips } from './components/discover/InfoChips';
+import { PromptCard } from './components/discover/PromptCard';
+import { VibeTagsList } from './components/discover/VibeTagsList';
+import { DiscoverTab } from './components/tabs/DiscoverTab';
+import { MatchesTab } from './components/tabs/MatchesTab';
+import { HomeTab } from './components/tabs/HomeTab';
+import { ConnectTab } from './components/tabs/ConnectTab';
+import { VentTab } from './components/tabs/VentTab';
+
+// Note: ActionTray component removed - action buttons are now componentized
 
 /**
  * useCodeBlueTheme Hook
@@ -394,6 +407,9 @@ const CodeBlueDating = () => {
   // Which prompt is being shown in Discover card view
   const [activePrompt, setActivePrompt] = useState(0);
   
+  // Track image load errors for fallback to emoji
+  const [imageErrors, setImageErrors] = useState({});
+  
   // Discovery filters modal visibility
   const [showFilters, setShowFilters] = useState(false);
 
@@ -485,7 +501,7 @@ const CodeBlueDating = () => {
    * - role: Healthcare professional role
    * - hospital: Workplace
    * - distance: Distance in km
-   * - photos: Array of photo emojis (placeholder for actual images)
+   * - photos: Array of photo objects with {url, alt, emoji} - emoji is fallback
    * - prompts: Array of prompt responses {question, answer, type}
    * - verified: Boolean for verification status
    * - vibe: Array of interest tags
@@ -500,7 +516,12 @@ const sampleProfiles = [
       hospital: "Royal London Hospital",
       shift: "Night Shift",
       distance: "2 miles away",
-      photos: ["👩‍⚕️", "🌙", "☕", "📚"],
+      photos: [
+        { url: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800&h=1000&fit=crop", alt: "Sarah smiling in scrubs", emoji: "👩‍⚕️" },
+        { url: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&h=1000&fit=crop", alt: "Sarah with her dog at night", emoji: "🌙" },
+        { url: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=1000&fit=crop", alt: "Sarah enjoying coffee", emoji: "☕" },
+        { url: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=1000&fit=crop", alt: "Sarah reading a book", emoji: "📚" }
+      ],
       verified: true,
       recentlyActive: true,
       responseRate: "Usually responds in 2 hours",
@@ -525,7 +546,12 @@ const sampleProfiles = [
       hospital: "St Thomas Hospital",
       shift: "Rotating Shifts",
       distance: "5 miles away",
-      photos: ["👨‍⚕️", "🏃", "✈️", "🍳"],
+      photos: [
+        { url: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=1000&fit=crop", alt: "James in white coat", emoji: "👨‍⚕️" },
+        { url: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&h=1000&fit=crop", alt: "James running outdoors", emoji: "🏃" },
+        { url: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=1000&fit=crop", alt: "James traveling", emoji: "✈️" },
+        { url: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=1000&fit=crop", alt: "James cooking", emoji: "🍳" }
+      ],
       verified: true,
       recentlyActive: false,
       responseRate: "Usually responds in 1 day",
@@ -1944,864 +1970,51 @@ const sampleProfiles = [
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto pb-20">
           {activeTab === 'discover' && (
-            <div className="min-h-full bg-[#FAFAFA]">{/* Hinge warm off-white */}
-              {/* Spacer for consistent layout */}
-              <div className="h-2"></div>
-
-              {sampleProfiles[currentMatch] ? (
-                <div className="max-w-2xl mx-auto">
-                  {/* Profile Photos Carousel - Enhanced with Premium Treatment */}
-                    <div className="relative h-[540px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-[28px] mx-4 shadow-[0_8px_32px_-8px_rgba(16,24,40,0.12),0_20px_60px_-12px_rgba(16,24,40,0.18)]">
-                    {/* Gradient Overlay for Photo Enhancement */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40 rounded-[28px] overflow-hidden"></div>
-                    
-                    {/* Main Photo Display */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-[140px] relative z-10 transform transition-transform duration-300 hover:scale-105 drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)]">
-                        {sampleProfiles[currentMatch].photos[activePrompt]}
-                      </div>
-                    </div>
-                    
-                    {/* Enhanced Photo Navigation */}
-                    <div className="absolute top-4 left-0 right-0 flex justify-center gap-2 px-4">
-                 <div className="bg-white/10 backdrop-blur-xl rounded-full p-1.5 flex gap-1 shadow-lg border border-white/20">
-                        {sampleProfiles[currentMatch].photos?.map((_, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => setActivePrompt(idx)}
-                            className={`h-1 rounded-full transition-all ${
-                              activePrompt === idx 
-                                ? 'bg-white w-8' 
-                                : 'bg-white/40 w-4 hover:bg-white/60'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Enhanced Badges */}
-                    <div className="absolute top-6 left-6 flex flex-col gap-2">
-                      {sampleProfiles[currentMatch].verified && (
-                          <div className="bg-white/20 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.3)_inset] border border-white/30 text-white">
-                            <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
-                              <Check className="w-3 h-3 text-blue-600" />
-                            </div>
-                          Verified
-                        </div>
-                      )}
-                      {sampleProfiles[currentMatch].recentlyActive && (
-                          <div className="bg-white/20 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.3)_inset] border border-white/30 text-white">
-                            <div className="relative w-2 h-2">
-                              <div className="absolute w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                              <div className="absolute w-2 h-2 bg-green-400 rounded-full animate-ping opacity-75"></div>
-                            </div>
-                          Recently Active
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Enhanced Compatibility Badge */}
-                      <div className="absolute top-6 right-6 bg-gradient-to-br from-blue-500 to-blue-600 backdrop-blur-xl px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_4px_16px_rgba(37,99,235,0.4),0_0_0_1px_rgba(255,255,255,0.2)_inset] border border-blue-400/40 text-white">
-                        <Zap className="w-4 h-4 text-blue-100" />
-                      <span className="font-bold">{sampleProfiles[currentMatch].shiftCompatibility}% Match</span>
-                    </div>
-
-                    {/* Sophisticated standalone action buttons */}
-                    {/* Inline action buttons (no ActionTray dependency) */}
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2 bottom-24 flex items-center justify-center gap-6 pointer-events-auto"
-                      style={{ zIndex: 'var(--z-dropdown, 40)' }}
-                    >
-                      <button
-                        aria-label="Pass"
-                        onClick={() => setCurrentMatch((currentMatch + 1) % sampleProfiles.length)}
-                  className="flex items-center justify-center rounded-full w-16 h-16 bg-white text-gray-700 border-2 border-gray-100 shadow-[0_4px_16px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.02)] transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.12),0_4px_8px_rgba(0,0,0,0.06)] hover:text-gray-900 hover:scale-110 hover:-translate-y-1 hover:rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                      >
-                  <X className="w-7 h-7" />
-                      </button>
-                      <button
-                        aria-label="Favorite"
-                        onClick={() => {
-                          const name = sampleProfiles[currentMatch].name;
-                          alert(`Added ${name} to your favorites ⭐`);
-                        }}
-                  className="flex items-center justify-center rounded-full w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_6px_20px_rgba(59,130,246,0.35),0_2px_8px_rgba(37,99,235,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-all duration-300 ease-out hover:shadow-[0_8px_28px_rgba(59,130,246,0.45),0_4px_12px_rgba(37,99,235,0.3)] hover:from-blue-400 hover:to-blue-500 hover:scale-110 hover:-translate-y-1 hover:-rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                      >
-                  <Star className="w-7 h-7" />
-                      </button>
-                      <button
-                        aria-label="Connect"
-                        onClick={() => {
-                          alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
-                          setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
-                        }}
-                  className="flex items-center justify-center rounded-full w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-[0_8px_28px_rgba(236,72,153,0.4),0_4px_12px_rgba(219,39,119,0.25),0_0_0_1px_rgba(255,255,255,0.15)_inset] transition-all duration-300 ease-out hover:shadow-[0_12px_36px_rgba(236,72,153,0.5),0_6px_16px_rgba(219,39,119,0.35)] hover:from-pink-400 hover:to-pink-500 hover:scale-110 hover:-translate-y-1.5 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
-                      >
-                  <Heart className="w-8 h-8" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Profile Details Card */}
-                    <article aria-labelledby="profile-title" className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] mb-24 z-40">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                          <h2 id="profile-title" className="text-[32px] sm:text-[36px] font-black tracking-tight leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
-                          {sampleProfiles[currentMatch].name}
-                            <span className="text-gray-500 font-bold">{`, ${sampleProfiles[currentMatch].age}`}</span>
-                        </h2>
-                          <div className="mt-2 flex items-center gap-2 text-gray-700">
-                            <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shadow-sm">
-                              <Briefcase className="w-3.5 h-3.5 text-blue-700" />
-                          </div>
-                            <p className="text-[15px] sm:text-base font-bold leading-tight tracking-tight">
-                            {sampleProfiles[currentMatch].role}
-                              {sampleProfiles[currentMatch].specialty ? <span className="text-gray-500 font-semibold">{` • ${sampleProfiles[currentMatch].specialty}`}</span> : null}
-                          </p>
-                        </div>
-                      </div>
-                      <button className="p-2 hover:bg-gray-50 rounded-full text-gray-600 transition-all border border-gray-100">
-                        <MoreHorizontal className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    {/* Optimized Info Chips */}
-                    <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 gap-2" role="list" aria-label="Profile information">
-                      {[{
-                        icon: Stethoscope,
-                        label: 'Specialty',
-                          value: sampleProfiles[currentMatch].specialty || '—',
-                          gradient: 'from-blue-50 to-blue-100/50',
-                          iconBg: 'bg-blue-100',
-                          iconColor: 'text-blue-700'
-                      },{
-                        icon: Building2,
-                        label: 'Hospital',
-                          value: sampleProfiles[currentMatch].hospital || '—',
-                          gradient: 'from-purple-50 to-purple-100/50',
-                          iconBg: 'bg-purple-100',
-                          iconColor: 'text-purple-700'
-                      },{
-                        icon: Clock,
-                        label: 'Shift',
-                          value: sampleProfiles[currentMatch].shift || '—',
-                          gradient: 'from-amber-50 to-amber-100/50',
-                          iconBg: 'bg-amber-100',
-                          iconColor: 'text-amber-700'
-                      },{
-                        icon: MapPin,
-                        label: 'Distance',
-                          value: sampleProfiles[currentMatch].distance || '—',
-                          gradient: 'from-green-50 to-green-100/50',
-                          iconBg: 'bg-green-100',
-                          iconColor: 'text-green-700'
-                      },{
-                        icon: Users,
-                        label: 'Mutual',
-                          value: `${sampleProfiles[currentMatch].mutualConnections ?? 0} mutual`,
-                          gradient: 'from-indigo-50 to-indigo-100/50',
-                          iconBg: 'bg-indigo-100',
-                          iconColor: 'text-indigo-700'
-                      },
-                      ...(sampleProfiles[currentMatch].responseRate ? [{
-                        icon: Zap,
-                        label: 'Response',
-                          value: sampleProfiles[currentMatch].responseRate,
-                          gradient: 'from-pink-50 to-pink-100/50',
-                          iconBg: 'bg-pink-100',
-                          iconColor: 'text-pink-700'
-                      }] : [])].map((item, idx) => (
-                          <div key={idx} role="listitem" aria-label={`${item.label}: ${item.value}`} className={`bg-gradient-to-br ${item.gradient} rounded-xl px-3 py-2.5 flex items-center gap-2.5 min-w-0 shadow-sm border border-white/60 hover:scale-105 transition-transform duration-200 cb-reveal`} style={{animationDelay: `${idx * 60}ms`}}>
-                            <div className={`w-7 h-7 ${item.iconBg} rounded-lg flex items-center justify-center shadow-sm`}>
-                              <item.icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
-                            </div>
-                          <div className="min-w-0">
-                              <div className="text-[10px] font-bold tracking-wider uppercase text-gray-500">{item.label}</div>
-                              <div className="text-[13px] font-bold text-gray-900 truncate">{item.value}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Prompts Section */}
-                    <div className="space-y-4">
-                      {sampleProfiles[currentMatch].prompts.map((prompt, idx) => (
-                          <div key={idx} className="cb-card rounded-2xl p-6 border border-gray-100 group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 transition-all duration-300 cb-reveal" style={{animationDelay: `${idx * 70}ms`}}>
-                            <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3 leading-tight">{prompt.question}</h3>
-                          {prompt.type === 'text' ? (
-                              <p className="text-gray-900 leading-relaxed mb-5 text-[15px] font-medium">{prompt.answer}</p>
-                          ) : (
-                              <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 dark:from-indigo-500 dark:to-fuchsia-600 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 hover:from-blue-700 hover:to-blue-800 hover:scale-105 transition-all shadow-[0_4px_16px_rgba(37,99,235,0.25)] mb-5">
-                                <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
-                                <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-white border-b-8 border-b-transparent ml-1"></div>
-                              </div>
-                              <div className="text-left">
-                                  <div className="text-sm font-bold">{prompt.answer}</div>
-                                  <div className="text-xs opacity-90 font-medium">{prompt.duration}</div>
-                              </div>
-                            </button>
-                          )}
-                            <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                              <button aria-label={`Like prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-all group/like">
-                                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/like:bg-pink-50 transition-colors">
-                                  <ThumbsUp className="w-4 h-4" />
-                                </div>
-                              <span className="font-semibold">{prompt.likes}</span>
-                            </button>
-                              <button aria-label={`Comment on prompt ${idx + 1}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-all group/comment">
-                                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/comment:bg-blue-50 transition-colors">
-                                  <MessageCircle className="w-4 h-4" />
-                                </div>
-                              <span className="font-semibold">Comment</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* My Vibe Section */}
-                    <div className="mt-6 space-y-4">
-                      <div>
-                          <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">My Vibe</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {sampleProfiles[currentMatch].myVibe.map((vibe, idx) => (
-                              <span key={idx} className="bg-gradient-to-br from-blue-50 to-blue-100/60 text-blue-700 px-4 py-2.5 rounded-full text-sm font-bold border border-blue-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200">
-                              {vibe}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      {sampleProfiles[currentMatch].dealbreakers.length > 0 && (
-                        <div>
-                            <h3 className="text-[13px] font-bold tracking-wide uppercase text-gray-600 mb-3">Dealbreakers</h3>
-                          <div className="flex flex-wrap gap-2">
-                            {sampleProfiles[currentMatch].dealbreakers.map((deal, idx) => (
-                                <span key={idx} className="bg-gradient-to-br from-red-50 to-red-100/60 text-red-700 px-4 py-2.5 rounded-full text-sm font-bold border border-red-200/60 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200">
-                                {deal}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </article>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-96 mb-24">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">💙</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No more profiles!</h3>
-                    <p className="text-gray-600">Check back later for new matches</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Comprehensive Filter Modal */}
-              {showFilters && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end justify-center">
-                  <div className="bg-white rounded-t-3xl w-full max-w-md max-h-[85vh] overflow-y-auto">
-                    <div className="sticky top-0 bg-white px-6 pt-6 pb-4 border-b border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
-                        <button 
-                          onClick={() => setShowFilters(false)}
-                          className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-all"
-                        >
-                          <X className="w-5 h-5 text-gray-600" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="p-6 space-y-6">
-                      {/* Distance */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Distance: {maxDistance} miles</label>
-                        <input
-                          type="range"
-                          min="1"
-                          max="100"
-                          value={maxDistance}
-                          onChange={(e) => setMaxDistance(e.target.value)}
-                          className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-blue-900"
-                        />
-                      </div>
-
-                      {/* Age Range */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Age Range: {ageRange[0]} - {ageRange[1]}</label>
-                        <div className="flex gap-4">
-                          <input
-                            type="range"
-                            min="18"
-                            max="65"
-                            value={ageRange[0]}
-                            onChange={(e) => setAgeRange([parseInt(e.target.value), ageRange[1]])}
-                            className="flex-1 h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-blue-900"
-                          />
-                          <input
-                            type="range"
-                            min="18"
-                            max="65"
-                            value={ageRange[1]}
-                            onChange={(e) => setAgeRange([ageRange[0], parseInt(e.target.value)])}
-                            className="flex-1 h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-blue-900"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Healthcare Role */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Healthcare Role</label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {['Nurse', 'Doctor', 'Paramedic', 'Therapist', 'Admin', 'Any'].map((role) => (
-                            <button key={role} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-blue-50 hover:text-blue-700 transition-all">
-                              {role}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Shift Compatibility */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Shift Preference</label>
-                        <div className="flex flex-wrap gap-2">
-                          {['Day Shift', 'Night Shift', 'Rotating', 'Any'].map((shift) => (
-                            <button key={shift} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-purple-50 hover:text-purple-700 transition-all">
-                              {shift}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Relationship Goals */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Looking For</label>
-                        <div className="flex flex-wrap gap-2">
-                          {['Long-term', 'Casual', 'Friends', 'Not sure'].map((goal) => (
-                            <button key={goal} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-pink-50 hover:text-pink-700 transition-all">
-                              {goal}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Show Only */}
-                      <div>
-                        <label className="block text-sm font-bold text-gray-900 mb-3">Show Only</label>
-                        <div className="space-y-2">
-                          <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                            <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                            <span className="cb-chip text-sm font-medium text-gray-700 border border-white/30">Verified profiles</span>
-                          </label>
-                          <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                            <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                            <span className="text-sm font-medium text-gray-700">Recently active</span>
-                          </label>
-                          <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                            <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                            <span className="text-sm font-medium text-gray-700">High compatibility (80%+)</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="sticky bottom-0 bg-white px-6 py-4 border-t border-gray-200 flex gap-3">
-                      <button className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all">
-                        Reset
-                      </button>
-                      <button 
-                        onClick={() => setShowFilters(false)}
-                        className="flex-1 bg-gradient-to-r from-blue-900 to-blue-800 text-white py-3 rounded-2xl font-bold hover:from-blue-800 hover:to-blue-700 transition-all cb-shadow-card"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <DiscoverTab
+              sampleProfiles={sampleProfiles}
+              currentMatch={currentMatch}
+              setCurrentMatch={setCurrentMatch}
+              activePrompt={activePrompt}
+              setActivePrompt={setActivePrompt}
+              imageErrors={imageErrors}
+              setImageErrors={setImageErrors}
+              showFilters={showFilters}
+              setShowFilters={setShowFilters}
+              maxDistance={maxDistance}
+              setMaxDistance={setMaxDistance}
+              ageRange={ageRange}
+              setAgeRange={setAgeRange}
+            />
           )}
 
           {activeTab === 'matches' && (
-            <div className="px-6 py-6">
-              <h2 className="cb-title text-2xl font-bold text-gray-900 mb-6">Messages</h2>
-              
-              {/* Who Likes You Section */}
-              <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 rounded-2xl p-6 mb-6 text-white cb-shadow-card">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <Heart className="w-6 h-6 fill-current" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">Who Likes You</h3>
-                      <p className="text-sm opacity-90">{whoLikesYou.length} people are interested</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-6 h-6" />
-                </div>
-                <div className="flex gap-3 overflow-x-auto pb-2">
-                  {whoLikesYou.map((person, idx) => (
-                        <div key={idx} className="cb-card rounded-2xl p-4 min-w-[200px] bg-white">
-                      <div className="text-4xl mb-2">{person.photo}</div>
-                      <h4 className="font-bold text-lg">{person.name}</h4>
-                      <p className="text-sm opacity-90 mb-2">{person.role}</p>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Zap className="w-4 h-4" />
-                        <span className="cb-chip font-semibold border border-white/30">{person.compatibility}% Match</span>
-                      </div>
-                      <p className="text-xs opacity-75 mt-2 line-clamp-2">{person.preview}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Matches List */}
-                  <div className="space-y-3 mb-24">
-                {myMatches.map(match => (
-                  <button
-                    key={match.id}
-                    onClick={() => setSelectedMatch(match)}
-                        className="w-full cb-card rounded-2xl p-4 cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all text-left"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <div className="w-14 h-14 text-3xl">{match.photo}</div>
-                        {match.online && (
-                          <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-bold text-gray-900">{match.name}</h3>
-                          {match.yourTurn && (
-                            <span className="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-bold">
-                              Your turn
-                            </span>
-                          )}
-                        </div>
-                        <p className={`text-sm ${match.unread ? 'text-gray-900 font-semibold' : 'text-gray-600'}`}>
-                          {match.lastMessage}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs text-gray-500 mb-2">{match.time}</div>
-                        {match.unread && (
-                          <div className="w-3 h-3 bg-pink-500 rounded-full ml-auto"></div>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <MatchesTab
+              whoLikesYou={whoLikesYou}
+              myMatches={myMatches}
+              setSelectedMatch={setSelectedMatch}
+            />
           )}
 
           {activeTab === 'home' && (
-            <div className="px-6 py-6 relative">
-              {/* Profile shortcut: circle button top-right navigates to profile */}
-              <button
-                onClick={() => setCurrentScreen('profile')}
-                title="Open profile"
-                className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center cb-shadow-card hover:scale-105 transition-transform"
-              >
-                {/* Avatar: prefer the first profile photo (emoji or image), fall back to icon */}
-                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 text-xl">
-                  {userProfile && userProfile.photos && userProfile.photos[0] ? (
-                    // If photos contain an emoji or simple string, render it; if it's a URL, render an <img>
-                    (typeof userProfile.photos[0] === 'string' && userProfile.photos[0].startsWith('http')) ? (
-                      <img src={userProfile.photos[0]} alt={userProfile.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-lg leading-none">{userProfile.photos[0]}</span>
-                    )
-                  ) : (
-                    <User className="w-6 h-6 text-gray-700" />
-                  )}
-                </div>
-              </button>
-
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back, Venice! 👋</h2>
-                <p className="text-gray-600">Here's what's happening today</p>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-5 text-white cb-shadow-card">
-                  <div className="text-3xl font-bold mb-1">{dailyInsights.profileViews}</div>
-                  <div className="text-sm opacity-90">Profile Views Today</div>
-                  <div className="flex items-center gap-1 mt-2 text-xs">
-                    <TrendingUp className="w-3 h-3" />
-                    <span>+5 from yesterday</span>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl p-5 text-white cb-shadow-card">
-                  <div className="text-3xl font-bold mb-1">{dailyInsights.newLikes}</div>
-                  <div className="text-sm opacity-90">New Likes</div>
-                  <div className="flex items-center gap-1 mt-2 text-xs">
-                    <Heart className="w-3 h-3 fill-current" />
-                    <span>Check them out!</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Top Match Highlight */}
-              <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 mb-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-5 h-5 text-yellow-500" />
-                  <h3 className="text-lg font-bold text-gray-900">Your Top Match Today</h3>
-                </div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="text-5xl">{sampleProfiles[0].photos[0]}</div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-bold text-gray-900">{sampleProfiles[0].name}, {sampleProfiles[0].age}</h4>
-                    <p className="text-sm text-gray-600 mb-2">{sampleProfiles[0].role}</p>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-full">
-                        <Zap className="w-3 h-3 text-green-600" />
-                        <span className="cb-chip text-xs font-bold text-green-700 border border-white/30">{sampleProfiles[0].shiftCompatibility}% Match</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded-full">
-                        <Users className="w-3 h-3 text-blue-600" />
-                        <span className="text-xs font-bold text-blue-700">{sampleProfiles[0].mutualConnections} mutual</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setActiveTab('discover')}
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-3 rounded-xl font-bold hover:from-pink-600 hover:to-rose-700 transition-all cb-shadow-card"
-                >
-                  View Profile
-                </button>
-              </div>
-
-              {/* Profile Completion */}
-              {userProfile.profileComplete < 100 && (
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white mb-6 cb-shadow-card">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Award className="w-8 h-8" />
-                    <div>
-                      <h3 className="text-lg font-bold">Complete Your Profile</h3>
-                      <p className="text-sm opacity-90">{userProfile.profileComplete}% complete</p>
-                    </div>
-                  </div>
-                  <div className="h-2 bg-white bg-opacity-20 rounded-full overflow-hidden mb-4">
-                    <div className="h-full bg-white rounded-full" style={{width: `${userProfile.profileComplete}%`}}></div>
-                  </div>
-                  <p className="text-sm mb-4">Complete profiles get 5x more matches! Add these to stand out:</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4" />
-                      <span>Add 2 more photos</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4" />
-                      <span>Record a voice prompt</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4" />
-                      <span>Add your vibe</span>
-                    </div>
-                  </div>
-                  <button className="w-full bg-white text-purple-600 py-3 rounded-xl font-bold mt-4 hover:bg-gray-50 transition-all">
-                    Continue Setup
-                  </button>
-                </div>
-              )}
-
-              {/* Tip of the Day - No bottom rounded corners */}
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-t-2xl p-5 mb-24">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-blue-900 mb-1">Tip of the Day</h3>
-                    <p className="text-sm text-blue-800">{dailyInsights.tip}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <HomeTab
+              setCurrentScreen={setCurrentScreen}
+              userProfile={userProfile}
+              dailyInsights={dailyInsights}
+              sampleProfiles={sampleProfiles}
+              setActiveTab={setActiveTab}
+            />
           )}
 
           {activeTab === 'connect' && (
-            <div className="px-6 py-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Events & Meetups</h2>
-              
-              {/* Buddy Mode Toggle */}
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 mb-6 text-white cb-shadow-card">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">Buddy Mode</h3>
-                      <p className="text-sm opacity-90">Find platonic connections</p>
-                    </div>
-                  </div>
-                  <button className="bg-white text-green-600 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-100 transition-all">
-                    Try Now
-                  </button>
-                </div>
-                <p className="text-sm opacity-90">Connect with healthcare professionals for friendship, support, and shared activities.</p>
-              </div>
-
-              {/* Events List */}
-              <div className="space-y-4">
-                {events.map(event => (
-                  <div key={event.id} className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all">
-                    <div className="flex">
-                      <div className="w-20 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-4xl flex-shrink-0">
-                        {event.image}
-                      </div>
-                      <div className="flex-1 p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <h3 className="font-bold text-gray-900 mb-1">{event.title}</h3>
-                            <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{event.date} • {event.time}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <MapPin className="w-4 h-4" />
-                                <span>{event.location}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                            event.category === 'Wellness' ? 'bg-green-100 text-green-700' :
-                            event.category === 'Support' ? 'bg-blue-100 text-blue-700' :
-                            'bg-purple-100 text-purple-700'
-                          }`}>
-                            {event.category}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-sm">
-                            <div className="flex items-center gap-1 text-gray-600">
-                              <Users className="w-4 h-4" />
-                              <span>{event.attendees} going</span>
-                            </div>
-                            {event.going > 0 && (
-                              <span className="text-blue-600 font-semibold">
-                                {event.going} friends attending
-                              </span>
-                            )}
-                          </div>
-                          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-all">
-                            RSVP
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Create Event Button */}
-              <button className="w-full mt-6 mb-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all cb-shadow-card flex items-center justify-center gap-2">
-                <Plus className="w-5 h-5" />
-                Create Your Own Event
-              </button>
-            </div>
+            <ConnectTab events={events} />
           )}
 
           {activeTab === 'vent' && (
-            <div className="px-6 py-6">
-              {!ventRoom ? (
-                <>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Anonymous Vent Space 💭</h2>
-                    <p className="text-gray-600">A safe space to release and be heard</p>
-                  </div>
-
-                  {/* Vent Stats */}
-                  <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white mb-6 cb-shadow-card">
-                    <h3 className="text-xl font-bold mb-4">Community Support 24/7</h3>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
-                        <div className="font-bold text-2xl mb-1">40</div>
-                        <div className="text-xs opacity-90">People Online</div>
-                      </div>
-                      <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
-                        <div className="font-bold text-2xl mb-1">24/7</div>
-                        <div className="text-xs opacity-90">Available</div>
-                      </div>
-                      <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
-                        <div className="font-bold text-2xl mb-1">100%</div>
-                        <div className="text-xs opacity-90">Anonymous</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Safety Notice */}
-                  <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-5 mb-6 flex items-start gap-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Shield className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-green-900 mb-2">Your Safety Matters</h3>
-                      <ul className="text-sm text-green-800 space-y-1">
-                        <li>• All conversations are anonymous and auto-delete</li>
-                        <li>• AI moderation protects patient privacy</li>
-                        <li>• Professional support available 24/7</li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {ventTopics.map(topic => (
-                      <button
-                        key={topic.id}
-                        onClick={() => setVentRoom(topic)}
-                        className="w-full bg-white border-2 border-gray-200 rounded-2xl p-6 cb-shadow-card hover:border-blue-300 hover:scale-[1.02] transition-all text-left"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className={`w-16 h-16 bg-gradient-to-br ${topic.gradient} rounded-2xl flex items-center justify-center text-3xl cb-shadow-card flex-shrink-0`}>
-                            {topic.icon}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="text-xl font-bold text-gray-900">{topic.name}</h3>
-                              {topic.trending && (
-                                <span className="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-                                  <TrendingUp className="w-3 h-3" />
-                                  Trending
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-600 mb-2">{topic.description}</p>
-                            <div className="flex items-center gap-4 text-sm">
-                              <span className="font-semibold text-blue-600">{topic.active} people online</span>
-                              <span className="text-gray-500">• Active now</span>
-                            </div>
-                          </div>
-                          <ChevronRight className="w-6 h-6 text-gray-400" />
-                        </div>
-                      </button>
-                    ))}
-
-                    <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white cb-shadow-card">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <Lock className="w-6 h-6" />
-                            <h3 className="text-xl font-bold">1-on-1 Anonymous Chat</h3>
-                          </div>
-                          <p className="text-blue-100 text-sm">Get paired with another healthcare professional for private, anonymous support.</p>
-                        </div>
-                      </div>
-                      <button className="bg-white text-blue-900 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 w-full transition-all cb-shadow-card">
-                        Start Private Chat
-                      </button>
-                    </div>
-
-                    {/* Crisis Resources */}
-                    <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-24">
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
-                        <div>
-                          <h3 className="font-bold text-red-900 mb-2">Need Immediate Help?</h3>
-                          <p className="text-sm text-red-800 mb-3">If you're in crisis, please reach out to professional support:</p>
-                          <div className="space-y-2">
-                            <button className="w-full bg-red-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
-                              <Phone className="w-5 h-5" />
-                              Call Crisis Hotline
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="mb-24">
-                  <button
-                    onClick={() => setVentRoom(null)}
-                    className="flex items-center gap-2 text-gray-600 mb-4 hover:text-gray-900 font-semibold"
-                  >
-                    <ChevronRight className="w-5 h-5 rotate-180" />
-                    Back to rooms
-                  </button>
-
-                  <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden cb-shadow-card">
-                    <div className={`bg-gradient-to-r ${ventRoom.gradient} px-6 py-5 flex items-center gap-4 text-white`}>
-                      <div className={`w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-sm`}>
-                        {ventRoom.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold mb-1">{ventRoom.name}</h3>
-                        <p className="text-sm opacity-90">Anonymous • {ventRoom.active} online • Auto-deletes in 10 min</p>
-                      </div>
-                      {ventRoom.trending && (
-                        <div className="bg-white bg-opacity-20 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 backdrop-blur-sm">
-                          <TrendingUp className="w-3 h-3" />
-                          Trending
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="h-96 p-6 overflow-y-auto bg-gray-50 space-y-4">
-                      <div className="bg-blue-600 text-white rounded-2xl p-5 max-w-sm shadow-md">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-bold text-sm">Nurse_42</div>
-                          <span className="text-xs opacity-75">2 min ago</span>
-                        </div>
-                        <p className="text-sm leading-relaxed">Just finished a brutal 12-hour shift. Completely drained. Anyone else struggling to decompress?</p>
-                      </div>
-                      <div className="bg-blue-700 text-white rounded-2xl p-5 max-w-sm ml-auto shadow-md">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-bold text-sm">Doctor_18</div>
-                          <span className="text-xs opacity-75">1 min ago</span>
-                        </div>
-                        <p className="text-sm leading-relaxed">You're not alone. The night shifts are especially rough. Take care of yourself 💙</p>
-                      </div>
-                      <div className="bg-green-600 text-white rounded-2xl p-5 max-w-sm shadow-md">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-bold text-sm">Paramedic_7</div>
-                          <span className="text-xs opacity-75">Just now</span>
-                        </div>
-                        <p className="text-sm leading-relaxed">Remember why we do this. Every shift makes a difference, even when it doesn't feel like it. You've got this! 💪</p>
-                      </div>
-                    </div>
-
-                    <div className="border-t-2 border-gray-200 p-4 bg-white">
-                      <div className="flex gap-3 mb-3">
-                        <input
-                          type="text"
-                          placeholder="Share what's on your mind... (completely anonymous)"
-                          className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-500 text-sm"
-                        />
-                        <button className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 cb-shadow-card flex-shrink-0">
-                          <Send className="w-5 h-5" />
-                        </button>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded-lg">
-                          <Image className="w-5 h-5 text-gray-600" />
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-lg">
-                          <Mic className="w-5 h-5 text-gray-600" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="bg-amber-50 border-t-2 border-amber-200 p-5 flex items-start gap-3">
-                      <Shield className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-sm text-amber-900 font-semibold mb-1">AI Moderation Active</p>
-                        <p className="text-sm text-amber-800">Messages are monitored to protect patient privacy. Please avoid sharing patient names or identifiable information.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <VentTab
+              ventRoom={ventRoom}
+              setVentRoom={setVentRoom}
+              ventTopics={ventTopics}
+            />
           )}
         </div>
 
