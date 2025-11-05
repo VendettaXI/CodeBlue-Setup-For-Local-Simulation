@@ -76,7 +76,7 @@
 import React from 'react';
 import { Stethoscope, Building2, Clock, MapPin, Users, Zap } from 'lucide-react';
 
-export function InfoChips({
+export const InfoChips = React.memo(function InfoChips({
   specialty,
   hospital,
   shift,
@@ -175,7 +175,7 @@ export function InfoChips({
       ))}
     </div>
   );
-}
+});
 
 // Default export for convenience
 export default InfoChips;

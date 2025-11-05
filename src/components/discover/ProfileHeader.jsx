@@ -63,7 +63,7 @@
 import React from 'react';
 import { Briefcase, MoreHorizontal } from 'lucide-react';
 
-export function ProfileHeader({
+export const ProfileHeader = React.memo(function ProfileHeader({
   name,
   age,
   role,
@@ -115,7 +115,7 @@ export function ProfileHeader({
       )}
     </div>
   );
-}
+});
 
 // Default export for convenience
 export default ProfileHeader;

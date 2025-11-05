@@ -53,7 +53,10 @@
 
 import React from 'react';
 
-export function VibeTagsList({ vibes = [], dealbreakers = [] }) {
+export const VibeTagsList = React.memo(function VibeTagsList({
+  vibes = [],
+  dealbreakers = []
+}) {
   return (
     <div className="mt-6 space-y-4">
       {/* My Vibe Section */}
@@ -95,6 +98,6 @@ export function VibeTagsList({ vibes = [], dealbreakers = [] }) {
       )}
     </div>
   );
-}
+});
 
 export default VibeTagsList;

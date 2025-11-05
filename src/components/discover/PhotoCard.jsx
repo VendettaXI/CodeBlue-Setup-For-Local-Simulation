@@ -75,7 +75,7 @@
 import React, { useState, useRef } from 'react';
 import { Check, Zap, Heart, X, Star } from 'lucide-react';
 
-export function PhotoCard({
+export const PhotoCard = React.memo(function PhotoCard({
   photos = [],
   activePhotoIndex = 0,
   onPhotoChange,
@@ -398,7 +398,7 @@ export function PhotoCard({
       )}
     </div>
   );
-}
+});
 
 // Default export for convenience
 export default PhotoCard;

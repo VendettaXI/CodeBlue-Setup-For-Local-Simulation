@@ -40,7 +40,7 @@
  * ============================================================================
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, SlidersHorizontal, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
 
 // Component imports
@@ -51,11 +51,13 @@ import { ProfileHeader } from './components/discover/ProfileHeader';
 import { InfoChips } from './components/discover/InfoChips';
 import { PromptCard } from './components/discover/PromptCard';
 import { VibeTagsList } from './components/discover/VibeTagsList';
-import { DiscoverTab } from './components/tabs/DiscoverTab';
-import { MatchesTab } from './components/tabs/MatchesTab';
-import { HomeTab } from './components/tabs/HomeTab';
-import { ConnectTab } from './components/tabs/ConnectTab';
-import { VentTab } from './components/tabs/VentTab';
+
+// Lazy-load tab components for better performance
+const DiscoverTab = lazy(() => import('./components/tabs/DiscoverTab'));
+const MatchesTab = lazy(() => import('./components/tabs/MatchesTab'));
+const HomeTab = lazy(() => import('./components/tabs/HomeTab'));
+const ConnectTab = lazy(() => import('./components/tabs/ConnectTab'));
+const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
@@ -2215,67 +2217,76 @@ const sampleProfiles = [
           role="main"
           aria-live="polite"
         >
-          {activeTab === 'discover' && (
-            <ErrorBoundary fallback="section" context="Discover Tab">
-              <DiscoverTab
-                sampleProfiles={sampleProfiles}
-                currentMatch={currentMatch}
-                setCurrentMatch={setCurrentMatch}
-                activePrompt={activePrompt}
-                setActivePrompt={setActivePrompt}
-                imageErrors={imageErrors}
-                setImageErrors={setImageErrors}
-                showFilters={showFilters}
-                setShowFilters={setShowFilters}
-                maxDistance={maxDistance}
-                setMaxDistance={setMaxDistance}
-                ageRange={ageRange}
-                setAgeRange={setAgeRange}
-                likedPrompts={likedPrompts}
-                togglePromptLike={togglePromptLike}
-                promptComments={promptComments}
-                addPromptComment={addPromptComment}
-              />
-            </ErrorBoundary>
-          )}
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+              </div>
+            </div>
+          }>
+            {activeTab === 'discover' && (
+              <ErrorBoundary fallback="section" context="Discover Tab">
+                <DiscoverTab
+                  sampleProfiles={sampleProfiles}
+                  currentMatch={currentMatch}
+                  setCurrentMatch={setCurrentMatch}
+                  activePrompt={activePrompt}
+                  setActivePrompt={setActivePrompt}
+                  imageErrors={imageErrors}
+                  setImageErrors={setImageErrors}
+                  showFilters={showFilters}
+                  setShowFilters={setShowFilters}
+                  maxDistance={maxDistance}
+                  setMaxDistance={setMaxDistance}
+                  ageRange={ageRange}
+                  setAgeRange={setAgeRange}
+                  likedPrompts={likedPrompts}
+                  togglePromptLike={togglePromptLike}
+                  promptComments={promptComments}
+                  addPromptComment={addPromptComment}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'matches' && (
-            <ErrorBoundary fallback="section" context="Matches Tab">
-              <MatchesTab
-                whoLikesYou={whoLikesYou}
-                myMatches={myMatches}
-                setSelectedMatch={setSelectedMatch}
-              />
-            </ErrorBoundary>
-          )}
+            {activeTab === 'matches' && (
+              <ErrorBoundary fallback="section" context="Matches Tab">
+                <MatchesTab
+                  whoLikesYou={whoLikesYou}
+                  myMatches={myMatches}
+                  setSelectedMatch={setSelectedMatch}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'home' && (
-            <ErrorBoundary fallback="section" context="Home Tab">
-              <HomeTab
-                setCurrentScreen={setCurrentScreen}
-                userProfile={userProfile}
-                dailyInsights={dailyInsights}
-                sampleProfiles={sampleProfiles}
-                setActiveTab={setActiveTab}
-              />
-            </ErrorBoundary>
-          )}
+            {activeTab === 'home' && (
+              <ErrorBoundary fallback="section" context="Home Tab">
+                <HomeTab
+                  setCurrentScreen={setCurrentScreen}
+                  userProfile={userProfile}
+                  dailyInsights={dailyInsights}
+                  sampleProfiles={sampleProfiles}
+                  setActiveTab={setActiveTab}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'connect' && (
-            <ErrorBoundary fallback="section" context="Connect Tab">
-              <ConnectTab events={events} />
-            </ErrorBoundary>
-          )}
+            {activeTab === 'connect' && (
+              <ErrorBoundary fallback="section" context="Connect Tab">
+                <ConnectTab events={events} />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'vent' && (
-            <ErrorBoundary fallback="section" context="Vent Tab">
-              <VentTab
-                ventRoom={ventRoom}
-                setVentRoom={setVentRoom}
-                ventTopics={ventTopics}
-              />
-            </ErrorBoundary>
-          )}
+            {activeTab === 'vent' && (
+              <ErrorBoundary fallback="section" context="Vent Tab">
+                <VentTab
+                  ventRoom={ventRoom}
+                  setVentRoom={setVentRoom}
+                  ventTopics={ventTopics}
+                />
+              </ErrorBoundary>
+            )}
+          </Suspense>
         </main>
 
         {/* Bottom Tab Navigation - Modern Nested Pill Design */}

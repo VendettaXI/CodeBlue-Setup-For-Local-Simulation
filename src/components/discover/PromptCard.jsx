@@ -64,7 +64,7 @@
 import React from 'react';
 import { ThumbsUp, MessageCircle } from 'lucide-react';
 
-export function PromptCard({
+export const PromptCard = React.memo(function PromptCard({
   question,
   answer,
   type = 'text',
@@ -127,6 +127,6 @@ export function PromptCard({
       {/* No like button or count */}
     </div>
   );
-}
+});
 
 export default PromptCard;

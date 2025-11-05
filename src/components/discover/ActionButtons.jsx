@@ -60,11 +60,11 @@
 import React from 'react';
 import { X, Star, Heart } from 'lucide-react';
 
-export function ActionButtons({ 
-  onPass, 
-  onFavorite, 
-  onConnect, 
-  profileName = '' 
+export const ActionButtons = React.memo(function ActionButtons({
+  onPass,
+  onFavorite,
+  onConnect,
+  profileName = ''
 }) {
   return (
     <div
@@ -99,7 +99,7 @@ export function ActionButtons({
       </button>
     </div>
   );
-}
+});
 
 // Default export for convenience
 export default ActionButtons;

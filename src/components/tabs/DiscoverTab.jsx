@@ -21,7 +21,7 @@
  * - VibeTagsList: Interests and dealbreakers
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { X } from 'lucide-react';
 import { PhotoCard } from '../discover/PhotoCard';
 import { ActionButtons } from '../discover/ActionButtons';
@@ -61,9 +61,15 @@ export function DiscoverTab({
   const [commentKey, setCommentKey] = useState(null);
   const [commentText, setCommentText] = useState('');
 
-  const handleAction = (action) => {
+  // Memoize current profile to avoid unnecessary recalculations
+  const currentProfile = useMemo(() => 
+    sampleProfiles[currentMatch],
+    [sampleProfiles, currentMatch]
+  );
+
+  const handleAction = useCallback((action) => {
     // Save action to localStorage for history/analytics
-    const profile = sampleProfiles[currentMatch];
+    const profile = currentProfile;
     const actionType = action === 'left' ? 'pass' : action === 'right' ? 'connect' : 'favorite';
     
     saveAction({
@@ -93,7 +99,7 @@ export function DiscoverTab({
       setCurrentMatch((currentMatch + 1) % sampleProfiles.length);
       setTransitioning(false);
     }, 300); // match CSS transition duration
-  };
+  }, [currentProfile, currentMatch, activePrompt, addToast, setCurrentMatch, sampleProfiles.length]);
 
   // Keyboard controls: Left = pass, Right = like, Up = super like
   useEffect(() => {
@@ -125,7 +131,7 @@ export function DiscoverTab({
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [currentMatch, activePrompt, showFilters, sampleProfiles]);
+  }, [handleAction, showFilters]);
   return (
     <div className="min-h-full bg-[#FAFAFA]">
       <div className="h-2"></div>
