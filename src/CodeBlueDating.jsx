@@ -68,7 +68,6 @@ const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
-import { getPalette, getCurrentPaletteId, setPalette, getAllPalettes } from './utils/themePalettes';
 
 // Note: ActionTray component removed - action buttons are now componentized
 
@@ -106,7 +105,7 @@ import { getPalette, getCurrentPaletteId, setPalette, getAllPalettes } from './u
  * - Activated by adding .dark class to <html> element
  * - Overrides colors and shadows for dark theme
  */
-function useCodeBlueTheme(palette) {
+function useCodeBlueTheme() {
   useEffect(() => {
     // Inter font
     if (!document.getElementById("inter-font-link")) {
@@ -120,22 +119,20 @@ function useCodeBlueTheme(palette) {
     document.body.style.fontFamily =
       'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
 
-    // Inject CSS custom properties for current palette
+    // Inject CSS custom properties for Classic Blue theme (NHS-inspired)
     const root = document.documentElement;
-    if (palette && palette.colors) {
-      root.style.setProperty('--cb-nav-container', palette.colors.navContainer);
-      root.style.setProperty('--cb-nav-active', palette.colors.navActive);
-      root.style.setProperty('--cb-discover', palette.colors.discover);
-      root.style.setProperty('--cb-matches', palette.colors.matches);
-      root.style.setProperty('--cb-home', palette.colors.home);
-      root.style.setProperty('--cb-connect', palette.colors.connect);
-      root.style.setProperty('--cb-vent', palette.colors.vent);
-      root.style.setProperty('--cb-gradient-start', palette.colors.gradientStart);
-      root.style.setProperty('--cb-gradient-mid', palette.colors.gradientMid);
-      root.style.setProperty('--cb-gradient-end', palette.colors.gradientEnd);
-      root.style.setProperty('--cb-button-primary', palette.colors.buttonPrimary);
-      root.style.setProperty('--cb-button-secondary', palette.colors.buttonSecondary);
-    }
+    root.style.setProperty('--cb-nav-container', '#122c34');    // Gunmetal
+    root.style.setProperty('--cb-nav-active', '#ffffff');       // White
+    root.style.setProperty('--cb-discover', '#ec4899');         // Pink
+    root.style.setProperty('--cb-matches', '#44cfcb');          // Robin egg blue
+    root.style.setProperty('--cb-home', '#4ea5d9');            // Picton blue
+    root.style.setProperty('--cb-connect', '#10b981');          // Emerald
+    root.style.setProperty('--cb-vent', '#6366f1');            // Indigo
+    root.style.setProperty('--cb-gradient-start', '#4ea5d9');   // Picton blue
+    root.style.setProperty('--cb-gradient-mid', '#44cfcb');     // Robin egg blue
+    root.style.setProperty('--cb-gradient-end', '#224870');     // Indigo dye
+    root.style.setProperty('--cb-button-primary', '#4ea5d9');
+    root.style.setProperty('--cb-button-secondary', '#44cfcb');
 
     // Global CSS tokens (lavender base + navy gradient + shadows)
     if (!document.getElementById("cb-theme-style")) {
@@ -431,27 +428,6 @@ const CodeBlueDating = () => {
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
-  // THEME PALETTE STATE & MANAGEMENT
-  // ========================================================================
-  
-  // Theme palette state - initialized from localStorage
-  const [currentPalette, setCurrentPalette] = useState(() => getCurrentPaletteId());
-  
-  // Change theme palette and persist to localStorage
-  const handlePaletteChange = (paletteId) => {
-    setPalette(paletteId);
-    setCurrentPalette(paletteId);
-  };
-
-  // Listen for theme changes (in case changed from another component)
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      setCurrentPalette(event.detail.paletteId);
-    };
-    window.addEventListener('themechange', handleThemeChange);
-    return () => window.removeEventListener('themechange', handleThemeChange);
-  }, []);
-
   // Detect system theme preference on first load if no user preference saved
   useEffect(() => {
     try {
@@ -470,8 +446,8 @@ const CodeBlueDating = () => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
-  // Inject global theme styles with current palette (updates when palette changes)
-  useCodeBlueTheme(getPalette());
+  // Inject global theme styles
+  useCodeBlueTheme();
   
   // ========================================================================
   // NAVIGATION STATE
@@ -1868,13 +1844,6 @@ const sampleProfiles = [
               action={<ToggleSwitch enabled={darkMode} onChange={toggleDarkMode} />}
               showChevron={false}
             />
-            <SettingItem
-              icon={Sparkles}
-              label="Color Palette"
-              description="Customize your app's color theme"
-              action={null}
-              onClick={() => setCurrentScreen('palette-selector')}
-            />
           </Section>
 
           {/* Safety & Privacy */}
@@ -2056,137 +2025,6 @@ const sampleProfiles = [
           <div className="mx-5 mb-20 text-center">
             <p className="text-sm text-gray-500">Version 1.0.0 • CODE BLUE DATING</p>
             <p className="text-xs text-gray-400 mt-1">© 2025 Healthcare Professionals Network</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // PALETTE SELECTOR SCREEN
-  if (currentScreen === 'palette-selector') {
-    const palettes = getAllPalettes();
-    
-    return (
-      <div className="min-h-screen bg-[#F8F7FB]">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-          <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
-            <button 
-              onClick={() => setCurrentScreen('settings')}
-              className="text-blue-900 font-semibold flex items-center gap-1"
-            >
-              <ChevronRight className="w-5 h-5 rotate-180" />
-              Back
-            </button>
-            <h1 className="text-xl font-bold text-gray-900">Color Palette</h1>
-            <div className="w-14"></div>
-          </div>
-        </div>
-
-        <div className="max-w-2xl mx-auto py-6 pb-24">
-          {/* Instructions */}
-          <div className="px-5 mb-6">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Choose a color palette that matches your vibe. Each palette changes the app's navigation and accent colors while maintaining accessibility.
-            </p>
-          </div>
-
-          {/* Palette Cards */}
-          <div className="space-y-3 px-5">
-            {Object.values(palettes).map((palette) => {
-              const isActive = currentPalette === palette.id;
-              
-              return (
-                <button
-                  key={palette.id}
-                  onClick={() => handlePaletteChange(palette.id)}
-                  className={`w-full bg-white dark:bg-gray-800 rounded-2xl p-5 border-2 transition-all ${
-                    isActive 
-                      ? 'border-blue-500 shadow-lg' 
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {/* Palette Name & Description */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-left">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                        {palette.name}
-                        {isActive && (
-                          <span className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">
-                            <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                            <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Active</span>
-                          </span>
-                        )}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {palette.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Color Swatches */}
-                  <div className="flex items-center gap-2">
-                    {/* Nav Container */}
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.navContainer }}
-                      title="Navigation container"
-                    />
-                    
-                    {/* Tab Colors */}
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.discover }}
-                      title="Discover tab"
-                    />
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.matches }}
-                      title="Matches tab"
-                    />
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.home }}
-                      title="Home tab"
-                    />
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.connect }}
-                      title="Connect tab"
-                    />
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ backgroundColor: palette.colors.vent }}
-                      title="Vent tab"
-                    />
-                    
-                    {/* Gradient Preview */}
-                    <div 
-                      className="flex-1 h-10 rounded-full border-2 border-white shadow-sm"
-                      style={{ 
-                        background: `linear-gradient(to right, ${palette.colors.gradientStart}, ${palette.colors.gradientMid}, ${palette.colors.gradientEnd})`
-                      }}
-                      title="Gradient colors"
-                    />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Info Card */}
-          <div className="mx-5 mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-5 border border-blue-200/60 dark:border-blue-700/40">
-            <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-blue-900 dark:text-blue-100 text-sm mb-1">
-                  Palette Changes Apply Immediately
-                </h4>
-                <p className="text-xs text-blue-700 dark:text-blue-300">
-                  Your chosen palette affects navigation, buttons, and accents throughout the app. All palettes maintain WCAG AA contrast ratios for accessibility.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
