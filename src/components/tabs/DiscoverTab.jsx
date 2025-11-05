@@ -22,7 +22,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { X, RotateCcw } from 'lucide-react';
+import { X } from 'lucide-react';
 import { PhotoCard } from '../discover/PhotoCard';
 import { ActionButtons } from '../discover/ActionButtons';
 import { ProfileHeader } from '../discover/ProfileHeader';
@@ -31,6 +31,8 @@ import { PromptCard } from '../discover/PromptCard';
 import { VibeTagsList } from '../discover/VibeTagsList';
 import { PhotoCardSkeleton } from '../skeletons/PhotoCardSkeleton';
 import { PromptCardSkeleton } from '../skeletons/PromptCardSkeleton';
+import { saveAction } from '../../utils/discoveryPersistence';
+import { useToast } from '../Toast';
 
 export function DiscoverTab({
   sampleProfiles,
@@ -51,22 +53,40 @@ export function DiscoverTab({
   promptComments,
   addPromptComment
 }) {
-  // Maintain a small stack of recent swipes for Undo
-  const [lastSwipes, setLastSwipes] = useState([]); // { index, action, photoIndex, ts }
   const [loading, setLoading] = useState(true);
   const [transitioning, setTransitioning] = useState(false);
-  const MAX_STACK = 10;
+  const { addToast } = useToast();
 
   // Comment modal state
   const [commentKey, setCommentKey] = useState(null);
   const [commentText, setCommentText] = useState('');
 
   const handleAction = (action) => {
-    // Record last state before advancing
-    setLastSwipes((prev) => {
-      const next = [{ index: currentMatch, action, photoIndex: activePrompt, ts: Date.now() }, ...prev];
-      return next.slice(0, MAX_STACK);
+    // Save action to localStorage for history/analytics
+    const profile = sampleProfiles[currentMatch];
+    const actionType = action === 'left' ? 'pass' : action === 'right' ? 'connect' : 'favorite';
+    
+    saveAction({
+      profileId: currentMatch, // Using index as ID for now
+      profileName: profile.name,
+      action: actionType,
+      photoIndex: activePrompt
     });
+
+    // Show toast notification
+    if (actionType === 'connect') {
+      addToast(`You matched with ${profile.name}!`, {
+        type: 'match',
+        profileName: profile.name,
+        duration: 5000
+      });
+    } else if (actionType === 'favorite') {
+      addToast(`Added ${profile.name} to favorites ⭐`, {
+        type: 'success',
+        duration: 3000
+      });
+    }
+
     // Trigger transition, then advance
     setTransitioning(true);
     setTimeout(() => {
@@ -75,17 +95,7 @@ export function DiscoverTab({
     }, 300); // match CSS transition duration
   };
 
-  const undoLast = () => {
-    setLastSwipes((prev) => {
-      if (!prev.length) return prev;
-      const [last, ...rest] = prev;
-      setCurrentMatch(last.index);
-      setActivePrompt(last.photoIndex ?? 0);
-      return rest;
-    });
-  };
-
-  // Keyboard controls: Left = pass, Right = like, Up = super like, Z/Backspace = undo
+  // Keyboard controls: Left = pass, Right = like, Up = super like
   useEffect(() => {
     // Simulate initial fetch to show skeletons
     const t = setTimeout(() => setLoading(false), 800);
@@ -105,19 +115,12 @@ export function DiscoverTab({
         handleAction('left');
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
-        console.log('⌨️ ArrowRight → Like');
-        // mimic like path (alert + advance)
-        alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
+        console.log('⌨️ ArrowRight → Connect');
         handleAction('right');
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        console.log('⌨️ ArrowUp → Super Like');
-        alert(`Super Liked ⭐ ${sampleProfiles[currentMatch].name}`);
+        console.log('⌨️ ArrowUp → Favorite');
         handleAction('up');
-      } else if (e.key === 'Backspace' || e.key.toLowerCase() === 'z') {
-        e.preventDefault();
-        console.log('⌨️ Undo last swipe');
-        undoLast();
       }
     };
     window.addEventListener('keydown', onKeyDown);
@@ -179,29 +182,15 @@ export function DiscoverTab({
                 handleAction('left');
               }}
               onSwipeRight={() => {
-                console.log('👉 Swiped RIGHT - Like', sampleProfiles[currentMatch].name);
-                alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
+                console.log('👉 Swiped RIGHT - Connect', sampleProfiles[currentMatch].name);
                 handleAction('right');
               }}
               onSwipeUp={() => {
                 const name = sampleProfiles[currentMatch].name;
-                console.log('⬆️ Swiped UP - Super Like', name);
-                alert(`Super Liked ⭐ ${name}`);
+                console.log('⬆️ Swiped UP - Favorite', name);
                 handleAction('up');
               }}
             />
-
-            {/* Undo button */}
-            <button
-              onClick={undoLast}
-              disabled={!lastSwipes.length}
-              aria-label="Undo last swipe"
-              className={`absolute left-6 bottom-24 flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-semibold transition-all ${lastSwipes.length ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 shadow dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]' : 'bg-white/70 dark:bg-gray-800/70 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'}`}
-              style={{ zIndex: 'var(--z-dropdown, 40)' }}
-            >
-              <RotateCcw className="w-4 h-4" />
-              Undo
-            </button>
             
             <ActionButtons
               onPass={() => {
@@ -209,11 +198,11 @@ export function DiscoverTab({
                 handleAction('left');
               }}
               onFavorite={() => {
-                const name = sampleProfiles[currentMatch].name;
-                alert(`Added ${name} to your favorites ⭐`);
+                console.log('⭐ Favorite (button)');
+                handleAction('up');
               }}
               onConnect={() => {
-                alert('Match! 💙 ' + sampleProfiles[currentMatch].name);
+                console.log('💙 Connect (button)');
                 handleAction('right');
               }}
               profileName={sampleProfiles[currentMatch].name}
@@ -425,7 +414,7 @@ export function DiscoverTab({
                 placeholder="Share a thoughtful reply…"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 resize-none"
               />
-              <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center justify-between text-xs text-gray-500/90">
                 <span>{commentText.length}/240</span>
                 <span>Be kind and constructive</span>
               </div>

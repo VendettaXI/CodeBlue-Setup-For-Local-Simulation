@@ -22,7 +22,7 @@ export default function ActionTrayPreview() {
               className=""
             />
           </div>
-          <p className="text-sm text-gray-500 mt-3">Dark tray uses a deep navy capsule with layered shadows; it's elevated and reads as a floating control above the profile card.</p>
+          <p className="text-sm text-gray-500/90 mt-3">Dark tray uses a deep navy capsule with layered shadows; it's elevated and reads as a floating control above the profile card.</p>
         </div>
 
         <div className="bg-gray-50 p-6 rounded-2xl cb-shadow-card">
@@ -41,7 +41,7 @@ export default function ActionTrayPreview() {
               </div>
             </div>
           </div>
-          <p className="text-sm text-gray-500 mt-3">White pill emphasizes high contrast on top of photos but visually reads as attached to the card; good for accessibility on busy backgrounds.</p>
+          <p className="text-sm text-gray-500/90 mt-3">White pill emphasizes high contrast on top of photos but visually reads as attached to the card; good for accessibility on busy backgrounds.</p>
         </div>
       </div>
 

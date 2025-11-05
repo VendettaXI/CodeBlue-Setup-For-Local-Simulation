@@ -73,14 +73,14 @@ export function ProfileHeader({
   return (
     <div className="flex items-center justify-between mb-4">
       <div>
-        {/* Name & Age - Sans-Serif Medium with gradient, slightly spaced */}
+        {/* Name & Age - Sans-Serif Bold with gradient, slightly spaced */}
         <h2 
           id="profile-title" 
-          className="text-[28px] font-medium tracking-wide leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:from-gray-100 dark:via-gray-200 dark:to-gray-300 bg-clip-text text-transparent"
+          className="text-[28px] font-bold cb-slightly-spaced leading-none bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:from-gray-100 dark:via-gray-200 dark:to-gray-300 bg-clip-text text-transparent"
         >
           {name}
           {age && (
-            <span className="text-gray-500 dark:text-gray-400 font-medium">{`, ${age}`}</span>
+            <span className="text-gray-500 dark:text-gray-400 font-bold">{`, ${age}`}</span>
           )}
         </h2>
         
@@ -92,8 +92,8 @@ export function ProfileHeader({
               <Briefcase className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             </div>
             
-            {/* Role & Specialty Text */}
-            <p className="text-[17px] font-light leading-tight tracking-wide">
+            {/* Role & Specialty Text - Responsive: 16px → 17px at sm+ */}
+            <p className="text-[16px] sm:text-[17px] font-light leading-tight cb-slightly-spaced">
               {role}
               {specialty && (
                 <span className="text-gray-500 dark:text-gray-400 font-light">{` • ${specialty}`}</span>

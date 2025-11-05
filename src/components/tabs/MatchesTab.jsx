@@ -92,7 +92,7 @@ export function MatchesTab({ whoLikesYou, myMatches, setSelectedMatch }) {
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{match.time}</div>
+                  <div className="text-xs text-gray-500/90 dark:text-gray-400/90 mb-2">{match.time}</div>
                   {match.unread && (
                     <div className="w-3 h-3 bg-pink-500 rounded-full ml-auto"></div>
                   )}

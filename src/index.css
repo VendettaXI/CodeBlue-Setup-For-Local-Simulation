@@ -1,6 +1,21 @@
+/* Import CodeBlue theme utilities (letter-spacing, tokens, etc.) */
+@import "./styles/codeblue-theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Toast slide-in animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
 /* Quick pop animation for swipe icons */
 @keyframes cb-pop {

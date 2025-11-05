@@ -162,12 +162,12 @@ export function InfoChips({
             <item.icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
           </div>
           
-          {/* Label & Value - Medium 15px labels, Light 17px values, slightly spaced */}
+          {/* Label & Value - Responsive: labels 13→15px, values 14→17px, slightly spaced */}
           <div className="min-w-0">
-            <div className="text-[15px] font-medium tracking-wide uppercase text-gray-600 dark:text-gray-400">
+            <div className="text-[13px] sm:text-[15px] font-bold cb-slightly-spaced uppercase text-gray-500/90 dark:text-gray-400/90">
               {item.label}
             </div>
-            <div className="text-[17px] font-light text-gray-900 dark:text-gray-100 truncate tracking-wide">
+            <div className="text-[14px] sm:text-[17px] font-light text-gray-900 dark:text-gray-100 truncate cb-slightly-spaced" title={item.value}>
               {item.value}
             </div>
           </div>

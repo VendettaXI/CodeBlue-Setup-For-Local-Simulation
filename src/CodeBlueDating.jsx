@@ -44,6 +44,7 @@ import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, SlidersHorizontal, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
 
 // Component imports
+import ErrorBoundary from './components/ErrorBoundary';
 import { ActionButtons } from './components/discover/ActionButtons';
 import { PhotoCard } from './components/discover/PhotoCard';
 import { ProfileHeader } from './components/discover/ProfileHeader';
@@ -55,6 +56,9 @@ import { MatchesTab } from './components/tabs/MatchesTab';
 import { HomeTab } from './components/tabs/HomeTab';
 import { ConnectTab } from './components/tabs/ConnectTab';
 import { VentTab } from './components/tabs/VentTab';
+
+// Utilities
+import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
 
 // Note: ActionTray component removed - action buttons are now componentized
 
@@ -830,7 +834,7 @@ const sampleProfiles = [
         <Icon className="w-6 h-6 text-gray-600" />
         <div>
           <p className="font-semibold text-gray-900">{label}</p>
-          {description && <p className="text-sm text-gray-500">{description}</p>}
+          {description && <p className="text-[16px] sm:text-[17px] text-gray-500/90 cb-slightly-spaced">{description}</p>}
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -907,7 +911,7 @@ const sampleProfiles = [
               ></div>
             </div>
             {userProfile.profileComplete < 100 && (
-              <p className="text-xs text-gray-500 mt-2">Complete all sections to get 5x more matches!</p>
+              <p className="text-xs text-gray-500/90 mt-2">Complete all sections to get 5x more matches!</p>
             )}
           </div>
 
@@ -940,7 +944,7 @@ const sampleProfiles = [
                   <Camera className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Photos</h3>
-                    <p className="text-sm text-gray-500">{profilePhotos.filter(p => p).length} of 6 added</p>
+                    <p className="text-sm text-gray-500/90">{profilePhotos.filter(p => p).length} of 6 added</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -957,7 +961,7 @@ const sampleProfiles = [
                   <User className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Basic Info</h3>
-                    <p className="text-sm text-gray-500">Name, bio, role, location</p>
+                    <p className="text-sm text-gray-500/90">Name, bio, role, location</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -974,7 +978,7 @@ const sampleProfiles = [
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Prompts</h3>
-                    <p className="text-sm text-gray-500">{selectedPrompts.length} prompts added</p>
+                    <p className="text-sm text-gray-500/90">{selectedPrompts.length} prompts added</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -991,7 +995,7 @@ const sampleProfiles = [
                   <Sparkles className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">My Vibe</h3>
-                    <p className="text-sm text-gray-500">{selectedVibe.length} interests selected</p>
+                    <p className="text-sm text-gray-500/90">{selectedVibe.length} interests selected</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1008,7 +1012,7 @@ const sampleProfiles = [
                   <Heart className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Looking For</h3>
-                    <p className="text-sm text-gray-500">Long-term, open to short</p>
+                    <p className="text-sm text-gray-500/90">Long-term, open to short</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1025,7 +1029,7 @@ const sampleProfiles = [
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Communication Style</h3>
-                    <p className="text-sm text-gray-500">Empty</p>
+                    <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1042,7 +1046,7 @@ const sampleProfiles = [
                   <Award className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Education</h3>
-                    <p className="text-sm text-gray-500">Empty</p>
+                    <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1059,7 +1063,7 @@ const sampleProfiles = [
                   <AlertCircle className="w-6 h-6 text-gray-600" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Dealbreakers</h3>
-                    <p className="text-sm text-gray-500">{dealbreakers.length} dealbreaker{dealbreakers.length !== 1 ? 's' : ''} set</p>
+                    <p className="text-sm text-gray-500/90">{dealbreakers.length} dealbreaker{dealbreakers.length !== 1 ? 's' : ''} set</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1176,8 +1180,8 @@ const sampleProfiles = [
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 resize-none"
                     />
                     <div className="flex justify-between items-center mt-2">
-                      <p className="text-xs text-gray-500">Write a bio that shows your personality</p>
-                      <p className="text-xs text-gray-500">{bio.length}/500</p>
+                      <p className="text-xs text-gray-500/90">Write a bio that shows your personality</p>
+                      <p className="text-xs text-gray-500/90">{bio.length}/500</p>
                     </div>
                   </div>
 
@@ -1925,6 +1929,17 @@ const sampleProfiles = [
             />
           </Section>
 
+          {/* Activity */}
+          <Section title="Activity">
+            <SettingItem
+              icon={Activity}
+              label="Discovery History"
+              description="View your swipe history and stats"
+              action={null}
+              onClick={() => setCurrentScreen('activity-history')}
+            />
+          </Section>
+
           {/* Notifications */}
           <Section title="Notifications">
             <SettingItem
@@ -1979,6 +1994,116 @@ const sampleProfiles = [
           <div className="mx-5 mb-20 text-center">
             <p className="text-sm text-gray-500">Version 1.0.0 • CODE BLUE DATING</p>
             <p className="text-xs text-gray-400 mt-1">© 2025 Healthcare Professionals Network</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ACTIVITY HISTORY SCREEN
+  if (currentScreen === 'activity-history') {
+    const history = getActionHistory();
+    const stats = getActionStats();
+
+    return (
+      <div className="min-h-screen bg-[#F8F7FB]">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+          <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
+            <button 
+              onClick={() => setCurrentScreen('settings')}
+              className="text-blue-900 font-semibold flex items-center gap-1"
+            >
+              <ChevronRight className="w-5 h-5 rotate-180" />
+              Back
+            </button>
+            <h1 className="text-xl font-bold text-gray-900">Discovery History</h1>
+            <div className="w-14"></div>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto py-6 pb-24">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 gap-3 mb-6 px-5">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl p-5 border border-blue-200/60 dark:border-blue-700/40">
+              <div className="text-3xl font-bold text-blue-900 dark:text-blue-100">{stats.total}</div>
+              <div className="text-sm text-blue-700 dark:text-blue-300 mt-1">Total Actions</div>
+            </div>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl p-5 border border-purple-200/60 dark:border-purple-700/40">
+              <div className="text-3xl font-bold text-purple-900 dark:text-purple-100">{stats.todayCount}</div>
+              <div className="text-sm text-purple-700 dark:text-purple-300 mt-1">Today</div>
+            </div>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl p-5 border border-green-200/60 dark:border-green-700/40">
+              <div className="text-3xl font-bold text-green-900 dark:text-green-100">{stats.connects}</div>
+              <div className="text-sm text-green-700 dark:text-green-300 mt-1">Connects</div>
+            </div>
+            <div className="bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900/30 dark:to-pink-800/20 rounded-2xl p-5 border border-pink-200/60 dark:border-pink-700/40">
+              <div className="text-3xl font-bold text-pink-900 dark:text-pink-100">{stats.favorites}</div>
+              <div className="text-sm text-pink-700 dark:text-pink-300 mt-1">Favorites</div>
+            </div>
+          </div>
+
+          {/* History List */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl cb-shadow-card mx-5 overflow-hidden">
+            <div className="p-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="font-bold text-gray-900 dark:text-gray-100">Recent Activity</h2>
+              {history.length > 0 && (
+                <button
+                  onClick={() => {
+                    if (confirm('Clear all discovery history? This cannot be undone.')) {
+                      clearHistory();
+                      setCurrentScreen('settings');
+                    }
+                  }}
+                  className="text-sm text-red-600 dark:text-red-400 hover:underline"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+
+            {history.length === 0 ? (
+              <div className="p-10 text-center">
+                <Activity className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                <p className="text-gray-500 dark:text-gray-400">No activity yet</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Start swiping to see your history</p>
+              </div>
+            ) : (
+              <div className="max-h-96 overflow-y-auto">
+                {history.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          item.action === 'connect' ? 'bg-green-100 dark:bg-green-900/30' :
+                          item.action === 'favorite' ? 'bg-pink-100 dark:bg-pink-900/30' :
+                          'bg-gray-100 dark:bg-gray-700'
+                        }`}>
+                          {item.action === 'connect' && <Heart className="w-5 h-5 text-green-600 dark:text-green-400 fill-current" />}
+                          {item.action === 'favorite' && <Star className="w-5 h-5 text-pink-600 dark:text-pink-400 fill-current" />}
+                          {item.action === 'pass' && <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{item.profileName}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{item.action}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                          {new Date(item.timestamp).toLocaleDateString()}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                          {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -2046,23 +2171,23 @@ const sampleProfiles = [
         >
           <div className="px-4 py-3 flex justify-center items-center relative">
             <div className="cb-nav-tabs" role="tablist" aria-label="Content sections">
-              {/* Discover tab - Sans-Serif Medium 15px, slightly spaced */}
+              {/* Discover tab - Sans-Serif Bold 15px, slightly spaced */}
               <button 
                 onClick={() => setActiveTab('discover')}
                 role="tab"
                 aria-selected={activeTab === 'discover'}
                 aria-controls="discover-panel"
-                className={`cb-nav-tab cb-nav-tab--discover text-[15px] font-medium tracking-wide ${activeTab === 'discover' ? 'active' : ''}`}
+                className={`cb-nav-tab cb-nav-tab--discover text-[15px] font-bold cb-slightly-spaced ${activeTab === 'discover' ? 'active' : ''}`}
               >
                 Discover
               </button>
-              {/* Matches tab - Sans-Serif Medium 15px, slightly spaced */}
+              {/* Matches tab - Sans-Serif Bold 15px, slightly spaced */}
               <button 
                 onClick={() => setActiveTab('matches')}
                 role="tab"
                 aria-selected={activeTab === 'matches'}
                 aria-controls="matches-panel"
-                className={`cb-nav-tab cb-nav-tab--matches text-[15px] font-medium tracking-wide ${activeTab === 'matches' ? 'active' : ''}`}
+                className={`cb-nav-tab cb-nav-tab--matches text-[15px] font-bold cb-slightly-spaced ${activeTab === 'matches' ? 'active' : ''}`}
               >
                 Matches
               </button>
@@ -2091,55 +2216,65 @@ const sampleProfiles = [
           aria-live="polite"
         >
           {activeTab === 'discover' && (
-            <DiscoverTab
-              sampleProfiles={sampleProfiles}
-              currentMatch={currentMatch}
-              setCurrentMatch={setCurrentMatch}
-              activePrompt={activePrompt}
-              setActivePrompt={setActivePrompt}
-              imageErrors={imageErrors}
-              setImageErrors={setImageErrors}
-              showFilters={showFilters}
-              setShowFilters={setShowFilters}
-              maxDistance={maxDistance}
-              setMaxDistance={setMaxDistance}
-              ageRange={ageRange}
-              setAgeRange={setAgeRange}
-              likedPrompts={likedPrompts}
-              togglePromptLike={togglePromptLike}
-              promptComments={promptComments}
-              addPromptComment={addPromptComment}
-            />
+            <ErrorBoundary fallback="section" context="Discover Tab">
+              <DiscoverTab
+                sampleProfiles={sampleProfiles}
+                currentMatch={currentMatch}
+                setCurrentMatch={setCurrentMatch}
+                activePrompt={activePrompt}
+                setActivePrompt={setActivePrompt}
+                imageErrors={imageErrors}
+                setImageErrors={setImageErrors}
+                showFilters={showFilters}
+                setShowFilters={setShowFilters}
+                maxDistance={maxDistance}
+                setMaxDistance={setMaxDistance}
+                ageRange={ageRange}
+                setAgeRange={setAgeRange}
+                likedPrompts={likedPrompts}
+                togglePromptLike={togglePromptLike}
+                promptComments={promptComments}
+                addPromptComment={addPromptComment}
+              />
+            </ErrorBoundary>
           )}
 
           {activeTab === 'matches' && (
-            <MatchesTab
-              whoLikesYou={whoLikesYou}
-              myMatches={myMatches}
-              setSelectedMatch={setSelectedMatch}
-            />
+            <ErrorBoundary fallback="section" context="Matches Tab">
+              <MatchesTab
+                whoLikesYou={whoLikesYou}
+                myMatches={myMatches}
+                setSelectedMatch={setSelectedMatch}
+              />
+            </ErrorBoundary>
           )}
 
           {activeTab === 'home' && (
-            <HomeTab
-              setCurrentScreen={setCurrentScreen}
-              userProfile={userProfile}
-              dailyInsights={dailyInsights}
-              sampleProfiles={sampleProfiles}
-              setActiveTab={setActiveTab}
-            />
+            <ErrorBoundary fallback="section" context="Home Tab">
+              <HomeTab
+                setCurrentScreen={setCurrentScreen}
+                userProfile={userProfile}
+                dailyInsights={dailyInsights}
+                sampleProfiles={sampleProfiles}
+                setActiveTab={setActiveTab}
+              />
+            </ErrorBoundary>
           )}
 
           {activeTab === 'connect' && (
-            <ConnectTab events={events} />
+            <ErrorBoundary fallback="section" context="Connect Tab">
+              <ConnectTab events={events} />
+            </ErrorBoundary>
           )}
 
           {activeTab === 'vent' && (
-            <VentTab
-              ventRoom={ventRoom}
-              setVentRoom={setVentRoom}
-              ventTopics={ventTopics}
-            />
+            <ErrorBoundary fallback="section" context="Vent Tab">
+              <VentTab
+                ventRoom={ventRoom}
+                setVentRoom={setVentRoom}
+                ventTopics={ventTopics}
+              />
+            </ErrorBoundary>
           )}
         </main>
 

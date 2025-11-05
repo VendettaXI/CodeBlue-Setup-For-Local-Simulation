@@ -107,3 +107,6 @@
 .btn-brand:hover { background-color: var(--cb-primary-700); }
 .btn-accent { background-color: var(--cb-accent); color: var(--cb-text-inverse); }
 .btn-accent:hover { background-color: var(--cb-accent-600); }
+
+/* Typography utilities */
+.cb-slightly-spaced { letter-spacing: 0.025em; }

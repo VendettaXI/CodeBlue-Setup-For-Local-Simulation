@@ -81,15 +81,15 @@ export function PromptCard({
       className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal" 
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      {/* Question - Sans-Serif Medium 15px, slightly spaced */}
-      <h3 className="text-[15px] font-medium text-gray-600 dark:text-gray-400 mb-2 leading-tight tracking-wide">
+      {/* Question - Responsive: 14px → 15px at sm+, Sans-Serif Bold, less prominent color */}
+      <h3 className="text-[14px] sm:text-[15px] font-bold text-gray-500/90 dark:text-gray-400/90 mb-2 leading-tight cb-slightly-spaced">
         {question}
       </h3>
 
-      {/* Answer - Sans-Serif Light 17px, slightly spaced */}
+      {/* Answer - Responsive: 16px → 17px at sm+, Sans-Serif Light, slightly spaced */}
       {type === 'text' ? (
         <div className="flex items-center justify-between">
-          <p className="text-[17px] font-light text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-justify tracking-wide">
+          <p className="text-[16px] sm:text-[17px] font-light text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-justify cb-slightly-spaced">
             {answer}
           </p>
           {/* Message Button - right side with heart icon */}
