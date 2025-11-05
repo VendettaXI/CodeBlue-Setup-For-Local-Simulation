@@ -28,7 +28,7 @@
  * STYLING:
  * - TailwindCSS utility classes
  * - Custom CSS variables (--cb-* prefix)
- * - Inter font family from Google Fonts
+ * - Inter font family from Google Fonts + system font stack globally
  * - Glassmorphism and shadow effects
  * 
  * ICONS:
@@ -37,6 +37,13 @@
  * EXPORTS:
  * - CodeBlueDating (default): Main component
  * - toggleCodeBlueTheme: Dark mode toggle utility
+ * 
+ * RECENT CHANGES (Nov 4, 2025):
+ * - Added theme palette switcher (4 palettes) with CSS variable injection
+ * - Converted remaining nav/gradients/buttons to use --cb-* variables
+ * - Applied global system font stack and refined heading letter-spacing (h1/h2/h3)
+ * - Standardized subheaders to font-medium outside Discover page for hierarchy
+ * - Performance pass (React.memo, lazy tabs), bundle ~319.7 KB (≈90 KB gz)
  * ============================================================================
  */
 
