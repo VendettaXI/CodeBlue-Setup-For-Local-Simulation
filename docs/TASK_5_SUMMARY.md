@@ -194,7 +194,7 @@ npm run dev
 - `src/components/discover/PromptCard.jsx` - Added React.memo
 - `src/components/discover/InfoChips.jsx` - Added React.memo
 - `src/components/discover/ProfileHeader.jsx` - Added React.memo
-- `src/components/discover/VibeTagsList.jsx` - Added React.memo, fixed duplicate import
+- `src/components/discover/VibeTagsList.jsx` - Added React.memo
 - `src/components/discover/ActionButtons.jsx` - Added React.memo
 
 ### Main App (2 files)

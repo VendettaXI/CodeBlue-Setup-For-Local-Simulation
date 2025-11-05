@@ -463,12 +463,10 @@ Test theme switching in:
 ### For Users
 
 1. Open the app
-2. Tap hamburger menu (top left)
-3. Select "Settings"
-4. Tap "Appearance"
-5. Tap "Color Palette"
-6. Choose your preferred palette
-7. Colors update instantly!
+2. Tap the menu (top right) → Settings
+3. Appearance → Color Palette
+4. Choose your preferred palette
+5. Colors update instantly!
 
 ### For Developers
 
@@ -587,7 +585,7 @@ All known issues resolved during implementation:
 ## ✅ Completion Checklist
 
 - [x] Create themePalettes.js utility
-- [x] Define 4 complete color palettes
+- [x] Define 4 complete palettes
 - [x] Implement localStorage persistence
 - [x] Add event-driven architecture
 - [x] Modify useCodeBlueTheme hook
@@ -626,4 +624,3 @@ All known issues resolved during implementation:
 **Build Status:** ✅ **PASSING**  
 **Dev Server:** ✅ **RUNNING (Port 5174)**  
 **Ready for Testing:** ✅ **YES**
-

@@ -1,8 +1,47 @@
 # CodeBlue Dating App - Project Status & Progress
 
+Note: Documentation has been reorganized. Most Markdown files now live under `docs/`. This status file is now maintained here. See README for links.
+
+Last Updated: November 5, 2025
+Repository: CodeBlue-Setup-For-Local-Simulation
+Branch: main
+
+---
+
+## 🔔 Quick Status Update — Nov 5, 2025
+
+- Finalized documentation migration: moved all root Markdown files into `docs/` (kept only `README.md` in root).
+- Removed duplicate file versions from root (single source of truth now lives in `docs/`).
+- Updated code comments and README pointers to reflect the new docs layout.
+- Build verification: PASS (main bundle ~319.74 KB; gz ~90.05 KB).
+- Git maintenance: count-objects showed small loose objects; ran `git gc --prune=now` — counts now 0 loose objects; repo healthy.
+- No functional code changes; UI and theme behavior unchanged. 
+
+Quality gates:
+- Build: PASS
+- Lint/Typecheck: Not configured in this repo
+- Tests: Not configured yet
+
+---
+
+# CodeBlue Dating App - Project Status & Progress
+
+Note: Documentation has been reorganized. Most Markdown files now live under `docs/`. This status file will also be maintained there. See README for links.
+
 **Last Updated:** November 4, 2025  
 **Repository:** CodeBlue-Setup-For-Local-Simulation  
 **Branch:** main
+
+---
+
+## 🔔 Quick Status Update — Nov 4, 2025
+
+- Task 5 Performance Pass complete: -9.4% main bundle (343.98 KB → 311.71 KB), tabs lazy-loaded, 6 components memoized, removed 3 unused files.
+- Task 6 Theme Palette Switcher complete: 4 palettes (Blue/Purple/Pink/Green), CSS variables injection, Settings > Appearance selector, event-driven switching; bundle ~319.7 KB (≈90 KB gz).
+- Typography refinements: Global system font stack applied; increased letter-spacing (h1: 0.03em, h2: 0.025em, h3: 0.02em); subheaders standardized to font-medium outside Discover page.
+- Optional Task 7 State Refactor analysis done (hybrid useReducer recommended when scaling); no code changes required now.
+- Dev/Build: Builds passing; dev server stable with HMR (minor non-blocking Fast Refresh note observed earlier).
+- Repo housekeeping: Markdown docs moved to `docs/` to declutter root; only `README.md` remains at root.
 
 ---
 
@@ -539,7 +578,7 @@ Utilities:
 
 ```powershell
 # Navigate to project
-Set-Location -Path "c:\Users\Radiance\Documents\codeblue_ready"
+Set-Location -Path "c:\\Users\\Radiance\\Documents\\codeblue_ready"
 
 # Install dependencies (if needed)
 npm install --no-fund --no-audit
@@ -568,7 +607,7 @@ npm run preview
 
 ### Technical Debt
 1. **Large main file** - `CodeBlueDating.jsx` is 2,319 lines
-   - Consider extracting more components if grows beyond 3,000 lines
+  - Consider extracting more components if grows beyond 3,000 lines
 2. **Embedded CSS** - Could move to separate file if becomes unwieldy
 3. **No tests** - Unit/integration tests needed
 
@@ -586,17 +625,17 @@ npm run preview
 
 ### Color Palette Changes
 1. **Original:** Navy/Yellow palette (#8ecae6, #219ebc, #023047, #ffb703, #fd9e02, #fb8500)
-   - Applied to text only, not fills
-   - User feedback: "not close"
+  - Applied to text only, not fills
+  - User feedback: "not close"
 2. **Iteration:** NHS blue-teal theme
-   - Initially excluded Marian blue (#2a4494)
-   - Later included for Vent tab
+  - Initially excluded Marian blue (#2a4494)
+  - Later included for Vent tab
 3. **Final:** Contextual color branding
-   - Each tab has unique color matching its content
-   - Pink for Discover (matches Like button)
-   - Teal for Matches (matches notification)
-   - Emerald for Connect (matches Buddy Mode card)
-   - etc.
+  - Each tab has unique color matching its content
+  - Pink for Discover (matches Like button)
+  - Teal for Matches (matches notification)
+  - Emerald for Connect (matches Buddy Mode card)
+  - etc.
 
 **Rationale:** Visual continuity - users associate tab colors with content
 

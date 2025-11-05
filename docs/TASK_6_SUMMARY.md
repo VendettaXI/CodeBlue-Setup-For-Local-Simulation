@@ -198,4 +198,3 @@ console.log(palette.name); // "Purple Dreams"
 **Task 6 Status:** ✅ **COMPLETE**
 
 Ready to proceed to Task 7 (State Refactor) or continue with manual testing!
-
