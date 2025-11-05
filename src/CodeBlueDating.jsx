@@ -342,7 +342,7 @@ function useCodeBlueTheme() {
               `;
       document.head.appendChild(style);
     }
-  }, [palette]);
+  }, []);
 }
 
 /**
@@ -896,7 +896,7 @@ const sampleProfiles = [
   // EDIT PROFILE SCREEN
   if (currentScreen === 'edit-profile') {
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -1500,7 +1500,7 @@ const sampleProfiles = [
     const maxViews = Math.max(...weeklyActivity.map(d => d.views));
     
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -1781,7 +1781,7 @@ const sampleProfiles = [
   // SETTINGS SCREEN
   if (currentScreen === 'settings') {
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
@@ -2037,7 +2037,7 @@ const sampleProfiles = [
     const stats = getActionStats();
 
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
@@ -2144,7 +2144,7 @@ const sampleProfiles = [
   // Splash Screen
   if (currentScreen === 'splash') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, var(--cb-navy-deep) 0%, var(--cb-navy) 50%, var(--cb-navy-soft) 100%)'}}>
+      <div id="main-content" role="main" className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, var(--cb-navy-deep) 0%, var(--cb-navy) 50%, var(--cb-navy-soft) 100%)'}}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>

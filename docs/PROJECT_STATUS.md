@@ -10,14 +10,13 @@ Branch: main
 
 ## 🔔 Quick Status Update — Nov 5, 2025
 
-- Finalized documentation migration: moved all root Markdown files into `docs/` (kept only `README.md` in root).
-- Removed duplicate file versions from root (single source of truth now lives in `docs/`).
-- Updated code comments and README pointers to reflect the new docs layout.
-- Build verification: PASS (main bundle ~319.74 KB; gz ~90.05 KB).
-- Git maintenance: count-objects showed small loose objects; ran `git gc --prune=now` — counts now 0 loose objects; repo healthy.
-- No functional code changes; UI and theme behavior unchanged. 
-
-Quality gates:
+- Removed Theme Palette Switcher UI and utility in favor of a single brand palette; retained CSS variables for maintainability (commit 713636c).
+- Added Git workflow rules file `.github-copilot-instructions.md` and linked it from README (commit 4a721bd).
+- Updated README pointers; documentation layout remains under `docs/`.
+- Fixed leftover dependency in theme hook (removed undefined `palette` reference) to avoid runtime error; theme injects once on mount now.
+- Build verification: PASS (main bundle 313.29 KB; gz 88.64 KB).
+- Git maintenance: repo healthy; no force pushes; history preserved.
+- Non-Discover screens are UX previews/placeholders; added `docs/ROADMAP.md` with MVP scope, data contracts, and acceptance criteria for Profile, Settings, Matches, Connect, Vent, and Home. Added `docs/PRODUCT_VISION.md` to capture original concept ideas and north-star quality bar.Quality gates:
 - Build: PASS
 - Lint/Typecheck: Not configured in this repo
 - Tests: Not configured yet
@@ -47,9 +46,7 @@ Note: Documentation has been reorganized. Most Markdown files now live under `do
 
 ## 🎯 Current State
 
-A premium dating app for healthcare professionals with a sophisticated UI matching Hinge/Bumble quality standards. **Now optimized for production with lazy loading, code splitting, memoization, and customizable theme palettes.**
-
-### Technology Stack
+A premium dating app for healthcare professionals with a sophisticated UI matching Hinge/Bumble quality standards. **Discover is in progress** (core mechanics—swipes, skeletons, persistence—functional; needs UX polish and edge-case corrections). Other screens (Profile, Settings, Matches, Connect, Vent, Home) are **purposeful placeholders** to illustrate direction and will be elevated to MVPs per the roadmap after core polish (dark mode, A11y, cross-browser QA).### Technology Stack
 - **Frontend:** React 19.x with hooks
 - **Build Tool:** Vite 7.1.12
 - **Styling:** Tailwind CSS 3.4.13 + CSS custom properties
@@ -59,11 +56,11 @@ A premium dating app for healthcare professionals with a sophisticated UI matchi
 - **Dev Server:** Running on http://localhost:5174/ (Vite HMR active)
 
 ### Latest Performance Metrics
-- **Main Bundle:** 319.49 KB (89.96 KB gzipped)
+- **Main Bundle:** 313.29 KB (88.64 KB gzipped)
 - **Lazy Chunks:** 34.84 KB (split across 5 tabs)
-- **Initial Load:** ~90 KB gzipped total
-- **Build Time:** ~14.5s
-- **Status:** ✅ All tasks 1-6 complete
+- **Initial Load:** ~89 KB gzipped total
+- **Build Time:** ~9–15s (varies per machine)
+- **Status:** ✅ Core performance improvements complete; theme switcher reverted to single palette. Profile/Settings/Matches/Connect/Vent/Home: see ROADMAP for MVP path. Discover: in progress (needs polish).
 
 ---
 
@@ -235,10 +232,14 @@ Contextual Accents:
 
 ---
 
-### 7. Theme Customization System (100% Complete) ✨ NEW
-**Status:** ✅ Task 6 Complete (November 4, 2025)
+### 7. Theme Customization System (history)
+**Status:** Built on Nov 4, 2025; UI removed on Nov 5, 2025
 
-**4 Available Palettes:**
+Update (Nov 5, 2025): The multi-palette theme switcher UI and utility were removed to preserve a single, consistent brand identity. The CSS variable system remains in place for maintainability, with the Classic Blue (NHS-inspired) palette hard-coded via `useCodeBlueTheme`. See commit 713636c.
+
+Previous implementation (Nov 4, 2025):
+
+**4 Palettes were available:**
 1. **Classic Blue** (Default - NHS-Inspired)
    - Gunmetal (#122c34), Picton Blue (#4ea5d9), Robin egg blue (#44cfcb)
    
@@ -251,21 +252,13 @@ Contextual Accents:
 4. **Green Vitality** (Fresh & Natural)
    - Forest green (#1a342e), Emerald (#10b981), Teal (#2dd4bf)
 
-**Features:**
+**Features (removed Nov 5):**
 - User-selectable color palettes via Settings > Appearance > Color Palette
-- Instant theme switching (no page reload required)
-- localStorage persistence across sessions
-- 13 CSS custom properties per theme
-- Visual palette preview with color swatches
-- Active palette indicator
-- Event-driven architecture (custom 'themechange' event)
+- Event-driven switching and localStorage persistence
 
-**Technical Implementation:**
-- `src/utils/themePalettes.js` - Theme utility (339 lines)
-- CSS variables injected to `:root` element
-- All navigation colors use CSS variables
-- Gradient backgrounds dynamically updated
-- Accessibility maintained (WCAG AA compliance)
+**Technical Notes (current):**
+- `src/utils/themePalettes.js` deleted; `useCodeBlueTheme` injects Classic Blue variables
+- All navigation colors continue to use CSS variables for maintainability
 
 **Documentation:**
 - `TASK_6_THEME_SYSTEM.md` - Complete implementation guide
@@ -336,57 +329,43 @@ Contextual Accents:
 ### Priority 1: Core Interactions
 
 #### 1. Swipe Gestures with Physics
-**Status:** ❌ Not started  
+**Status:** ✅ Complete  
 **Scope:**
-- Implement left/right swipe detection on `PhotoCard`
-- Add drag physics with spring animations
-- Set thresholds for pass/like actions (e.g., 150px swipe = action)
-- Integrate with existing action buttons (X for pass, Heart for like)
-- Add visual feedback (card tilt, opacity changes during drag)
-- Consider library: `framer-motion` or `react-spring`
+- Implemented custom drag handling with thresholds (left/right/up) and fly-out animations in `PhotoCard.jsx`. Card tilt, opacity overlays, and micro-haptic scales included. Callbacks `onSwipeLeft/Right/Up` are invoked after transition end. No external libs required.
 
 **Files to modify:**
-- `src/components/discover/PhotoCard.jsx`
-- `src/components/discover/ActionButtons.jsx`
+- Already implemented in `src/components/discover/PhotoCard.jsx` (Action buttons exist and work alongside gestures).
 
 ---
 
 #### 2. Skeleton Loading States
-**Status:** ❌ Not started  
+**Status:** ✅ Complete  
 **Scope:**
-- Create skeleton loaders for:
-  - Photo cards (shimmer effect on image placeholder)
-  - Info chips (shimmer rectangles)
-  - Prompt cards (shimmer text lines)
-  - Match cards in grid view
-- Implement pulse/shimmer animation
-- Show skeletons during initial data fetch
-- Consider Tailwind's `animate-pulse` utility
+- Skeletons created and used:
+  - `PhotoCardSkeleton.jsx`, `PromptCardSkeleton.jsx`, `MatchCardSkeleton.jsx`
+  - Discover and Matches tabs show skeletons during initial load
+  - Info chips skeleton handled inline in Discover
 
 **Files to create:**
-- `src/components/skeletons/PhotoCardSkeleton.jsx`
-- `src/components/skeletons/PromptCardSkeleton.jsx`
-- `src/components/skeletons/MatchCardSkeleton.jsx`
+- Already present under `src/components/skeletons/`.
 
 **Files to modify:**
-- All tab components to show skeletons before data loads
+- Tabs updated to gate content behind skeletons (notably Discover and Matches).
 
 ---
 
 #### 3. Wire Like/Comment Interactions
-**Status:** ❌ Not started  
+**Status:** ✅ Complete (state + persistence wired)  
 **Scope:**
-- Connect like buttons to local state
-- Implement optimistic updates (instant UI response)
-- Track liked prompts and comments
-- Update like counts immediately
-- Add heart animation on like (scale + color change)
-- Store interactions in `localStorage` for persistence
-- Consider future backend API integration points
+- State and persistence implemented in `CodeBlueDating.jsx`:
+  - `likedPrompts` (Set persisted to localStorage)
+  - `promptComments` (object with arrays)
+  - `togglePromptLike` and `addPromptComment` handlers
+  - `DiscoverTab` passes `onLike`, `isLiked`, and `likeCount` to `PromptCard`
+  - UI currently prioritizes comment-first design; optional like icon can be reintroduced later
 
 **Files to modify:**
-- `src/components/discover/PromptCard.jsx`
-- `src/CodeBlueDating.jsx` (state management)
+- Implemented in `src/CodeBlueDating.jsx` and integrated via `src/components/tabs/DiscoverTab.jsx`. `PromptCard.jsx` supports the props; like button UI is intentionally minimal for now.
 
 **State to add:**
 ```javascript
@@ -399,7 +378,7 @@ const [promptComments, setPromptComments] = useState({});
 ### Priority 2: Polish & Accessibility
 
 #### 4. Dark Mode Implementation
-**Status:** ❌ Not started (partial foundation exists)  
+**Status:** ⚠️ Partial (foundation exists; toggle implemented)  
 **Scope:**
 - Implement dark theme toggle
 - Update all components for dark mode
@@ -415,12 +394,12 @@ const [promptComments, setPromptComments] = useState({});
 **Foundation already in place:**
 - `.dark` class selectors in CSS
 - CSS variables for colors
-- Basic dark mode structure
+- Dark mode toggle with persistence implemented in `CodeBlueDating.jsx`
 
 ---
 
 #### 5. Accessibility Improvements
-**Status:** ⚠️ Partial (focus rings added to nav)  
+**Status:** ⚠️ Partial (focus rings + ARIA labels on key buttons)  
 **Remaining work:**
 - Add ARIA labels to all interactive elements
 - Implement keyboard navigation (arrow keys, Enter, Space)
@@ -461,17 +440,8 @@ const [promptComments, setPromptComments] = useState({});
 ### Priority 3: Advanced Features
 
 #### 7. Theme Palette Switcher
-**Status:** ❌ Not started  
-**Scope:**
-- Create utility to switch between color palettes
-- Store palette preference
-- Quick switcher UI component
-- Animate color transitions
-
-**Palettes tested:**
-- Navy/Yellow (tested, switched away)
-- NHS (current)
-- Option to add more
+**Status:** ➖ Removed (Nov 5, 2025)  
+**Rationale:** Maintain a single, consistent brand identity. The CSS variable system is retained for maintainability, but no user-facing palette switching is planned.
 
 ---
 
@@ -583,7 +553,7 @@ Set-Location -Path "c:\\Users\\Radiance\\Documents\\codeblue_ready"
 # Install dependencies (if needed)
 npm install --no-fund --no-audit
 
-# Start dev server
+# Start dev server (default Vite port 5173)
 npm run dev
 
 # Build for production
@@ -601,8 +571,8 @@ npm run preview
 1. **Sample data only** - No real matching algorithm
 2. **No real-time updates** - Requires WebSocket integration
 3. **localStorage only** - No persistent backend
-4. **No error boundaries** - Should add for production
-5. **No loading states** - For async operations
+4. **Error boundaries** - Implemented; continue to monitor coverage
+5. **Loading states** - Implemented for key views (skeletons)
 6. **No NHS verification** - Mock verification only
 
 ### Technical Debt
@@ -730,9 +700,9 @@ npm run preview
 5. Test changes in browser at `http://localhost:5173`
 
 **High-priority next steps:**
-1. Swipe gestures (most impactful UX improvement)
-2. Skeleton loaders (professional loading experience)
-3. Like/comment interactions (core functionality)
+1. Dark mode polish across all components (WCAG AA)
+2. Accessibility audit (ARIA, keyboard, focus management)
+3. Cross-browser responsive QA
 
 ---
 
