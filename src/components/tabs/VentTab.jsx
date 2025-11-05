@@ -100,9 +100,9 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
             <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-24">
               <div className="flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-red-900 mb-2">Need Immediate Help?</h3>
-                  <p className="text-sm text-red-800 mb-3">If you're in crisis, please reach out to professional support:</p>
+              <div>
+                <h3 className="font-medium text-red-900 mb-2">Need Immediate Help?</h3>
+                <p className="text-sm text-red-800 mb-3">If you're in crisis, please reach out to professional support:</p>
                   <div className="space-y-2">
                     <button className="w-full bg-red-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
                       <Phone className="w-5 h-5" />

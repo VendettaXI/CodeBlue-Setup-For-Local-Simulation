@@ -61,6 +61,7 @@ const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
+import { getPalette, getCurrentPaletteId, setPalette, getAllPalettes } from './utils/themePalettes';
 
 // Note: ActionTray component removed - action buttons are now componentized
 
@@ -98,7 +99,7 @@ import { getActionHistory, getActionStats, clearHistory } from './utils/discover
  * - Activated by adding .dark class to <html> element
  * - Overrides colors and shadows for dark theme
  */
-function useCodeBlueTheme() {
+function useCodeBlueTheme(palette) {
   useEffect(() => {
     // Inter font
     if (!document.getElementById("inter-font-link")) {
@@ -112,16 +113,39 @@ function useCodeBlueTheme() {
     document.body.style.fontFamily =
       'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
 
+    // Inject CSS custom properties for current palette
+    const root = document.documentElement;
+    if (palette && palette.colors) {
+      root.style.setProperty('--cb-nav-container', palette.colors.navContainer);
+      root.style.setProperty('--cb-nav-active', palette.colors.navActive);
+      root.style.setProperty('--cb-discover', palette.colors.discover);
+      root.style.setProperty('--cb-matches', palette.colors.matches);
+      root.style.setProperty('--cb-home', palette.colors.home);
+      root.style.setProperty('--cb-connect', palette.colors.connect);
+      root.style.setProperty('--cb-vent', palette.colors.vent);
+      root.style.setProperty('--cb-gradient-start', palette.colors.gradientStart);
+      root.style.setProperty('--cb-gradient-mid', palette.colors.gradientMid);
+      root.style.setProperty('--cb-gradient-end', palette.colors.gradientEnd);
+      root.style.setProperty('--cb-button-primary', palette.colors.buttonPrimary);
+      root.style.setProperty('--cb-button-secondary', palette.colors.buttonSecondary);
+    }
+
     // Global CSS tokens (lavender base + navy gradient + shadows)
     if (!document.getElementById("cb-theme-style")) {
       const style = document.createElement("style");
       style.id = "cb-theme-style";
       style.innerHTML = `
         /* Typography refinements for premium spacing */
-        html, body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        html, body { 
+          -webkit-font-smoothing: antialiased; 
+          -moz-osx-font-smoothing: grayscale;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        }
         body { line-height: 1.5; letter-spacing: 0; font-feature-settings: 'liga' 1, 'kern' 1; }
-        h1,h2,h3 { letter-spacing: -0.01em; }
-        .cb-heading { letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; font-size: 0.875rem; }
+        h1 { letter-spacing: 0.03em; }
+        h2 { letter-spacing: 0.025em; }
+        h3 { letter-spacing: 0.02em; }
+        .cb-heading { letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; font-size: 0.875rem; }
         /* Typography hierarchy */
         .cb-display{ font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
         .cb-title{ font-weight: 700; letter-spacing: -0.015em; }
@@ -166,36 +190,36 @@ function useCodeBlueTheme() {
         /* Active state defaults (fallback) */
         .cb-nav-tab.active {
           color: #fff;
-          background: linear-gradient(135deg, #4ea5d9, #44cfcb);
+          background: linear-gradient(135deg, var(--cb-gradient-start), var(--cb-gradient-mid));
           border: none;
           box-shadow: 0 4px 12px rgba(78,165,217,0.35), 0 2px 4px rgba(0,0,0,0.1);
         }
 
         /* Variant: Discover active */
         .cb-nav-tab.cb-nav-tab--discover.active{
-          background: linear-gradient(135deg, #4ea5d9, #44cfcb); /* Picton → Robin egg */
+          background: linear-gradient(135deg, var(--cb-gradient-start), var(--cb-gradient-mid));
         }
 
         /* Variant: Matches active */
         .cb-nav-tab.cb-nav-tab--matches.active{
-          background: linear-gradient(135deg, #224870, #4ea5d9); /* Indigo dye → Picton */
+          background: linear-gradient(135deg, var(--cb-gradient-end), var(--cb-gradient-start));
           box-shadow: 0 4px 12px rgba(34,72,112,0.35), 0 2px 4px rgba(0,0,0,0.12);
         }
         
         /* Default hover (for Discover) */
         .cb-nav-tab.cb-nav-tab--discover:not(.active):hover {
-          background: linear-gradient(135deg, #44cfcb, #4ea5d9); /* Robin egg blue to Picton Blue */
+          background: linear-gradient(135deg, var(--cb-gradient-mid), var(--cb-gradient-start));
           color: #fff;
         }
 
         /* Variant hover for Matches - must be after default */
         .cb-nav-tab.cb-nav-tab--matches:not(.active):hover{
-          background: linear-gradient(135deg, #224870, #4ea5d9); /* Indigo → Picton - same as active */
+          background: linear-gradient(135deg, var(--cb-gradient-end), var(--cb-gradient-start));
           color: #fff;
         }
 
         .cb-nav-tab:focus-visible{
-          outline: 2px solid #4ea5d9;
+          outline: 2px solid var(--cb-home);
           outline-offset: 2px;
         }
         
@@ -314,7 +338,7 @@ function useCodeBlueTheme() {
               `;
       document.head.appendChild(style);
     }
-  }, []);
+  }, [palette]);
 }
 
 /**
@@ -383,9 +407,7 @@ const CodeBlueDating = () => {
   // ========================================================================
   // THEME INITIALIZATION
   // ========================================================================
-  useCodeBlueTheme();
   
-  // ========================================================================
   // DARK MODE STATE & MANAGEMENT
   // ========================================================================
   
@@ -401,6 +423,27 @@ const CodeBlueDating = () => {
     document.documentElement.classList.toggle('dark', newDarkMode);
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
+
+  // THEME PALETTE STATE & MANAGEMENT
+  // ========================================================================
+  
+  // Theme palette state - initialized from localStorage
+  const [currentPalette, setCurrentPalette] = useState(() => getCurrentPaletteId());
+  
+  // Change theme palette and persist to localStorage
+  const handlePaletteChange = (paletteId) => {
+    setPalette(paletteId);
+    setCurrentPalette(paletteId);
+  };
+
+  // Listen for theme changes (in case changed from another component)
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      setCurrentPalette(event.detail.paletteId);
+    };
+    window.addEventListener('themechange', handleThemeChange);
+    return () => window.removeEventListener('themechange', handleThemeChange);
+  }, []);
 
   // Detect system theme preference on first load if no user preference saved
   useEffect(() => {
@@ -419,6 +462,9 @@ const CodeBlueDating = () => {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
+
+  // Inject global theme styles with current palette (updates when palette changes)
+  useCodeBlueTheme(getPalette());
   
   // ========================================================================
   // NAVIGATION STATE
@@ -945,7 +991,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <Camera className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Photos</h3>
+                    <h3 className="font-medium text-gray-900">Photos</h3>
                     <p className="text-sm text-gray-500/90">{profilePhotos.filter(p => p).length} of 6 added</p>
                   </div>
                 </div>
@@ -962,7 +1008,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <User className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Basic Info</h3>
+                    <h3 className="font-medium text-gray-900">Basic Info</h3>
                     <p className="text-sm text-gray-500/90">Name, bio, role, location</p>
                   </div>
                 </div>
@@ -979,7 +1025,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Prompts</h3>
+                    <h3 className="font-medium text-gray-900">Prompts</h3>
                     <p className="text-sm text-gray-500/90">{selectedPrompts.length} prompts added</p>
                   </div>
                 </div>
@@ -996,7 +1042,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <Sparkles className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">My Vibe</h3>
+                    <h3 className="font-medium text-gray-900">My Vibe</h3>
                     <p className="text-sm text-gray-500/90">{selectedVibe.length} interests selected</p>
                   </div>
                 </div>
@@ -1013,7 +1059,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <Heart className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Looking For</h3>
+                    <h3 className="font-medium text-gray-900">Looking For</h3>
                     <p className="text-sm text-gray-500/90">Long-term, open to short</p>
                   </div>
                 </div>
@@ -1030,7 +1076,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Communication Style</h3>
+                    <h3 className="font-medium text-gray-900">Communication Style</h3>
                     <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
@@ -1047,7 +1093,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <Award className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Education</h3>
+                    <h3 className="font-medium text-gray-900">Education</h3>
                     <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
@@ -1064,7 +1110,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <AlertCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Dealbreakers</h3>
+                    <h3 className="font-medium text-gray-900">Dealbreakers</h3>
                     <p className="text-sm text-gray-500/90">{dealbreakers.length} dealbreaker{dealbreakers.length !== 1 ? 's' : ''} set</p>
                   </div>
                 </div>
@@ -1815,6 +1861,13 @@ const sampleProfiles = [
               action={<ToggleSwitch enabled={darkMode} onChange={toggleDarkMode} />}
               showChevron={false}
             />
+            <SettingItem
+              icon={Sparkles}
+              label="Color Palette"
+              description="Customize your app's color theme"
+              action={null}
+              onClick={() => setCurrentScreen('palette-selector')}
+            />
           </Section>
 
           {/* Safety & Privacy */}
@@ -1996,6 +2049,137 @@ const sampleProfiles = [
           <div className="mx-5 mb-20 text-center">
             <p className="text-sm text-gray-500">Version 1.0.0 • CODE BLUE DATING</p>
             <p className="text-xs text-gray-400 mt-1">© 2025 Healthcare Professionals Network</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // PALETTE SELECTOR SCREEN
+  if (currentScreen === 'palette-selector') {
+    const palettes = getAllPalettes();
+    
+    return (
+      <div className="min-h-screen bg-[#F8F7FB]">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+          <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
+            <button 
+              onClick={() => setCurrentScreen('settings')}
+              className="text-blue-900 font-semibold flex items-center gap-1"
+            >
+              <ChevronRight className="w-5 h-5 rotate-180" />
+              Back
+            </button>
+            <h1 className="text-xl font-bold text-gray-900">Color Palette</h1>
+            <div className="w-14"></div>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto py-6 pb-24">
+          {/* Instructions */}
+          <div className="px-5 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Choose a color palette that matches your vibe. Each palette changes the app's navigation and accent colors while maintaining accessibility.
+            </p>
+          </div>
+
+          {/* Palette Cards */}
+          <div className="space-y-3 px-5">
+            {Object.values(palettes).map((palette) => {
+              const isActive = currentPalette === palette.id;
+              
+              return (
+                <button
+                  key={palette.id}
+                  onClick={() => handlePaletteChange(palette.id)}
+                  className={`w-full bg-white dark:bg-gray-800 rounded-2xl p-5 border-2 transition-all ${
+                    isActive 
+                      ? 'border-blue-500 shadow-lg' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  {/* Palette Name & Description */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-left">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                        {palette.name}
+                        {isActive && (
+                          <span className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">
+                            <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                            <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Active</span>
+                          </span>
+                        )}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {palette.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Color Swatches */}
+                  <div className="flex items-center gap-2">
+                    {/* Nav Container */}
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.navContainer }}
+                      title="Navigation container"
+                    />
+                    
+                    {/* Tab Colors */}
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.discover }}
+                      title="Discover tab"
+                    />
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.matches }}
+                      title="Matches tab"
+                    />
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.home }}
+                      title="Home tab"
+                    />
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.connect }}
+                      title="Connect tab"
+                    />
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: palette.colors.vent }}
+                      title="Vent tab"
+                    />
+                    
+                    {/* Gradient Preview */}
+                    <div 
+                      className="flex-1 h-10 rounded-full border-2 border-white shadow-sm"
+                      style={{ 
+                        background: `linear-gradient(to right, ${palette.colors.gradientStart}, ${palette.colors.gradientMid}, ${palette.colors.gradientEnd})`
+                      }}
+                      title="Gradient colors"
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Info Card */}
+          <div className="mx-5 mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-5 border border-blue-200/60 dark:border-blue-700/40">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-bold text-blue-900 dark:text-blue-100 text-sm mb-1">
+                  Palette Changes Apply Immediately
+                </h4>
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  Your chosen palette affects navigation, buttons, and accents throughout the app. All palettes maintain WCAG AA contrast ratios for accessibility.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2200,11 +2384,25 @@ const sampleProfiles = [
                 onClick={() => setShowFilters(!showFilters)}
                 aria-label={showFilters ? "Close filters" : "Open filters (3 active)"}
                 aria-expanded={showFilters}
-                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors border-2 text-[#122c34] border-[#122c34] bg-transparent hover:bg-[rgba(18,44,52,0.06)] focus:outline-none focus:ring-2 focus:ring-[#4ea5d9]/40"
+                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors border-2 bg-transparent focus:outline-none focus:ring-2"
+                style={{
+                  color: 'var(--cb-nav-container)',
+                  borderColor: 'var(--cb-nav-container)',
+                  '--hover-bg': 'rgba(18,44,52,0.06)'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--hover-bg)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span className="text-sm font-medium">Filters</span>
-                <div className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border border-[#122c34] text-[#122c34]" aria-hidden="true">3</div>
+                <div 
+                  className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border" 
+                  style={{
+                    borderColor: 'var(--cb-nav-container)',
+                    color: 'var(--cb-nav-container)'
+                  }}
+                  aria-hidden="true"
+                >3</div>
               </button>
             )}
           </div>
@@ -2303,7 +2501,7 @@ const sampleProfiles = [
               role="tablist"
               aria-label="Main tabs"
               style={{
-                background: '#122c34', // Gunmetal
+                background: 'var(--cb-nav-container)',
                 boxShadow: '0 10px 40px rgba(18, 44, 52, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)'
               }}
             >
@@ -2316,19 +2514,23 @@ const sampleProfiles = [
                   aria-selected={activeTab === 'discover'}
                   aria-label="Discover profiles"
                   tabIndex={activeTab === 'discover' ? 0 : -1}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
                   style={{
                     background: activeTab === 'discover' 
-                      ? '#ffffff'
+                      ? 'var(--cb-nav-active)'
                       : 'transparent',
                     boxShadow: activeTab === 'discover' 
                       ? '0 4px 12px rgba(0, 0, 0, 0.15)'
-                      : 'none'
+                      : 'none',
+                    ringOffsetColor: 'var(--cb-nav-container)'
                   }}
                 >
-                  <Heart className={`w-5 h-5 transition-all ${activeTab === 'discover' ? 'text-[#ec4899] fill-[#ec4899]' : 'text-white/70'}`} />
+                  <Heart 
+                    className={`w-5 h-5 transition-all ${activeTab === 'discover' ? 'fill-current' : 'text-white/70'}`}
+                    style={{ color: activeTab === 'discover' ? 'var(--cb-discover)' : undefined }}
+                  />
                   {activeTab === 'discover' && (
-                    <span className="text-sm font-semibold text-[#122c34]">Discover</span>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--cb-nav-container)' }}>Discover</span>
                   )}
                 </button>
 
@@ -2339,25 +2541,29 @@ const sampleProfiles = [
                   aria-selected={activeTab === 'matches'}
                   aria-label="View matches (3 new messages)"
                   tabIndex={activeTab === 'matches' ? 0 : -1}
-                  className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
+                  className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                   style={{
                     background: activeTab === 'matches' 
-                      ? '#ffffff'
+                      ? 'var(--cb-nav-active)'
                       : 'transparent',
                     boxShadow: activeTab === 'matches' 
                       ? '0 4px 12px rgba(0, 0, 0, 0.15)'
-                      : 'none'
+                      : 'none',
+                    ringOffsetColor: 'var(--cb-nav-container)'
                   }}
                 >
-                  <MessageCircle className={`w-5 h-5 transition-all ${activeTab === 'matches' ? 'text-[#44cfcb] fill-[#44cfcb]' : 'text-white/70'}`} />
+                  <MessageCircle 
+                    className={`w-5 h-5 transition-all ${activeTab === 'matches' ? 'fill-current' : 'text-white/70'}`}
+                    style={{ color: activeTab === 'matches' ? 'var(--cb-matches)' : undefined }}
+                  />
                   {activeTab === 'matches' && (
-                    <span className="text-sm font-semibold text-[#44cfcb]">Matches</span>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--cb-matches)' }}>Matches</span>
                   )}
                   {/* Notification Badge */}
                   {activeTab !== 'matches' && (
                     <span 
                       className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white"
-                      style={{ backgroundColor: '#44cfcb', border: '2px solid #122c34' }}
+                      style={{ backgroundColor: 'var(--cb-matches)', border: '2px solid var(--cb-nav-container)' }}
                       aria-label="3 new"
                     >
                       3
@@ -2372,19 +2578,23 @@ const sampleProfiles = [
                   aria-selected={activeTab === 'home'}
                   aria-label="Home dashboard"
                   tabIndex={activeTab === 'home' ? 0 : -1}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   style={{
                     background: activeTab === 'home' 
-                      ? '#ffffff'
+                      ? 'var(--cb-nav-active)'
                       : 'transparent',
                     boxShadow: activeTab === 'home' 
                       ? '0 4px 12px rgba(0, 0, 0, 0.15)'
-                      : 'none'
+                      : 'none',
+                    ringOffsetColor: 'var(--cb-nav-container)'
                   }}
                 >
-                  <Home className={`w-5 h-5 transition-all ${activeTab === 'home' ? 'text-[#4ea5d9] fill-[#4ea5d9]' : 'text-white/70'}`} />
+                  <Home 
+                    className={`w-5 h-5 transition-all ${activeTab === 'home' ? 'fill-current' : 'text-white/70'}`}
+                    style={{ color: activeTab === 'home' ? 'var(--cb-home)' : undefined }}
+                  />
                   {activeTab === 'home' && (
-                    <span className="text-sm font-semibold text-[#4ea5d9]">Home</span>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--cb-home)' }}>Home</span>
                   )}
                 </button>
 
@@ -2395,19 +2605,23 @@ const sampleProfiles = [
                   aria-selected={activeTab === 'connect'}
                   aria-label="Events and connections"
                   tabIndex={activeTab === 'connect' ? 0 : -1}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   style={{
                     background: activeTab === 'connect' 
-                      ? '#ffffff'
+                      ? 'var(--cb-nav-active)'
                       : 'transparent',
                     boxShadow: activeTab === 'connect' 
                       ? '0 4px 12px rgba(0, 0, 0, 0.15)'
-                      : 'none'
+                      : 'none',
+                    ringOffsetColor: 'var(--cb-nav-container)'
                   }}
                 >
-                  <Users className={`w-5 h-5 transition-all ${activeTab === 'connect' ? 'text-[#10b981] fill-[#10b981]' : 'text-white/70'}`} />
+                  <Users 
+                    className={`w-5 h-5 transition-all ${activeTab === 'connect' ? 'fill-current' : 'text-white/70'}`}
+                    style={{ color: activeTab === 'connect' ? 'var(--cb-connect)' : undefined }}
+                  />
                   {activeTab === 'connect' && (
-                    <span className="text-sm font-semibold text-[#10b981]">Connect</span>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--cb-connect)' }}>Connect</span>
                   )}
                 </button>
 
@@ -2418,19 +2632,23 @@ const sampleProfiles = [
                   aria-selected={activeTab === 'vent'}
                   aria-label="Anonymous vent space"
                   tabIndex={activeTab === 'vent' ? 0 : -1}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[#122c34]"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 min-w-[56px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                   style={{
                     background: activeTab === 'vent' 
-                      ? '#ffffff'
+                      ? 'var(--cb-nav-active)'
                       : 'transparent',
                     boxShadow: activeTab === 'vent' 
                       ? '0 4px 12px rgba(0, 0, 0, 0.15)'
-                      : 'none'
+                      : 'none',
+                    ringOffsetColor: 'var(--cb-nav-container)'
                   }}
                 >
-                  <Cloud className={`w-5 h-5 transition-all ${activeTab === 'vent' ? 'text-[#6366f1] fill-[#6366f1]' : 'text-white/70'}`} />
+                  <Cloud 
+                    className={`w-5 h-5 transition-all ${activeTab === 'vent' ? 'fill-current' : 'text-white/70'}`}
+                    style={{ color: activeTab === 'vent' ? 'var(--cb-vent)' : undefined }}
+                  />
                   {activeTab === 'vent' && (
-                    <span className="text-sm font-semibold text-[#6366f1]">Vent</span>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--cb-vent)' }}>Vent</span>
                   )}
                 </button>
               </div>
