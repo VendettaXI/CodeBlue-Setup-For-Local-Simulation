@@ -896,7 +896,7 @@ const sampleProfiles = [
   // EDIT PROFILE SCREEN
   if (currentScreen === 'edit-profile') {
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -925,11 +925,11 @@ const sampleProfiles = [
 
         <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
           {/* Profile Completion */}
-          <div className="bg-white rounded-2xl cb-shadow-card p-5 mb-6 cb-shadow-card">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl cb-shadow-card p-5 mb-6 cb-shadow-card">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Profile Strength</h3>
-                <p className="text-sm text-gray-600">{userProfile.profileComplete}% Complete</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Profile Strength</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{userProfile.profileComplete}% Complete</p>
               </div>
               <div className="text-3xl">
                 {userProfile.profileComplete === 100 ? '🎉' : '💪'}
@@ -964,52 +964,52 @@ const sampleProfiles = [
           </button>
 
           {/* Edit Sections - Clean Professional Style */}
-          <div className="bg-white rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
             {/* Photos */}
             <button 
               onClick={() => setEditSection('photos')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Camera className="w-6 h-6 text-gray-600" />
+                  <Camera className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Photos</h3>
-                    <p className="text-sm text-gray-500/90">{profilePhotos.filter(p => p).length} of 6 added</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">Photos</h3>
+                    <p className="text-sm text-gray-500/90 dark:text-gray-400">{profilePhotos.filter(p => p).length} of 6 added</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
+                <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
               </div>
             </button>
 
             {/* Basic Info */}
             <button 
               onClick={() => setEditSection('info')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <User className="w-6 h-6 text-gray-600" />
+                  <User className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Basic Info</h3>
-                    <p className="text-sm text-gray-500/90">Name, bio, role, location</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">Basic Info</h3>
+                    <p className="text-sm text-gray-500/90 dark:text-gray-400">Name, bio, role, location</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
+                <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
               </div>
             </button>
 
             {/* Prompts */}
             <button 
               onClick={() => setEditSection('prompts')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <MessageCircle className="w-6 h-6 text-gray-600" />
+                  <MessageCircle className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Prompts</h3>
-                    <p className="text-sm text-gray-500/90">{selectedPrompts.length} prompts added</p>
+                    <h3 className="font-medium text-gray-900 dark:text-white">Prompts</h3>
+                    <p className="text-sm text-gray-500/90 dark:text-gray-400">{selectedPrompts.length} prompts added</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1104,19 +1104,19 @@ const sampleProfiles = [
 
           {/* Edit Section Modals */}
           {editSection === 'photos' && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900">Manage Photos</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <X className="w-5 h-5 text-gray-600" />
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
+              <div className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Manage Photos</h2>
+                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
                 <div className="p-6">
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 mb-6">
+                  <div className="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-700 rounded-2xl p-4 mb-6">
                     <div className="flex items-start gap-3">
-                      <Camera className="w-5 h-5 text-blue-700 mt-0.5" />
-                      <div className="text-sm text-blue-800">
+                      <Camera className="w-5 h-5 text-blue-700 dark:text-blue-400 mt-0.5" />
+                      <div className="text-sm text-blue-800 dark:text-blue-200">
                         <p className="font-semibold mb-1">Photo Tips:</p>
                         <ul className="space-y-1">
                           <li>• Add 4-6 photos for best results</li>
@@ -1174,26 +1174,26 @@ const sampleProfiles = [
           )}
 
           {editSection === 'info' && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900">Basic Info</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <X className="w-5 h-5 text-gray-600" />
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
+              <div className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Basic Info</h2>
+                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
                 <div className="p-6 space-y-6">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
                     <input 
                       type="text" 
                       defaultValue="Venice"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Age</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Age</label>
                     <input 
                       type="number" 
                       defaultValue="24"
@@ -1500,7 +1500,7 @@ const sampleProfiles = [
     const maxViews = Math.max(...weeklyActivity.map(d => d.views));
     
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -1781,9 +1781,9 @@ const sampleProfiles = [
   // SETTINGS SCREEN
   if (currentScreen === 'settings') {
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('profile')}
@@ -2037,13 +2037,13 @@ const sampleProfiles = [
     const stats = getActionStats();
 
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB]">
+      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('settings')}
-              className="text-blue-900 font-semibold flex items-center gap-1"
+              className="text-blue-900 dark:text-blue-400 font-semibold flex items-center gap-1"
             >
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back

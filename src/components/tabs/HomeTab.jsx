@@ -139,14 +139,14 @@ export function HomeTab({
       )}
 
       {/* Tip of the Day */}
-      <div className="bg-blue-50 border-2 border-blue-200 rounded-t-2xl p-5 mb-24">
+      <div className="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-700 rounded-t-2xl p-5 mb-24">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-bold text-blue-900 mb-1">Tip of the Day</h3>
-            <p className="text-sm text-blue-800">{dailyInsights.tip}</p>
+            <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-1">Tip of the Day</h3>
+            <p className="text-sm text-blue-800 dark:text-blue-200">{dailyInsights.tip}</p>
           </div>
         </div>
       </div>

@@ -343,10 +343,10 @@ export function DiscoverTab({
 
               {/* Shift Compatibility */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-3">Shift Preference</label>
+                <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-3">Shift Preference</label>
                 <div className="flex flex-wrap gap-2">
                   {['Day Shift', 'Night Shift', 'Rotating', 'Any'].map((shift) => (
-                    <button key={shift} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-purple-50 hover:text-purple-700 transition-all">
+                    <button key={shift} className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-400 transition-all">
                       {shift}
                     </button>
                   ))}
@@ -355,10 +355,10 @@ export function DiscoverTab({
 
               {/* Relationship Goals */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-3">Looking For</label>
+                <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-3">Looking For</label>
                 <div className="flex flex-wrap gap-2">
                   {['Long-term', 'Casual', 'Friends', 'Not sure'].map((goal) => (
-                    <button key={goal} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-pink-50 hover:text-pink-700 transition-all">
+                    <button key={goal} className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-pink-50 dark:hover:bg-pink-900/30 hover:text-pink-700 dark:hover:text-pink-400 transition-all">
                       {goal}
                     </button>
                   ))}
@@ -367,19 +367,19 @@ export function DiscoverTab({
 
               {/* Show Only */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-3">Show Only</label>
+                <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-3">Show Only</label>
                 <div className="space-y-2">
-                  <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                    <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                    <span className="cb-chip text-sm font-medium text-gray-700 border border-white/30">Verified profiles</span>
+                  <label className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-all">
+                    <input type="checkbox" className="w-5 h-5 text-blue-900 dark:text-blue-500 rounded" />
+                    <span className="cb-chip text-sm font-medium text-gray-700 dark:text-gray-300 border border-white/30">Verified profiles</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                    <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                    <span className="text-sm font-medium text-gray-700">Recently active</span>
+                  <label className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-all">
+                    <input type="checkbox" className="w-5 h-5 text-blue-900 dark:text-blue-500 rounded" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Recently active</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all">
-                    <input type="checkbox" className="w-5 h-5 text-blue-900 rounded" />
-                    <span className="text-sm font-medium text-gray-700">High compatibility (80%+)</span>
+                  <label className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-all">
+                    <input type="checkbox" className="w-5 h-5 text-blue-900 dark:text-blue-500 rounded" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">High compatibility (80%+)</span>
                   </label>
                 </div>
               </div>
