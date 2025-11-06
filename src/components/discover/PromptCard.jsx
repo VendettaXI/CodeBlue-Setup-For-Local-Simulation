@@ -89,7 +89,10 @@ export const PromptCard = React.memo(function PromptCard({
       {/* Answer - Responsive: 16px → 17px at sm+, Sans-Serif Light, slightly spaced */}
       {type === 'text' ? (
         <div className="flex items-center justify-between">
-          <p className="text-[16px] sm:text-[17px] font-light text-gray-900 dark:text-gray-100 leading-relaxed mb-5 text-justify cb-slightly-spaced">
+          <p
+            className="text-[16px] sm:text-[17px] font-light leading-relaxed mb-5 text-justify cb-slightly-spaced"
+            style={{ color: 'var(--cb-text)' }}
+          >
             {answer}
           </p>
           {/* Message Button - right side with heart icon */}
