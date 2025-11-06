@@ -923,7 +923,7 @@ const sampleProfiles = [
       <div className="flex items-center gap-4">
         <Icon className="w-6 h-6 text-gray-600" />
         <div>
-          <p className="font-semibold text-gray-900">{label}</p>
+          <p className="font-semibold text-gray-900 dark:text-gray-100">{label}</p>
           {description && <p className="text-[16px] sm:text-[17px] text-gray-500/90 cb-slightly-spaced">{description}</p>}
         </div>
       </div>
@@ -987,7 +987,7 @@ const sampleProfiles = [
           <div className="cb-card rounded-2xl p-5 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Profile Strength</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Profile Strength</h3>
                 <p className="text-sm text-gray-600">{userProfile.profileComplete}% Complete</p>
               </div>
               <div className="text-3xl">
@@ -1263,7 +1263,7 @@ const sampleProfiles = [
                     <input 
                       type="text" 
                       defaultValue="Venice"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
@@ -1272,7 +1272,7 @@ const sampleProfiles = [
                     <input 
                       type="number" 
                       defaultValue="24"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
@@ -1283,7 +1283,7 @@ const sampleProfiles = [
                       onChange={(e) => setBio(e.target.value)}
                       maxLength={500}
                       rows={5}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 resize-none"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100 resize-none"
                     />
                     <div className="flex justify-between items-center mt-2">
                       <p className="text-xs text-gray-500/90">Write a bio that shows your personality</p>
@@ -1293,7 +1293,7 @@ const sampleProfiles = [
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">Role</label>
-                    <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900">
+                    <select className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100">
                       <option>Registered Nurse</option>
                       <option>Junior Doctor</option>
                       <option>Senior Doctor</option>
@@ -1313,7 +1313,7 @@ const sampleProfiles = [
                       type="text" 
                       defaultValue="Emergency Department"
                       placeholder="e.g., Emergency, Cardiology, Pediatrics"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
@@ -1323,13 +1323,13 @@ const sampleProfiles = [
                       type="text" 
                       defaultValue="Royal London Hospital"
                       placeholder="Where do you work?"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">Typical Shift</label>
-                    <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900">
+                    <select className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900 dark:text-gray-100">
                       <option>Day Shift</option>
                       <option>Night Shift</option>
                       <option>Rotating Shifts</option>
@@ -1629,7 +1629,7 @@ const sampleProfiles = [
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-2xl font-bold text-gray-900">Venice Dawn</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Venice Dawn</h2>
                     <div className="flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-full">
                       <Check className="w-4 h-4 text-blue-900" />
                       <span className="cb-chip text-xs font-bold text-blue-900 border border-white/30">Verified</span>
@@ -1645,9 +1645,9 @@ const sampleProfiles = [
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Target className="w-5 h-5 text-blue-700" />
-                    <span className="font-bold text-gray-900">Profile Strength</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">Profile Strength</span>
                   </div>
-                  <span className="text-2xl font-bold text-blue-900">{userProfile.profileComplete}%</span>
+                  <span className="text-2xl font-bold text-blue-900 dark:text-blue-400">{userProfile.profileComplete}%</span>
                 </div>
                 <div className="h-3 bg-white rounded-full overflow-hidden mb-2">
                   <div 
@@ -1670,8 +1670,8 @@ const sampleProfiles = [
           {/* Weekly Activity Dashboard */}
           <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="cb-title text-lg font-bold text-gray-900 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-700" />
+              <h3 className="cb-title text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                <Activity className="w-5 h-5 text-blue-700 dark:text-blue-400" />
                 Weekly Activity
               </h3>
               <TrendingUp className="w-5 h-5 text-green-600" />
@@ -1693,24 +1693,24 @@ const sampleProfiles = [
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 text-center">
                 <Eye className="w-5 h-5 text-blue-700 mx-auto mb-1" />
-                <div className="text-2xl font-bold text-gray-900">156</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">156</div>
                 <div className="text-xs text-gray-600">Total Views</div>
               </div>
               <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-3 text-center">
                 <Heart className="w-5 h-5 text-pink-600 mx-auto mb-1" />
-                <div className="text-2xl font-bold text-gray-900">23</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">23</div>
                 <div className="text-xs text-gray-600">Likes</div>
               </div>
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-3 text-center">
                 <Zap className="w-5 h-5 text-green-600 mx-auto mb-1" />
-                <div className="text-2xl font-bold text-gray-900">89%</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">89%</div>
                 <div className="text-xs text-gray-600">Response</div>
               </div>
             </div>
           </div>
 
           {/* Best Performing Content */}
-          <div className="cb-card rounded-3xl p-6 mb-6 text-gray-900 cb-shadow-card">
+          <div className="cb-card rounded-3xl p-6 mb-6 text-gray-900 dark:text-gray-100 cb-shadow-card">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <Flame className="w-6 h-6" />
@@ -1740,7 +1740,7 @@ const sampleProfiles = [
           <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Trophy className="w-5 h-5 text-yellow-600" />
-              <h3 className="cb-title text-lg font-bold text-gray-900">Achievements</h3>
+              <h3 className="cb-title text-lg font-bold text-gray-900 dark:text-gray-100">Achievements</h3>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {achievements.map(achievement => (
@@ -1753,7 +1753,7 @@ const sampleProfiles = [
                   }`}
                 >
                   <div className="text-3xl mb-2">{achievement.icon}</div>
-                  <div className="text-xs font-bold text-gray-900 mb-1">{achievement.name}</div>
+                  <div className="text-xs font-bold text-gray-900 dark:text-gray-100 mb-1">{achievement.name}</div>
                   <div className="text-xs text-gray-500">{achievement.description}</div>
                 </div>
               ))}
@@ -1786,7 +1786,7 @@ const sampleProfiles = [
           {/* Who Likes You Preview */}
           <div className="cb-card rounded-3xl cb-shadow-card p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="cb-title text-lg font-bold text-gray-900">Who Likes You</h3>
+              <h3 className="cb-title text-lg font-bold text-gray-900 dark:text-gray-100">Who Likes You</h3>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </div>
             <div className="flex gap-3">
@@ -1812,11 +1812,11 @@ const sampleProfiles = [
                 <Crown className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="cb-title text-xl font-bold text-gray-900">Upgrade to Premium</h3>
+                <h3 className="cb-title text-xl font-bold text-gray-900 dark:text-gray-100">Upgrade to Premium</h3>
                 <p className="text-sm text-gray-600">Unlock exclusive features</p>
               </div>
             </div>
-            <div className="space-y-2 mb-4 text-gray-800">
+            <div className="space-y-2 mb-4 text-gray-800 dark:text-gray-200">
               <div className="flex items-center gap-2 text-sm">
                 <Check className="w-4 h-4 text-emerald-600" />
                 <span>See everyone who likes you</span>
@@ -1843,7 +1843,7 @@ const sampleProfiles = [
             >
               <div className="flex items-center gap-4">
                 <Settings className="w-6 h-6 text-gray-600" />
-                <span className="font-semibold text-gray-900">Settings & Privacy</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">Settings & Privacy</span>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </button>
@@ -1851,7 +1851,7 @@ const sampleProfiles = [
             <button className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-all border-b border-gray-100">
               <div className="flex items-center gap-4">
                 <Shield className="w-6 h-6 text-gray-600" />
-                <span className="font-semibold text-gray-900">Safety & Security</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">Safety & Security</span>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </button>
@@ -1859,7 +1859,7 @@ const sampleProfiles = [
             <button className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-all">
               <div className="flex items-center gap-4">
                 <Info className="w-6 h-6 text-gray-600" />
-                <span className="font-semibold text-gray-900">Help Center</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">Help Center</span>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </button>
@@ -1991,7 +1991,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <MapPin className="w-6 h-6 text-gray-600" />
                   <div>
-                    <p className="font-semibold text-gray-900">Maximum Distance</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">Maximum Distance</p>
                     <p className="text-sm text-gray-500">{maxDistance} miles</p>
                   </div>
                 </div>
@@ -2012,7 +2012,7 @@ const sampleProfiles = [
                 <div className="flex items-center gap-4">
                   <Users className="w-6 h-6 text-gray-600" />
                   <div>
-                    <p className="font-semibold text-gray-900">Age Range</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">Age Range</p>
                     <p className="text-sm text-gray-500">{ageRange[0]} - {ageRange[1]} years</p>
                   </div>
                 </div>
