@@ -14,8 +14,6 @@ A polished, componentized React + Vite app themed for healthcare professionals.
 Docs have moved to the `docs/` folder to keep the root clean.
 
 - Current status, roadmap, and next steps: docs/PROJECT_STATUS.md
-- Product vision & concept (read first): docs/PRODUCT_VISION.md
-- Feature roadmap and MVP specs: docs/ROADMAP.md
 - Code guide and architecture notes: docs/CODE_GUIDE.md
 - Additional documentation: docs/DOCUMENTATION.md
 - Performance report: docs/PERFORMANCE_REPORT.md
@@ -23,14 +21,6 @@ Docs have moved to the `docs/` folder to keep the root clean.
 - QA findings: docs/QA_FINDINGS.md
 - Theme system: docs/TASK_6_THEME_SYSTEM.md
 - State refactor analysis: docs/TASK_7_STATE_REFACTOR_ANALYSIS.md
-
-### Collaboration rules (important)
-
-To prevent accidental Git history overwrites and auto-commits by tools/assistants, please see:
-
-- Git workflow rules: .github-copilot-instructions.md
-
-Summary: no automatic git add/commit/push; always show diffs first; prefer feature branches and PRs for changes to `main`.
 
 Tip (Windows): You can also run npm run status:open to open the status doc directly in your default editor.
 

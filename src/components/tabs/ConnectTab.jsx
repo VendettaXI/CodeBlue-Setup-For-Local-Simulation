@@ -22,7 +22,7 @@ export function ConnectTab({ events }) {
               <p className="text-sm opacity-90">Find platonic connections</p>
             </div>
           </div>
-          <button className="bg-white dark:bg-gray-800 text-green-600 dark:text-green-400 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+          <button className="bg-white text-green-600 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-100 dark:hover:bg-gray-50 transition-all">
             Try Now
           </button>
         </div>

@@ -35,13 +35,13 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
           </div>
 
           {/* Safety Notice */}
-          <div className="bg-green-50 dark:bg-green-900/30 border-2 border-green-200 dark:border-green-700 rounded-2xl p-5 mb-6 flex items-start gap-4">
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center flex-shrink-0">
-              <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
+          <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-5 mb-6 flex items-start gap-4">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Shield className="w-6 h-6 text-green-600" />
             </div>
             <div>
-              <h3 className="font-bold text-green-900 dark:text-green-100 mb-2">Your Safety Matters</h3>
-              <ul className="text-sm text-green-800 dark:text-green-200 space-y-1">
+              <h3 className="font-bold text-green-900 mb-2">Your Safety Matters</h3>
+              <ul className="text-sm text-green-800 space-y-1">
                 <li>• All conversations are anonymous and auto-delete</li>
                 <li>• AI moderation protects patient privacy</li>
                 <li>• Professional support available 24/7</li>
@@ -91,18 +91,18 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
                   <p className="text-blue-100 text-sm">Get paired with another healthcare professional for private, anonymous support.</p>
                 </div>
               </div>
-              <button className="bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-400 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 dark:hover:bg-gray-700 w-full transition-all cb-shadow-card">
+              <button className="bg-white text-blue-900 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 w-full transition-all cb-shadow-card">
                 Start Private Chat
               </button>
             </div>
 
             {/* Crisis Resources */}
-            <div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 rounded-2xl p-5 mb-24">
+            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-24">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
+                <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
               <div>
-                <h3 className="font-medium text-red-900 dark:text-red-100 mb-2">Need Immediate Help?</h3>
-                <p className="text-sm text-red-800 dark:text-red-200 mb-3">If you're in crisis, please reach out to professional support:</p>
+                <h3 className="font-medium text-red-900 mb-2">Need Immediate Help?</h3>
+                <p className="text-sm text-red-800 mb-3">If you're in crisis, please reach out to professional support:</p>
                   <div className="space-y-2">
                     <button className="w-full bg-red-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
                       <Phone className="w-5 h-5" />

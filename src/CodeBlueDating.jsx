@@ -955,7 +955,7 @@ const sampleProfiles = [
   // EDIT PROFILE SCREEN
   if (currentScreen === 'edit-profile') {
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+  <div className="min-h-screen bg-[var(--cb-bg)]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -984,7 +984,7 @@ const sampleProfiles = [
 
         <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
           {/* Profile Completion */}
-          <div className="bg-white rounded-2xl cb-shadow-card p-5 mb-6 cb-shadow-card">
+          <div className="cb-card rounded-2xl p-5 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">Profile Strength</h3>
@@ -1023,17 +1023,17 @@ const sampleProfiles = [
           </button>
 
           {/* Edit Sections - Clean Professional Style */}
-          <div className="bg-white rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
+          <div className="cb-card rounded-2xl overflow-hidden">
             {/* Photos */}
             <button 
               onClick={() => setEditSection('photos')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Camera className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Photos</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Photos</h3>
                     <p className="text-sm text-gray-500/90">{profilePhotos.filter(p => p).length} of 6 added</p>
                   </div>
                 </div>
@@ -1044,13 +1044,13 @@ const sampleProfiles = [
             {/* Basic Info */}
             <button 
               onClick={() => setEditSection('info')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <User className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Basic Info</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Basic Info</h3>
                     <p className="text-sm text-gray-500/90">Name, bio, role, location</p>
                   </div>
                 </div>
@@ -1061,13 +1061,13 @@ const sampleProfiles = [
             {/* Prompts */}
             <button 
               onClick={() => setEditSection('prompts')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Prompts</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Prompts</h3>
                     <p className="text-sm text-gray-500/90">{selectedPrompts.length} prompts added</p>
                   </div>
                 </div>
@@ -1078,13 +1078,13 @@ const sampleProfiles = [
             {/* My Vibe */}
             <button 
               onClick={() => setEditSection('vibe')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Sparkles className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">My Vibe</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">My Vibe</h3>
                     <p className="text-sm text-gray-500/90">{selectedVibe.length} interests selected</p>
                   </div>
                 </div>
@@ -1095,13 +1095,13 @@ const sampleProfiles = [
             {/* Relationship Goals */}
             <button 
               onClick={() => setEditSection('goals')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Heart className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Looking For</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Looking For</h3>
                     <p className="text-sm text-gray-500/90">Long-term, open to short</p>
                   </div>
                 </div>
@@ -1112,13 +1112,13 @@ const sampleProfiles = [
             {/* Communication Style */}
             <button 
               onClick={() => setEditSection('communication')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Communication Style</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Communication Style</h3>
                     <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
@@ -1129,13 +1129,13 @@ const sampleProfiles = [
             {/* Education */}
             <button 
               onClick={() => setEditSection('education')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Award className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Education</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Education</h3>
                     <p className="text-sm text-gray-500/90">Empty</p>
                   </div>
                 </div>
@@ -1146,13 +1146,13 @@ const sampleProfiles = [
             {/* Dealbreakers */}
             <button 
               onClick={() => setEditSection('dealbreakers')}
-              className="w-full p-5 hover:bg-gray-50 transition-all text-left"
+              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <AlertCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Dealbreakers</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Dealbreakers</h3>
                     <p className="text-sm text-gray-500/90">{dealbreakers.length} dealbreaker{dealbreakers.length !== 1 ? 's' : ''} set</p>
                   </div>
                 </div>
@@ -1546,7 +1546,7 @@ const sampleProfiles = [
                   </div>
 
                   {/* Preview Card */}
-                  <div className="bg-white rounded-3xl cb-shadow-card overflow-hidden cb-shadow-card">
+                  <div className="cb-card rounded-3xl overflow-hidden">
                     <div className="relative w-full h-[66vh] overflow-hidden rounded-t-3xl">
                       <div className="absolute inset-0 flex items-center justify-center opacity-30">
                         <div className="text-9xl">{profilePhotos[0] || '👤'}</div>
@@ -1559,7 +1559,7 @@ const sampleProfiles = [
                       </div>
                     </div>
                     <div className="p-6">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-1">Venice, 24</h3>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">Venice, 24</h3>
                       <p className="text-gray-600 mb-4">Registered Nurse • Royal London</p>
                       <p className="text-gray-700 mb-4">{bio}</p>
                       {selectedVibe.length > 0 && (
@@ -1872,9 +1872,9 @@ const sampleProfiles = [
   // SETTINGS SCREEN
   if (currentScreen === 'settings') {
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div className="min-h-screen bg-[var(--cb-bg)]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('profile')}
@@ -1883,7 +1883,7 @@ const sampleProfiles = [
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back
             </button>
-            <h1 className="text-xl font-bold text-gray-900">Settings</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
             <button className="text-blue-900 font-semibold">Done</button>
           </div>
         </div>
@@ -2131,9 +2131,9 @@ const sampleProfiles = [
     const stats = getActionStats();
 
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
+      <div className="min-h-screen bg-[var(--cb-bg)]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('settings')}
@@ -2142,7 +2142,7 @@ const sampleProfiles = [
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back
             </button>
-            <h1 className="text-xl font-bold text-gray-900">Discovery History</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Discovery History</h1>
             <div className="w-14"></div>
           </div>
         </div>
