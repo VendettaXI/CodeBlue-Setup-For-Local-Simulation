@@ -47,7 +47,7 @@
  * ============================================================================
  */
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Heart, MessageCircle, Home, Users, Cloud, Shield, User, ChevronRight, X, Check, Send, MapPin, Briefcase, Clock, Zap, Lock, Star, Camera, Plus, AlertCircle, TrendingUp, Award, Bell, Settings, Filter, SlidersHorizontal, Sparkles, Coffee, Phone, Video, Image, Mic, MoreHorizontal, ThumbsUp, Share2, Bookmark, Eye, EyeOff, Globe, Calendar, Mail, Info, LogOut, Crown, Edit, BarChart3, Activity, Target, Flame, Trophy, Moon, Sun, Stethoscope, Building2 } from 'lucide-react';
 
 // Component imports
@@ -68,6 +68,7 @@ const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
+// Theme palettes removed (Nov 5, 2025) – single brand palette retained via useCodeBlueTheme
 
 // Note: ActionTray component removed - action buttons are now componentized
 
@@ -119,20 +120,7 @@ function useCodeBlueTheme() {
     document.body.style.fontFamily =
       'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
 
-    // Inject CSS custom properties for Classic Blue theme (NHS-inspired)
-    const root = document.documentElement;
-    root.style.setProperty('--cb-nav-container', '#122c34');    // Gunmetal
-    root.style.setProperty('--cb-nav-active', '#ffffff');       // White
-    root.style.setProperty('--cb-discover', '#ec4899');         // Pink
-    root.style.setProperty('--cb-matches', '#44cfcb');          // Robin egg blue
-    root.style.setProperty('--cb-home', '#4ea5d9');            // Picton blue
-    root.style.setProperty('--cb-connect', '#10b981');          // Emerald
-    root.style.setProperty('--cb-vent', '#6366f1');            // Indigo
-    root.style.setProperty('--cb-gradient-start', '#4ea5d9');   // Picton blue
-    root.style.setProperty('--cb-gradient-mid', '#44cfcb');     // Robin egg blue
-    root.style.setProperty('--cb-gradient-end', '#224870');     // Indigo dye
-    root.style.setProperty('--cb-button-primary', '#4ea5d9');
-    root.style.setProperty('--cb-button-secondary', '#44cfcb');
+    // CSS custom properties are defined below in :root for the single brand palette
 
     // Global CSS tokens (lavender base + navy gradient + shadows)
     if (!document.getElementById("cb-theme-style")) {
@@ -252,6 +240,20 @@ function useCodeBlueTheme() {
           --cb-surface-muted:#F8FAFC;
           --cb-border: rgba(15,23,42,.08);
           --cb-text-muted:#6B7280;
+
+          /* Single brand palette tokens (formerly dynamic via themePalettes) */
+          --cb-nav-container: rgba(15,33,58,0.9); /* gunmetal container */
+          --cb-nav-active: #FFFFFF; /* white active pill */
+          --cb-discover: #0EA5E9; /* cyan-500 */
+          --cb-matches: #EC4899; /* pink-500 */
+          --cb-home: #3B82F6; /* blue-500 */
+          --cb-connect: #22C55E; /* green-500 */
+          --cb-vent: #A855F7; /* purple-500 */
+          --cb-gradient-start: #4F46E5; /* indigo-600 */
+          --cb-gradient-mid: #3B82F6; /* blue-500 */
+          --cb-gradient-end: #06B6D4; /* cyan-500 */
+          --cb-button-primary: #3B82F6; /* blue-500 */
+          --cb-button-secondary: #F3F4F6; /* gray-100 */
           
           /* Z-index layers */
           --z-header: 30;
@@ -428,6 +430,8 @@ const CodeBlueDating = () => {
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
+  // Theme palette switching removed; single brand palette enforced
+
   // Detect system theme preference on first load if no user preference saved
   useEffect(() => {
     try {
@@ -446,7 +450,7 @@ const CodeBlueDating = () => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
-  // Inject global theme styles
+  // Inject global theme styles with current palette (updates when palette changes)
   useCodeBlueTheme();
   
   // ========================================================================
@@ -571,6 +575,61 @@ const CodeBlueDating = () => {
   // Which profile editing section is active
   // Values: null | 'photos' | 'info' | 'prompts' | 'vibe' | 'preview'
   const [editSection, setEditSection] = useState(null);
+  
+  // A11y: Modal focus management
+  const modalRef = useRef(null);
+  const prevFocusRef = useRef(null);
+
+  // Trap focus within modal when open and support Escape-to-close
+  const handleModalKeyDown = (e) => {
+    if (!modalRef.current) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setEditSection(null);
+      return;
+    }
+    if (e.key === 'Tab') {
+      const focusable = modalRef.current.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const isShift = e.shiftKey;
+      const active = document.activeElement;
+      if (!isShift && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (isShift && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    }
+  };
+
+  // Focus the first focusable element when a modal opens; restore focus on close
+  useEffect(() => {
+    if (editSection && modalRef.current) {
+      prevFocusRef.current = document.activeElement;
+      const focusable = modalRef.current.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length) {
+        // Prefer focusing a close button if present
+        const closeBtn = modalRef.current.querySelector('[data-close-button]');
+        (closeBtn || focusable[0]).focus();
+      } else {
+        modalRef.current.focus();
+      }
+    } else if (!editSection && prevFocusRef.current) {
+      // Restore focus to prior element when modal closes
+      const el = prevFocusRef.current;
+      prevFocusRef.current = null;
+      if (el && typeof el.focus === 'function') {
+        el.focus();
+      }
+    }
+  }, [editSection]);
   
   // Profile photos array (up to 6 slots, empty string for unused slots)
   const [profilePhotos, setProfilePhotos] = useState(['👩‍⚕️', '🌙', '☕', '📚', '', '']);
@@ -896,7 +955,7 @@ const sampleProfiles = [
   // EDIT PROFILE SCREEN
   if (currentScreen === 'edit-profile') {
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
+      <div className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -925,11 +984,11 @@ const sampleProfiles = [
 
         <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
           {/* Profile Completion */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl cb-shadow-card p-5 mb-6 cb-shadow-card">
+          <div className="bg-white rounded-2xl cb-shadow-card p-5 mb-6 cb-shadow-card">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Profile Strength</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{userProfile.profileComplete}% Complete</p>
+                <h3 className="text-lg font-bold text-gray-900">Profile Strength</h3>
+                <p className="text-sm text-gray-600">{userProfile.profileComplete}% Complete</p>
               </div>
               <div className="text-3xl">
                 {userProfile.profileComplete === 100 ? '🎉' : '💪'}
@@ -964,52 +1023,52 @@ const sampleProfiles = [
           </button>
 
           {/* Edit Sections - Clean Professional Style */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
+          <div className="bg-white rounded-2xl cb-shadow-card overflow-hidden cb-shadow-card">
             {/* Photos */}
             <button 
               onClick={() => setEditSection('photos')}
-              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
+              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Camera className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                  <Camera className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Photos</h3>
-                    <p className="text-sm text-gray-500/90 dark:text-gray-400">{profilePhotos.filter(p => p).length} of 6 added</p>
+                    <h3 className="font-medium text-gray-900">Photos</h3>
+                    <p className="text-sm text-gray-500/90">{profilePhotos.filter(p => p).length} of 6 added</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
             </button>
 
             {/* Basic Info */}
             <button 
               onClick={() => setEditSection('info')}
-              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
+              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <User className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                  <User className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Basic Info</h3>
-                    <p className="text-sm text-gray-500/90 dark:text-gray-400">Name, bio, role, location</p>
+                    <h3 className="font-medium text-gray-900">Basic Info</h3>
+                    <p className="text-sm text-gray-500/90">Name, bio, role, location</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
             </button>
 
             {/* Prompts */}
             <button 
               onClick={() => setEditSection('prompts')}
-              className="w-full p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-left border-b border-gray-100 dark:border-gray-700"
+              className="w-full p-5 hover:bg-gray-50 transition-all text-left border-b border-gray-100"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <MessageCircle className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                  <MessageCircle className="w-6 h-6 text-gray-600" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">Prompts</h3>
-                    <p className="text-sm text-gray-500/90 dark:text-gray-400">{selectedPrompts.length} prompts added</p>
+                    <h3 className="font-medium text-gray-900">Prompts</h3>
+                    <p className="text-sm text-gray-500/90">{selectedPrompts.length} prompts added</p>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1105,10 +1164,18 @@ const sampleProfiles = [
           {/* Edit Section Modals */}
           {editSection === 'photos' && (
             <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
+              <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="photos-title"
+                tabIndex={-1}
+                onKeyDown={handleModalKeyDown}
+                className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card"
+              >
                 <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Manage Photos</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                  <h2 id="photos-title" className="text-xl font-bold text-gray-900 dark:text-white">Manage Photos</h2>
+                  <button data-close-button aria-label="Close" onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                     <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
@@ -1175,25 +1242,33 @@ const sampleProfiles = [
 
           {editSection === 'info' && (
             <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
+              <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="info-title"
+                tabIndex={-1}
+                onKeyDown={handleModalKeyDown}
+                className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card"
+              >
                 <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Basic Info</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                  <h2 id="info-title" className="text-xl font-bold text-gray-900 dark:text-white">Basic Info</h2>
+                  <button data-close-button aria-label="Close" onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                     <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
                 <div className="p-6 space-y-6">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
                     <input 
                       type="text" 
                       defaultValue="Venice"
-                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-blue-500"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Age</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Age</label>
                     <input 
                       type="number" 
                       defaultValue="24"
@@ -1275,19 +1350,27 @@ const sampleProfiles = [
           )}
 
           {editSection === 'prompts' && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900">Edit Prompts</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <X className="w-5 h-5 text-gray-600" />
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
+              <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="prompts-title"
+                tabIndex={-1}
+                onKeyDown={handleModalKeyDown}
+                className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card"
+              >
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+                  <h2 id="prompts-title" className="text-xl font-bold text-gray-900 dark:text-white">Edit Prompts</h2>
+                  <button data-close-button aria-label="Close" onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
                 <div className="p-6">
-                  <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 mb-6">
+                  <div className="bg-purple-50 dark:bg-purple-900/30 border-2 border-purple-200 dark:border-purple-700 rounded-2xl p-4 mb-6">
                     <div className="flex items-start gap-3">
-                      <Sparkles className="w-5 h-5 text-purple-700 mt-0.5" />
-                      <div className="text-sm text-purple-800">
+                      <Sparkles className="w-5 h-5 text-purple-700 dark:text-purple-300 mt-0.5" />
+                      <div className="text-sm text-purple-800 dark:text-purple-200">
                         <p className="font-semibold mb-1">Prompt Tips:</p>
                         <p>Choose prompts that showcase your personality and give conversation starters. Add 3-5 prompts for best results!</p>
                       </div>
@@ -1296,11 +1379,11 @@ const sampleProfiles = [
 
                   {/* Current Prompts */}
                   <div className="space-y-3 mb-6">
-                    <h3 className="font-bold text-gray-900">Your Prompts</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Your Prompts</h3>
                     {selectedPrompts.map((prompt, idx) => (
-                      <div key={idx} className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4">
+                      <div key={idx} className="bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4">
                         <div className="flex items-start justify-between mb-2">
-                          <p className="font-bold text-sm text-gray-700">{prompt.question}</p>
+                          <p className="font-bold text-sm text-gray-700 dark:text-gray-200">{prompt.question}</p>
                           <button 
                             onClick={() => {
                               const newPrompts = selectedPrompts.filter((_, i) => i !== idx);
@@ -1320,7 +1403,7 @@ const sampleProfiles = [
                           }}
                           rows={3}
                           maxLength={200}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm resize-none"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:border-blue-500 text-sm resize-none"
                         />
                       </div>
                     ))}
@@ -1329,7 +1412,7 @@ const sampleProfiles = [
                   {/* Add New Prompt */}
                   {selectedPrompts.length < 5 && (
                     <div className="space-y-3">
-                      <h3 className="font-bold text-gray-900">Choose a Prompt</h3>
+                      <h3 className="font-bold text-gray-900 dark:text-white">Choose a Prompt</h3>
                       <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto">
                         {allPrompts.filter(p => !selectedPrompts.find(sp => sp.question === p)).map((prompt, idx) => (
                           <button 
@@ -1339,9 +1422,9 @@ const sampleProfiles = [
                                 setSelectedPrompts([...selectedPrompts, { id: Date.now(), question: prompt, answer: "", type: "text" }]);
                               }
                             }}
-                            className="text-left px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all"
+                            className="text-left px-4 py-3 bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition-all"
                           >
-                            <p className="font-medium text-gray-900">{prompt}</p>
+                            <p className="font-medium text-gray-900 dark:text-white">{prompt}</p>
                           </button>
                         ))}
                       </div>
@@ -1360,19 +1443,27 @@ const sampleProfiles = [
           )}
 
           {editSection === 'vibe' && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4">
-              <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card">
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-                  <h2 className="text-xl font-bold text-gray-900">My Vibe</h2>
-                  <button onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <X className="w-5 h-5 text-gray-600" />
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-end sm:items-center justify-center p-4">
+              <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="vibe-title"
+                tabIndex={-1}
+                onKeyDown={handleModalKeyDown}
+                className="bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto cb-shadow-card"
+              >
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+                  <h2 id="vibe-title" className="text-xl font-bold text-gray-900 dark:text-white">My Vibe</h2>
+                  <button data-close-button aria-label="Close" onClick={() => setEditSection(null)} className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
                 <div className="p-6">
-                  <div className="bg-pink-50 border-2 border-pink-200 rounded-2xl p-4 mb-6">
+                  <div className="bg-pink-50 dark:bg-pink-900/30 border-2 border-pink-200 dark:border-pink-700 rounded-2xl p-4 mb-6">
                     <div className="flex items-start gap-3">
-                      <Heart className="w-5 h-5 text-pink-700 mt-0.5" />
-                      <div className="text-sm text-pink-800">
+                      <Heart className="w-5 h-5 text-pink-700 dark:text-pink-300 mt-0.5" />
+                      <div className="text-sm text-pink-800 dark:text-pink-200">
                         <p className="font-semibold mb-1">Show Your Vibe:</p>
                         <p>Select 5-10 interests that best represent you. This helps find compatible matches!</p>
                       </div>
@@ -1382,7 +1473,7 @@ const sampleProfiles = [
                   {/* Selected Interests */}
                   {selectedVibe.length > 0 && (
                     <div className="mb-6">
-                      <h3 className="font-bold text-gray-900 mb-3">Selected ({selectedVibe.length})</h3>
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-3">Selected ({selectedVibe.length})</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedVibe.map((vibe, idx) => (
                           <button 
@@ -1402,7 +1493,7 @@ const sampleProfiles = [
                   <div className="space-y-4">
                     {Object.entries(vibeCategories).map(([category, items]) => (
                       <div key={category}>
-                        <h3 className="font-bold text-gray-700 mb-2 text-sm">{category}</h3>
+                        <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-2 text-sm">{category}</h3>
                         <div className="flex flex-wrap gap-2">
                           {items.map((item, idx) => (
                             <button 
@@ -1417,7 +1508,7 @@ const sampleProfiles = [
                               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                                 selectedVibe.includes(item)
                                   ? 'bg-blue-600 text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                               }`}
                             >
                               {item}
@@ -1500,7 +1591,7 @@ const sampleProfiles = [
     const maxViews = Math.max(...weeklyActivity.map(d => d.views));
     
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
+      <div className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -1781,9 +1872,9 @@ const sampleProfiles = [
   // SETTINGS SCREEN
   if (currentScreen === 'settings') {
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
+      <div className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-10">
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('profile')}
@@ -1844,6 +1935,7 @@ const sampleProfiles = [
               action={<ToggleSwitch enabled={darkMode} onChange={toggleDarkMode} />}
               showChevron={false}
             />
+            {/* Color Palette selector removed to maintain single brand palette */}
           </Section>
 
           {/* Safety & Privacy */}
@@ -2031,19 +2123,21 @@ const sampleProfiles = [
     );
   }
 
+  // Palette selector removed
+
   // ACTIVITY HISTORY SCREEN
   if (currentScreen === 'activity-history') {
     const history = getActionHistory();
     const stats = getActionStats();
 
     return (
-      <div id="main-content" role="main" className="min-h-screen bg-[#F8F7FB] dark:bg-gray-900">
+      <div className="min-h-screen bg-[#F8F7FB]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-10">
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
             <button 
               onClick={() => setCurrentScreen('settings')}
-              className="text-blue-900 dark:text-blue-400 font-semibold flex items-center gap-1"
+              className="text-blue-900 font-semibold flex items-center gap-1"
             >
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back
@@ -2144,7 +2238,7 @@ const sampleProfiles = [
   // Splash Screen
   if (currentScreen === 'splash') {
     return (
-      <div id="main-content" role="main" className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, var(--cb-navy-deep) 0%, var(--cb-navy) 50%, var(--cb-navy-soft) 100%)'}}>
+      <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, var(--cb-navy-deep) 0%, var(--cb-navy) 50%, var(--cb-navy-soft) 100%)'}}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
