@@ -918,13 +918,13 @@ const sampleProfiles = [
   const SettingItem = ({ icon: Icon, label, description, action, showChevron = true, onClick }) => (
     <div 
       onClick={onClick}
-      className={`flex items-center justify-between py-4 border-b border-gray-100 ${onClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+      className={`flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700 ${onClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50' : ''}`}
     >
       <div className="flex items-center gap-4">
-        <Icon className="w-6 h-6 text-gray-600" />
+        <Icon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
         <div>
-          <p className="font-semibold text-gray-900 dark:text-gray-100">{label}</p>
-          {description && <p className="text-[16px] sm:text-[17px] text-gray-500/90 cb-slightly-spaced">{description}</p>}
+          <p className="font-normal text-gray-900 dark:text-gray-100">{label}</p>
+          {description && <p className="text-[15px] font-light text-gray-500 dark:text-gray-400 cb-slightly-spaced">{description}</p>}
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -942,8 +942,8 @@ const sampleProfiles = [
    * - children: Content to render inside section
    */
   const Section = ({ title, children }) => (
-    <div className="mb-6">
-      <h2 className="cb-eyebrow mb-3 px-5">
+    <div className="mb-6 px-4">
+      <h2 className="cb-eyebrow mb-3 px-1">
         {title}
       </h2>
       <div className="cb-card rounded-lg px-5 cb-shadow-card">
@@ -953,36 +953,38 @@ const sampleProfiles = [
   );
 
   // EDIT PROFILE SCREEN
+  // EDIT PROFILE SCREEN
   if (currentScreen === 'edit-profile') {
     return (
   <div className="min-h-screen bg-[var(--cb-bg)]">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
-          <div className="max-w-2xl mx-auto flex items-center justify-between">
+        {/* Header - simplified to match Discover style */}
+        <div className="h-2"></div>
+        
+        <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
+          {/* Cancel and Done buttons at top */}
+          <div className="flex items-center justify-between mb-6">
             <button 
               onClick={() => {
                 setCurrentScreen('profile');
                 setEditSection(null);
               }}
-              className="flex items-center gap-1 font-semibold"
+              className="flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100"
             >
               <X className="w-5 h-5" />
               Cancel
             </button>
-            <h1 className="text-lg font-bold">Edit Profile</h1>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">Edit Profile</h1>
             <button 
               onClick={() => {
                 setCurrentScreen('profile');
                 setEditSection(null);
               }}
-              className="font-bold text-green-400"
+              className="font-bold text-blue-900 dark:text-blue-400"
             >
               Done
             </button>
           </div>
-        </div>
 
-        <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
           {/* Profile Completion */}
           <div className="cb-card rounded-2xl p-5 mb-6">
             <div className="flex items-center justify-between mb-3">
@@ -1591,31 +1593,32 @@ const sampleProfiles = [
     const maxViews = Math.max(...weeklyActivity.map(d => d.views));
     
     return (
-      <div className="min-h-screen bg-[#F8F7FB]">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950 text-white px-5 py-4 sticky top-0 z-20">
-          <div className="max-w-2xl mx-auto flex items-center justify-between">
+      <div className="min-h-screen bg-[var(--cb-bg)]">
+        {/* Header - simplified to match Discover style */}
+        <div className="h-2"></div>
+
+        <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
+          {/* Back and Settings buttons at top */}
+          <div className="flex items-center justify-between mb-6">
             <button 
               onClick={() => setCurrentScreen('main')}
-              className="flex items-center gap-1 font-semibold"
+              className="flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100"
             >
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back
             </button>
-            <h1 className="text-lg font-bold">My Profile</h1>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">My Profile</h1>
             <button 
               onClick={() => setCurrentScreen('settings')}
-              className="p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-all"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700/50 rounded-lg transition-all"
             >
-              <Settings className="w-6 h-6" />
+              <Settings className="w-6 h-6 text-gray-900 dark:text-gray-100" />
             </button>
           </div>
-        </div>
 
-        <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
           {/* Profile Header with Animated Ring */}
           <div className="relative mb-6">
-            <div className="bg-white rounded-3xl cb-shadow-card p-6 cb-shadow-card">
+            <div className="cb-card rounded-3xl cb-shadow-card p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="relative">
                   {/* Animated gradient ring */}
@@ -1630,32 +1633,32 @@ const sampleProfiles = [
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Venice Dawn</h2>
-                    <div className="flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-full">
-                      <Check className="w-4 h-4 text-blue-900" />
-                      <span className="cb-chip text-xs font-bold text-blue-900 border border-white/30">Verified</span>
+                    <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full">
+                      <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Verified</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">Registered Nurse • NHS</p>
-                  <p className="text-xs text-gray-500">London, UK • 24 years old</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Registered Nurse • NHS</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500">London, UK • 24 years old</p>
                 </div>
               </div>
 
               {/* Profile Strength */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <Target className="w-5 h-5 text-blue-700" />
+                    <Target className="w-5 h-5 text-blue-700 dark:text-blue-400" />
                     <span className="font-bold text-gray-900 dark:text-gray-100">Profile Strength</span>
                   </div>
                   <span className="text-2xl font-bold text-blue-900 dark:text-blue-400">{userProfile.profileComplete}%</span>
                 </div>
-                <div className="h-3 bg-white rounded-full overflow-hidden mb-2">
+                <div className="h-3 bg-white dark:bg-gray-700 rounded-full overflow-hidden mb-2">
                   <div 
                     className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-full transition-all duration-500"
                     style={{width: `${userProfile.profileComplete}%`}}
                   ></div>
                 </div>
-                <p className="text-xs text-gray-600">Complete profiles get 5x more matches!</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">Complete profiles get 5x more matches!</p>
               </div>
 
               <button className="w-full mt-4 bg-gradient-to-r from-blue-900 to-blue-800 text-white py-3 rounded-xl font-bold hover:from-blue-800 hover:to-blue-700 transition-all cb-shadow-card flex items-center justify-center gap-2"
@@ -1873,22 +1876,22 @@ const sampleProfiles = [
   if (currentScreen === 'settings') {
     return (
       <div className="min-h-screen bg-[var(--cb-bg)]">
-        {/* Header */}
-        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
-          <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
+        {/* Header - simplified to match Discover style */}
+        <div className="h-2"></div>
+        
+        <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
+          {/* Back and Done buttons at top */}
+          <div className="flex items-center justify-between mb-6">
             <button 
               onClick={() => setCurrentScreen('profile')}
-              className="text-blue-900 font-semibold flex items-center gap-1"
+              className="flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100"
             >
               <ChevronRight className="w-5 h-5 rotate-180" />
               Back
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
-            <button className="text-blue-900 font-semibold">Done</button>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">Settings</h1>
+            <button className="font-semibold text-blue-900 dark:text-blue-400">Done</button>
           </div>
-        </div>
-
-        <div className="max-w-2xl mx-auto py-6 pb-24">
           {/* Profile Settings */}
           <Section title="Profile">
             <SettingItem
@@ -1986,13 +1989,13 @@ const sampleProfiles = [
             />
             
             {/* Distance Slider */}
-            <div className="py-4 border-b border-gray-100">
+            <div className="py-4 border-b border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-4">
-                  <MapPin className="w-6 h-6 text-gray-600" />
+                  <MapPin className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">Maximum Distance</p>
-                    <p className="text-sm text-gray-500">{maxDistance} miles</p>
+                    <p className="font-normal text-gray-900 dark:text-gray-100">Maximum Distance</p>
+                    <p className="text-[15px] font-light text-gray-500 dark:text-gray-400">{maxDistance} miles</p>
                   </div>
                 </div>
               </div>
@@ -2007,13 +2010,13 @@ const sampleProfiles = [
             </div>
 
             {/* Age Range Slider */}
-            <div className="py-4 border-b border-gray-100">
+            <div className="py-4 border-b border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-4">
-                  <Users className="w-6 h-6 text-gray-600" />
+                  <Users className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">Age Range</p>
-                    <p className="text-sm text-gray-500">{ageRange[0]} - {ageRange[1]} years</p>
+                    <p className="font-normal text-gray-900 dark:text-gray-100">Age Range</p>
+                    <p className="text-[15px] font-light text-gray-500 dark:text-gray-400">{ageRange[0]} - {ageRange[1]} years</p>
                   </div>
                 </div>
               </div>
