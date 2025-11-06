@@ -78,7 +78,7 @@ export const PromptCard = React.memo(function PromptCard({
 }) {
   return (
     <div 
-      className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal" 
+      className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal bg-[var(--cb-surface-muted)]" 
       style={{ animationDelay: `${index * 70}ms` }}
     >
       {/* Question - Responsive: 14px → 15px at sm+, Sans-Serif Bold, less prominent color */}

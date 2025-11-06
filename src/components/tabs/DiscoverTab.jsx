@@ -133,7 +133,7 @@ export function DiscoverTab({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleAction, showFilters]);
   return (
-    <div className="min-h-full bg-[#FAFAFA]">
+    <div className="min-h-full">
       <div className="h-2"></div>
 
       {loading ? (
@@ -141,7 +141,7 @@ export function DiscoverTab({
           <div className="relative">
             <PhotoCardSkeleton />
           </div>
-          <article className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] mb-24 z-40">
+          <article className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_36px_rgba(0,0,0,0.45)] border dark:border-gray-700/60 mb-24 z-40">
             {/* Profile header skeleton */}
             <div className="mb-4">
               <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
@@ -216,7 +216,7 @@ export function DiscoverTab({
           </div>
 
           {/* Profile Details Card */}
-          <article aria-labelledby="profile-title" className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] mb-24 z-40">
+          <article aria-labelledby="profile-title" className="relative -mt-10 mx-4 cb-card rounded-[28px] p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_36px_rgba(0,0,0,0.45)] border dark:border-gray-700/60 mb-24 z-40">
             <ProfileHeader
               name={sampleProfiles[currentMatch].name}
               age={sampleProfiles[currentMatch].age}
@@ -386,8 +386,8 @@ export function DiscoverTab({
             </div>
 
             {/* Action Buttons */}
-            <div className="sticky bottom-0 bg-white px-6 py-4 border-t border-gray-200 flex gap-3">
-              <button className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+            <div className="sticky bottom-0 bg-white dark:bg-gray-900 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+              <button className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
                 Reset
               </button>
               <button 
@@ -404,10 +404,10 @@ export function DiscoverTab({
       {/* Comment Modal */}
       {commentKey && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center">
-          <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[80vh] overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900">Add a comment</h3>
-              <button onClick={() => setCommentKey(null)} className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[80vh] overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-900">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Add a comment</h3>
+              <button onClick={() => setCommentKey(null)} className="w-9 h-9 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                 <X className="w-5 h-5 text-gray-600" />
               </button>
             </div>
