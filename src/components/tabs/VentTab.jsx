@@ -7,41 +7,41 @@ import { Shield, ChevronRight, TrendingUp, Lock, AlertCircle, Phone } from 'luci
 
 export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
   return (
-    <div className="px-6 py-6">
+    <div className="px-4 sm:px-6 py-4 sm:py-6">
       {!ventRoom ? (
         <>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Anonymous Vent Space 💭</h2>
-            <p className="text-gray-600 dark:text-gray-400">A safe space to release and be heard</p>
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">Anonymous Vent Space 💭</h2>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">A safe space to release and be heard</p>
           </div>
 
-          {/* Vent Stats */}
-          <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white mb-6 cb-shadow-card dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-            <h3 className="text-xl font-bold mb-4">Community Support 24/7</h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white dark:bg-gray-800 bg-opacity-10 dark:bg-opacity-80 rounded-xl p-4 text-center backdrop-blur-sm">
-                <div className="font-bold text-2xl mb-1">40</div>
-                <div className="text-xs opacity-90">People Online</div>
+          {/* Vent Stats - Responsive padding and text */}
+          <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-4 sm:p-6 text-white mb-4 sm:mb-6 cb-shadow-card dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <h3 className="text-base sm:text-xl font-bold mb-3 sm:mb-4">Community Support 24/7</h3>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+              <div className="bg-white dark:bg-gray-800 bg-opacity-10 dark:bg-opacity-80 rounded-xl p-2 sm:p-4 text-center backdrop-blur-sm">
+                <div className="font-bold text-lg sm:text-2xl mb-0.5 sm:mb-1">40</div>
+                <div className="text-[10px] sm:text-xs opacity-90 leading-tight">People<br className="sm:hidden" /> Online</div>
               </div>
-              <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
-                <div className="font-bold text-2xl mb-1">24/7</div>
-                <div className="text-xs opacity-90">Available</div>
+              <div className="bg-white bg-opacity-10 rounded-xl p-2 sm:p-4 text-center backdrop-blur-sm">
+                <div className="font-bold text-lg sm:text-2xl mb-0.5 sm:mb-1">24/7</div>
+                <div className="text-[10px] sm:text-xs opacity-90">Available</div>
               </div>
-              <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
-                <div className="font-bold text-2xl mb-1">100%</div>
-                <div className="text-xs opacity-90">Anonymous</div>
+              <div className="bg-white bg-opacity-10 rounded-xl p-2 sm:p-4 text-center backdrop-blur-sm">
+                <div className="font-bold text-lg sm:text-2xl mb-0.5 sm:mb-1">100%</div>
+                <div className="text-[10px] sm:text-xs opacity-90">Anonymous</div>
               </div>
             </div>
           </div>
 
-          {/* Safety Notice */}
-          <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-5 mb-6 flex items-start gap-4">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Shield className="w-6 h-6 text-green-600" />
+          {/* Safety Notice - Responsive layout */}
+          <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-3 sm:p-5 mb-4 sm:mb-6 flex items-start gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
-            <div>
-              <h3 className="font-bold text-green-900 mb-2">Your Safety Matters</h3>
-              <ul className="text-sm text-green-800 space-y-1">
+            <div className="min-w-0">
+              <h3 className="font-bold text-sm sm:text-base text-green-900 mb-1.5 sm:mb-2">Your Safety Matters</h3>
+              <ul className="text-xs sm:text-sm text-green-800 space-y-0.5 sm:space-y-1">
                 <li>• All conversations are anonymous and auto-delete</li>
                 <li>• AI moderation protects patient privacy</li>
                 <li>• Professional support available 24/7</li>
@@ -49,63 +49,61 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
             </div>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {ventTopics.map(topic => (
               <button
                 key={topic.id}
                 onClick={() => setVentRoom(topic)}
-                className="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 cb-card cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all text-left"
+                className="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-4 sm:p-6 cb-card cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all text-left"
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${topic.gradient} rounded-2xl flex items-center justify-center text-3xl cb-shadow-card flex-shrink-0`}>
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${topic.gradient} rounded-2xl flex items-center justify-center text-2xl sm:text-3xl cb-shadow-card flex-shrink-0`}>
                     {topic.icon}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{topic.name}</h3>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                      <h3 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">{topic.name}</h3>
                       {topic.trending && (
-                        <span className="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" />
-                          Trending
+                        <span className="bg-red-100 text-red-600 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+                          <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                          <span className="hidden xs:inline">Trending</span>
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{topic.description}</p>
-                    <div className="flex items-center gap-4 text-sm">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1.5 sm:mb-2 line-clamp-2">{topic.description}</p>
+                    <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
                       <span className="font-semibold text-blue-600 dark:text-blue-400">{topic.active} people online</span>
                       <span className="text-gray-500 dark:text-gray-400">• Active now</span>
                     </div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                 </div>
               </button>
             ))}
 
-            <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white cb-shadow-card">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <Lock className="w-6 h-6" />
-                    <h3 className="text-xl font-bold">1-on-1 Anonymous Chat</h3>
-                  </div>
-                  <p className="text-blue-100 text-sm">Get paired with another healthcare professional for private, anonymous support.</p>
+            <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-4 sm:p-6 text-white cb-shadow-card">
+              <div className="mb-3 sm:mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                  <Lock className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                  <h3 className="text-base sm:text-xl font-bold">1-on-1 Anonymous Chat</h3>
                 </div>
+                <p className="text-blue-100 text-xs sm:text-sm">Get paired with another healthcare professional for private, anonymous support.</p>
               </div>
-              <button className="bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-200 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 dark:hover:bg-gray-700 w-full transition-all cb-shadow-card">
+              <button className="bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-200 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-bold hover:bg-blue-50 dark:hover:bg-gray-700 w-full transition-all cb-shadow-card">
                 Start Private Chat
               </button>
             </div>
 
             {/* Crisis Resources */}
-            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-24">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
-              <div>
-                <h3 className="font-medium text-red-900 mb-2">Need Immediate Help?</h3>
-                <p className="text-sm text-red-800 mb-3">If you're in crisis, please reach out to professional support:</p>
+            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-3 sm:p-5 mb-24">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <h3 className="font-medium text-sm sm:text-base text-red-900 mb-1.5 sm:mb-2">Need Immediate Help?</h3>
+                <p className="text-xs sm:text-sm text-red-800 mb-2 sm:mb-3">If you're in crisis, please reach out to professional support:</p>
                   <div className="space-y-2">
-                    <button className="w-full bg-red-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
-                      <Phone className="w-5 h-5" />
+                    <button className="w-full bg-red-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
+                      <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                       Call Crisis Hotline
                     </button>
                   </div>

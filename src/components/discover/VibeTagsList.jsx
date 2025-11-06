@@ -58,18 +58,18 @@ export const VibeTagsList = React.memo(function VibeTagsList({
   dealbreakers = []
 }) {
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-5 sm:mt-6 space-y-3 sm:space-y-4">
       {/* My Vibe Section */}
       {vibes.length > 0 && (
         <div>
-          <h3 className="text-[15px] font-bold cb-slightly-spaced uppercase text-gray-600 dark:text-gray-400 mb-3">
+          <h3 className="text-[13px] sm:text-[15px] font-bold cb-slightly-spaced uppercase text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
             My Vibe
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {vibes.map((vibe, idx) => (
               <span 
                 key={idx}
-                className="bg-gradient-to-br from-blue-50 to-blue-100/60 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-700 dark:text-blue-300 px-4 py-2.5 rounded-full text-[15px] font-light cb-slightly-spaced border border-blue-200/60 dark:border-blue-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+                className="bg-gradient-to-br from-blue-50 to-blue-100/60 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-700 dark:text-blue-300 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-[13px] sm:text-[15px] font-light cb-slightly-spaced border border-blue-200/60 dark:border-blue-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
               >
                 {vibe}
               </span>
@@ -81,14 +81,14 @@ export const VibeTagsList = React.memo(function VibeTagsList({
       {/* Dealbreakers Section */}
       {dealbreakers.length > 0 && (
         <div>
-          <h3 className="text-[15px] font-bold cb-slightly-spaced uppercase text-gray-600 dark:text-gray-400 mb-3">
+          <h3 className="text-[13px] sm:text-[15px] font-bold cb-slightly-spaced uppercase text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
             Dealbreakers
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {dealbreakers.map((deal, idx) => (
               <span 
                 key={idx}
-                className="bg-gradient-to-br from-red-50 to-red-100/60 dark:from-red-900/30 dark:to-red-800/20 text-red-700 dark:text-red-300 px-4 py-2.5 rounded-full text-[15px] font-light cb-slightly-spaced border border-red-200/60 dark:border-red-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
+                className="bg-gradient-to-br from-red-50 to-red-100/60 dark:from-red-900/30 dark:to-red-800/20 text-red-700 dark:text-red-300 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-[13px] sm:text-[15px] font-light cb-slightly-spaced border border-red-200/60 dark:border-red-700/40 shadow-sm hover:scale-105 hover:shadow-md transition-all duration-200"
               >
                 {deal}
               </span>

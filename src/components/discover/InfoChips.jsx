@@ -145,7 +145,7 @@ export const InfoChips = React.memo(function InfoChips({
 
   return (
     <div 
-      className="mb-6 grid grid-cols-2 sm:grid-cols-3 gap-2" 
+      className="mb-5 sm:mb-6 grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2" 
       role="list" 
       aria-label="Profile information"
     >
@@ -154,20 +154,20 @@ export const InfoChips = React.memo(function InfoChips({
           key={idx}
           role="listitem"
           aria-label={`${item.label}: ${item.value}`}
-          className={`bg-gradient-to-br ${item.gradient} ${item.darkGradient} rounded-xl px-2.5 py-1.5 flex items-center gap-2.5 min-w-0 shadow-sm border border-white/60 dark:border-gray-700/50 hover:scale-105 transition-transform duration-200 cb-reveal`}
+          className={`bg-gradient-to-br ${item.gradient} ${item.darkGradient} rounded-xl px-2 sm:px-2.5 py-1.5 flex items-center gap-2 sm:gap-2.5 min-w-0 shadow-sm border border-white/60 dark:border-gray-700/50 hover:scale-105 transition-transform duration-200 cb-reveal`}
           style={{ animationDelay: `${idx * 60}ms` }}
         >
           {/* Icon Container */}
-          <div className={`w-7 h-7 ${item.iconBg} rounded-lg flex items-center justify-center shadow-sm`}>
-            <item.icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
+          <div className={`w-6 h-6 sm:w-7 sm:h-7 ${item.iconBg} rounded-lg flex items-center justify-center shadow-sm flex-shrink-0`}>
+            <item.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${item.iconColor}`} />
           </div>
           
-          {/* Label & Value - Responsive: labels 13→15px, values 14→17px, slightly spaced */}
+          {/* Label & Value - Responsive: labels 11→15px, values 13→17px, slightly spaced */}
           <div className="min-w-0">
-            <div className="text-[13px] sm:text-[15px] font-bold cb-slightly-spaced uppercase text-gray-500/90 dark:text-gray-400/90">
+            <div className="text-[11px] sm:text-[15px] font-bold cb-slightly-spaced uppercase text-gray-500/90 dark:text-gray-400/90">
               {item.label}
             </div>
-            <div className="text-[14px] sm:text-[17px] font-light text-gray-900 dark:text-gray-100 truncate cb-slightly-spaced" title={item.value}>
+            <div className="text-[13px] sm:text-[17px] font-light text-gray-900 dark:text-gray-100 truncate cb-slightly-spaced" title={item.value}>
               {item.value}
             </div>
           </div>
