@@ -1,51 +1,94 @@
 # CodeBlue Roadmap & MVP Specs
 
-Last updated: Nov 5, 2025
+Last updated: Nov 6, 2025
 
-This roadmap clarifies scope and priorities for moving screens/tabs from placeholders to production-ready MVPs. Discover is **in progress** (core mechanics present; needs UX polish and corrections). Matches, Home, Connect, Vent, Profile, and Settings are intentionally UX previews and will be iterated to MVPs post core polish (dark mode, accessibility, cross-browser QA).
+⚠️ **Current Status:** Frontend prototype with hardcoded data. This roadmap outlines the path from UI demo to production-ready MVP with backend integration.
+
+**What Exists Now:**
+- ✅ Premium UI design across all tabs (Hinge/Bumble quality)
+- ✅ Dark mode, accessibility (WCAG AA), responsive design
+- ✅ Frontend interactions (swipes, skeletons, like/comment UI)
+
+**What's Missing for Real MVP:**
+- ❌ Backend API server and database
+- ❌ User authentication and accounts
+- ❌ Real data (currently hardcoded samples)
+- ❌ Messaging system (UI exists, no backend)
+- ❌ File upload/storage
+- ❌ Matching algorithm
+
+This roadmap assumes backend development will proceed in parallel with frontend refinements.
 
 ## Priorities (sequence)
 
-1) Core polish: Dark mode, Accessibility, Cross-browser QA
-2) Discover refinements: UX corrections, edge cases, final polish
-3) Profile & Settings MVP (edit flows, privacy/notification controls, achievements/stats)
-4) Matches MVP (conversations list + threads)
-5) Connect MVP (events list + detail + RSVP)
-6) Vent MVP (rooms + realtime-like chat simulation)
-7) Home MVP (actionable dashboard with real counters)
+**Phase 1: Backend Foundation (Critical)**
+1) Set up backend API (Node.js/Express or Python/FastAPI)
+2) Database setup (PostgreSQL/MongoDB/Supabase)
+3) User authentication (Auth0, Firebase, or custom JWT)
+4) Profile CRUD endpoints
+5) Image upload/storage (Cloudinary, S3, or similar)
+
+**Phase 2: Core Dating Features**
+6) Discover backend: Profile fetching, filtering, matching algorithm
+7) Like/Match system: Mutual likes → match creation
+8) Messaging backend: WebSocket server for real-time chat
+9) Matches tab integration: Connect frontend to backend
+
+**Phase 3: Community Features**
+10) Connect backend: Events CRUD, RSVP system
+11) Vent backend: Anonymous chat rooms with WebSocket
+12) Home dashboard: Real-time stats and insights
+
+**Phase 4: Polish & Production**
+13) Push notifications
+14) Analytics and monitoring
+15) Performance optimization
+16) Security audit
+17) Production deployment
 
 ---
 
 ## Global contracts (applies to all MVPs)
 
-- Error handling: User-friendly states, retry actions, and empty states.
-- Loading: Skeletons for list and detail views.
-- A11y: Proper roles/labels, keyboard navigation, focus management.
-- Theming: Light/dark with WCAG AA contrast.
-- Data: Local mock service now; injectable adapters to swap to real API later.
+**Frontend (Already Implemented):**
+- ✅ Error handling: User-friendly states, retry actions, and empty states
+- ✅ Loading: Skeletons for list and detail views
+- ✅ A11y: Proper roles/labels, keyboard navigation, focus management
+- ✅ Theming: Light/dark with WCAG AA contrast
+
+**Backend (To Be Implemented):**
+- ⚠️ Data layer: RESTful API or GraphQL endpoints
+- ⚠️ Authentication: Secure user sessions and token management
+- ⚠️ Real-time: WebSocket connections for messaging and live updates
+- ⚠️ Storage: Image upload, CDN integration, database persistence
+- ⚠️ Validation: Server-side input validation and sanitization
 
 ---
 
-## Discover (in progress)
+## Discover (Frontend Complete, Backend Needed)
 
 User value: Browse profiles, express interest, manage interactions.
 
-Status: Core mechanics present (swipes, skeletons, persistence); needs UX polish and corrections.
+**Frontend Status:** ✅ UI complete with swipe gestures, skeletons, responsive design
+**Backend Status:** ❌ All data is hardcoded samples - needs full backend integration
 
-Features
-- Swipeable profiles with gestures (left/right/up).
-- Photo cards with navigation, verified badges, match %.
-- Profile info (name, age, role, hospital, shift, distance).
-- Prompt cards (Hinge-style) with comment-first design and optional like.
-- Action buttons (Pass/Favorite/Connect).
-- Filters (age range, max distance).
-- Activity history and stats.
+**Frontend Features (Implemented):**
+- ✅ Swipeable profiles with drag physics (left/right/up)
+- ✅ Photo cards with navigation, badges, compatibility %
+- ✅ Profile info (name, age, role, hospital, shift, distance)
+- ✅ Prompt cards (Hinge-style) with comment and like UI
+- ✅ Action buttons (Pass/Favorite/Connect)
+- ✅ Filter modal (age range, max distance, role, shift)
+- ✅ Skeleton loading states
+- ✅ Dark mode and accessibility
 
-Next steps
-- Dark mode refinements (consistent surfaces, WCAG AA contrast).
-- Accessibility pass (modals, keyboard flows, focus management).
-- Cross-browser QA (touch gestures, backdrop-filter fallbacks).
-- Edge-case handling (rapid swipes, empty states, offline).
+**Backend Needed:**
+- ❌ GET /api/profiles - Fetch profiles based on filters and algorithm
+- ❌ POST /api/profiles/:id/like - Record like action
+- ❌ POST /api/profiles/:id/pass - Record pass action
+- ❌ POST /api/prompts/:id/like - Like a specific prompt
+- ❌ POST /api/prompts/:id/comment - Comment on prompt
+- ❌ Matching algorithm: Compatibility scoring based on specialty, shift, location, interests
 
 ---
 
@@ -53,24 +96,29 @@ Next steps
 
 User value: View and edit profile; control privacy, notifications, and preferences.
 
-Features
-- Profile view: Stats (views/likes/response rate), achievements, weekly activity chart, boosts/super likes count, "Who Likes You" preview (premium).
-- Edit profile: Photos (up to 6), basic info (name/age/bio/role/specialty/hospital/shift), prompts (add/edit/remove), My Vibe (interests), dealbreakers.
-- Settings: Privacy (pause profile, show last active, discovery on/off), dark mode toggle, messaging (read receipts), discovery (max distance, age range, show distance, interested in), notifications (push/email), account (phone/email/password/delete), logout.
+**Frontend Status:** ✅ UI components exist in HomeTab/Settings modal
+**Backend Status:** ❌ No user accounts, profile CRUD, or settings persistence
 
-Data contracts
-- GET /profile/:userId -> { ...fields, stats, achievements, activity }
-- PUT /profile { bio, photos, prompts, vibe, dealbreakers, ...fields }
-- GET /settings -> { privacy, messaging, discovery, notifications, account }
-- PUT /settings { ...updated fields }
+**Frontend Features (Partially Implemented):**
+- ⚠️ Profile view UI: Stats display (hardcoded), achievements layout
+- ⚠️ Edit profile modal: Photo grid, bio textarea, prompts form
+- ✅ Settings modal: Dark mode toggle (localStorage only)
+- ⚠️ Privacy toggles: UI exists but no backend
 
-Acceptance criteria
-- Profile loads with skeleton; edit flows save optimistically with validation.
-- Settings toggle/slider changes persist immediately; dark mode applies instantly.
-- Keyboard/screen reader usable; focus management in edit modals.
+**Backend Needed:**
+- ❌ POST /auth/register - User registration
+- ❌ POST /auth/login - User authentication
+- ❌ GET /api/profile/:userId - Fetch user profile with stats
+- ❌ PUT /api/profile - Update profile (bio, photos, prompts, vibe, dealbreakers)
+- ❌ POST /api/profile/photos - Upload profile photos to CDN
+- ❌ GET /api/settings - Fetch user settings
+- ❌ PUT /api/settings - Update privacy, notifications, discovery preferences
+- ❌ DELETE /api/account - Account deletion
 
-Edge cases
-- Incomplete profile; missing photos; empty prompts; invalid age range; network errors.
+**Data Requirements:**
+- User accounts table (id, email, password_hash, created_at)
+- Profiles table (user_id, bio, role, specialty, hospital, shift, photos_urls)
+- Settings table (user_id, privacy_settings, notification_preferences)
 
 ---
 
@@ -78,25 +126,29 @@ Edge cases
 
 User value: Manage conversations from matches; read and send messages.
 
-Features
-- Conversations list with unread counts and timestamps.
-- Conversation thread view (basic text messages).
-- Compose box with send, Enter-to-send, Shift+Enter newline.
-- Optimistic send + error toast on failure (mocked).
-- Basic presence (online indicator) optional.
+**Frontend Status:** ✅ UI complete with match cards, chat layout
+**Backend Status:** ❌ No messaging system, all matches are hardcoded
 
-Data contracts
-- GET /matches -> [{ id, name, role, avatarUrl?, unreadCount, lastMessage: { text, ts } }]
-- GET /messages/:matchId -> [{ id, sender:'me'|'them', text, ts }]
-- POST /messages/:matchId { text } -> { id, sender:'me', text, ts }
+**Frontend Features (Implemented):**
+- ✅ "Who Likes You" section UI with gradient cards
+- ✅ Conversations list with avatars, last message, timestamps
+- ✅ Unread indicators and "Your turn" badges
+- ✅ Online status indicators
+- ⚠️ Chat thread UI exists but not functional
 
-Acceptance criteria
-- List loads with skeleton → data.
-- Thread loads with skeleton → history; send appends immediately and persists.
-- Keyboard and screen reader usable; focus kept in composer when appropriate.
+**Backend Needed:**
+- ❌ GET /api/matches - Fetch user's matches
+- ❌ GET /api/likes/received - Fetch who liked the user
+- ❌ POST /api/matches/:matchId/messages - Send message
+- ❌ GET /api/matches/:matchId/messages - Fetch conversation history
+- ❌ WebSocket server for real-time messaging
+- ❌ POST /api/matches/:matchId/read - Mark messages as read
+- ❌ Matching logic: When user A likes user B who already liked user A → create match
 
-Edge cases
-- Empty thread; long messages; offline simulated error; rapid sends.
+**Data Requirements:**
+- Matches table (id, user1_id, user2_id, created_at, last_message_at)
+- Messages table (id, match_id, sender_id, content, sent_at, read_at)
+- Likes table (id, liker_id, liked_id, created_at)
 
 ---
 
@@ -104,51 +156,73 @@ Edge cases
 
 User value: Browse events, view details, and RSVP.
 
-Features
-- Events list (title, date/time, location, attending count).
-- Event detail with description, attendees preview, RSVP button.
-- RSVP toggle (optimistic) with toast feedback.
+**Frontend Status:** ✅ UI complete with event cards, RSVP buttons
+**Backend Status:** ❌ All events are hardcoded, no RSVP functionality
 
-Data contracts
-- GET /events -> [{ id, title, date, time, location, attendees, going, description? }]
-- GET /events/:id -> { id, ...fields, attendeesList?: [{ id, name }] }
-- POST /events/:id/rsvp { going:boolean } -> { going }
+**Frontend Features (Implemented):**
+- ✅ Buddy Mode toggle card with gradient
+- ✅ Event cards with emoji, title, date, location, attendee count
+- ✅ Category badges (Wellness, Support, Social)
+- ✅ RSVP button UI
+- ✅ "Create Your Own Event" button
 
-Acceptance criteria
-- List and detail load with skeletons.
-- RSVP toggles state locally and persists; handles errors gracefully.
+**Backend Needed:**
+- ❌ GET /api/events - Fetch upcoming events
+- ❌ GET /api/events/:id - Fetch event details
+- ❌ POST /api/events - Create new event
+- ❌ POST /api/events/:id/rsvp - Toggle RSVP status
+- ❌ GET /api/events/my-rsvps - Fetch user's RSVPs
+- ❌ DELETE /api/events/:id - Delete event (creator only)
 
-Edge cases
+**Data Requirements:**
+- Events table (id, creator_id, title, description, date, time, location, category, emoji)
+- Event_RSVPs table (id, event_id, user_id, created_at)
 - Past events; capacity full (future), network errors.
 
 ---
 
 ## Vent MVP (Support Rooms)
 
-User value: Join topic rooms and exchange supportive messages (simulated real-time for now).
+User value: Join topic rooms and exchange supportive messages anonymously.
 
-Features
-- Rooms list with active counts and trending badge.
-- Room view with message list, composer, and basic auto-scroll.
-- Pseudo-realtime: periodic fetch or timeout-based bot reply for demo.
+**Frontend Status:** ✅ UI complete with room cards, safety notice, crisis resources
+**Backend Status:** ❌ No real chat rooms, all data is hardcoded
 
-Data contracts
-- GET /vent/rooms -> [{ id, name, description, active, trending }]
-- GET /vent/rooms/:id/messages -> [{ id, sender, text, ts }]
-- POST /vent/rooms/:id/messages { text } -> { id, sender:'me', text, ts }
+**Frontend Features (Implemented):**
+- ✅ Anonymous room cards (Burnout, Imposter Syndrome, Night Shift, etc.)
+- ✅ Community stats display (40 online, 24/7, 100% anonymous)
+- ✅ Safety notice with guidelines
+- ✅ 1-on-1 anonymous chat button
+- ✅ Crisis resources card
 
-Acceptance criteria
-- Loading skeletons shown; messages append optimistically; scroll behavior sensible.
-- Escape to close room; accessible labels and roles.
-
-Edge cases
-- Large history; fast message bursts; offline mode.
+**Backend Needed:**
+- ❌ GET /api/vent/rooms - Fetch available rooms with active counts
+- ❌ WebSocket /ws/vent/:roomId - Join anonymous chat room
+- ❌ POST /api/vent/1on1/match - Pair users for private anonymous chat
+- ❌ AI moderation system for patient privacy (detect PHI/PII)
+- ❌ Auto-delete system: Messages auto-delete after session
+- ❌ Crisis resource integration: Actual phone call functionality
 
 ---
 
 ## Home MVP (Dashboard)
 
 User value: Actionable overview that encourages engagement.
+
+**Frontend Status:** ✅ UI complete with stats cards, top match, profile completion
+**Backend Status:** ❌ All stats are hardcoded, no real data
+
+**Frontend Features (Implemented):**
+- ✅ Stats cards: Profile views (40), New likes (12) - hardcoded
+- ✅ Top match highlight card with compatibility %
+- ✅ Profile completion progress bar (hardcoded %)
+- ✅ Tip of the Day card
+
+**Backend Needed:**
+- ❌ GET /api/dashboard/stats - Real profile views, likes, matches today
+- ❌ GET /api/dashboard/top-match - Algorithm-based recommendation
+- ❌ GET /api/profile/completion - Calculate completion percentage
+- ❌ GET /api/insights/daily - Personalized tip based on activity
 
 Features
 - Today’s stats (views, likes, messages) + trends vs. last week.
