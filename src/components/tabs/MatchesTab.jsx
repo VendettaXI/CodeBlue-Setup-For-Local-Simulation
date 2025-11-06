@@ -43,7 +43,7 @@ export function MatchesTab({ whoLikesYou, myMatches, setSelectedMatch }) {
         ) : (
           <div className="flex gap-3 overflow-x-auto pb-2">
             {whoLikesYou.map((person, idx) => (
-              <div key={idx} className="cb-card rounded-2xl p-4 min-w-[200px] bg-white">
+              <div key={idx} className="cb-card rounded-2xl p-4 min-w-[200px] bg-white dark:bg-gray-800">
                 <div className="text-4xl mb-2">{person.photo}</div>
                 <h4 className="font-bold text-lg">{person.name}</h4>
                 <p className="text-sm opacity-90 mb-2">{person.role}</p>

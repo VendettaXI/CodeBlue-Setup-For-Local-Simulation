@@ -19,7 +19,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
           <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-950 rounded-2xl p-6 text-white mb-6 cb-shadow-card dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
             <h3 className="text-xl font-bold mb-4">Community Support 24/7</h3>
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white bg-opacity-10 rounded-xl p-4 text-center backdrop-blur-sm">
+              <div className="bg-white dark:bg-gray-800 bg-opacity-10 dark:bg-opacity-80 rounded-xl p-4 text-center backdrop-blur-sm">
                 <div className="font-bold text-2xl mb-1">40</div>
                 <div className="text-xs opacity-90">People Online</div>
               </div>
@@ -54,7 +54,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
               <button
                 key={topic.id}
                 onClick={() => setVentRoom(topic)}
-                className="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all text-left"
+                className="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 cb-card cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all text-left"
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-16 h-16 bg-gradient-to-br ${topic.gradient} rounded-2xl flex items-center justify-center text-3xl cb-shadow-card flex-shrink-0`}>
@@ -91,7 +91,7 @@ export function VentTab({ ventRoom, setVentRoom, ventTopics }) {
                   <p className="text-blue-100 text-sm">Get paired with another healthcare professional for private, anonymous support.</p>
                 </div>
               </div>
-              <button className="bg-white text-blue-900 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 w-full transition-all cb-shadow-card">
+              <button className="bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-200 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 dark:hover:bg-gray-700 w-full transition-all cb-shadow-card">
                 Start Private Chat
               </button>
             </div>

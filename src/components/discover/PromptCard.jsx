@@ -78,7 +78,7 @@ export const PromptCard = React.memo(function PromptCard({
 }) {
   return (
     <div 
-      className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal bg-[var(--cb-surface-muted)]" 
+      className="cb-card rounded-2xl p-6 border group hover:shadow-lg hover:scale-[1.01] hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 cb-reveal bg-[var(--cb-surface-muted)] text-gray-900 dark:text-gray-100" 
       style={{ animationDelay: `${index * 70}ms` }}
     >
       {/* Question - Responsive: 14px → 15px at sm+, Sans-Serif Bold, less prominent color */}
@@ -116,7 +116,7 @@ export const PromptCard = React.memo(function PromptCard({
             <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-white border-b-8 border-b-transparent ml-1"></div>
           </div>
           {/* Voice Note Info */}
-          <div className="text-left">
+          <div className="text-left text-white">
             <div className="text-sm font-bold">{answer}</div>
             <div className="text-xs opacity-90 font-medium">{duration}</div>
           </div>

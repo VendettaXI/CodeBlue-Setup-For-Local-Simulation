@@ -18,7 +18,7 @@ export function HomeTab({
       <button
         onClick={() => setCurrentScreen('profile')}
         title="Open profile"
-        className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center cb-shadow-card hover:scale-105 transition-transform"
+  className="absolute top-4 right-4 w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center cb-shadow-card hover:scale-105 transition-transform"
       >
         <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-xl">
           {userProfile && userProfile.photos && userProfile.photos[0] ? (
@@ -35,7 +35,7 @@ export function HomeTab({
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Welcome Back, Venice! 👋</h2>
-        <p className="text-gray-600 dark:text-gray-400">Here's what's happening today</p>
+  <p className="text-gray-600 dark:text-gray-300">Here's what's happening today</p>
       </div>
 
       {/* Quick Stats */}
@@ -59,7 +59,7 @@ export function HomeTab({
       </div>
 
       {/* Top Match Highlight */}
-      <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 mb-6 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+  <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 mb-6 cb-card shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-yellow-500" />
           <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Your Top Match Today</h3>
@@ -85,13 +85,13 @@ export function HomeTab({
             <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100">{sampleProfiles[0].name}, {sampleProfiles[0].age}</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{sampleProfiles[0].role}</p>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-full">
-                <Zap className="w-3 h-3 text-green-600" />
-                <span className="cb-chip text-xs font-bold text-green-700 border border-white/30">{sampleProfiles[0].shiftCompatibility}% Match</span>
+              <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
+                <Zap className="w-3 h-3 text-green-600 dark:text-green-300" />
+                <span className="cb-chip text-xs font-bold text-green-700 dark:text-green-200 border border-white/30">{sampleProfiles[0].shiftCompatibility}% Match</span>
               </div>
-              <div className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded-full">
-                <Users className="w-3 h-3 text-blue-600" />
-                <span className="text-xs font-bold text-blue-700">{sampleProfiles[0].mutualConnections} mutual</span>
+              <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
+                <Users className="w-3 h-3 text-blue-600 dark:text-blue-300" />
+                <span className="text-xs font-bold text-blue-700 dark:text-blue-200">{sampleProfiles[0].mutualConnections} mutual</span>
               </div>
             </div>
           </div>
@@ -114,8 +114,8 @@ export function HomeTab({
               <p className="text-sm opacity-90">{userProfile.profileComplete}% complete</p>
             </div>
           </div>
-          <div className="h-2 bg-white bg-opacity-20 rounded-full overflow-hidden mb-4">
-            <div className="h-full bg-white rounded-full" style={{width: `${userProfile.profileComplete}%`}}></div>
+          <div className="h-2 bg-white bg-opacity-20 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+            <div className="h-full bg-white dark:bg-gray-300 rounded-full" style={{width: `${userProfile.profileComplete}%`}}></div>
           </div>
           <p className="text-sm mb-4">Complete profiles get 5x more matches! Add these to stand out:</p>
           <div className="space-y-2">

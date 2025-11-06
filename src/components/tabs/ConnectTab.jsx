@@ -22,7 +22,7 @@ export function ConnectTab({ events }) {
               <p className="text-sm opacity-90">Find platonic connections</p>
             </div>
           </div>
-          <button className="bg-white text-green-600 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-100 dark:hover:bg-gray-50 transition-all">
+          <button className="bg-white dark:bg-gray-800 text-green-600 dark:text-green-200 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
             Try Now
           </button>
         </div>
@@ -32,7 +32,7 @@ export function ConnectTab({ events }) {
       {/* Events List */}
       <div className="space-y-4">
         {events.map(event => (
-          <div key={event.id} className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all">
+          <div key={event.id} className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden cb-card cb-shadow-card dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:border-blue-300 dark:hover:border-blue-600 hover:scale-[1.02] transition-all">
             <div className="flex">
               <div className="w-20 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-4xl flex-shrink-0">
                 {event.image}
