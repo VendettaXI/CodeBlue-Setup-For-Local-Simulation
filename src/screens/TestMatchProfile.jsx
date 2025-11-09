@@ -136,16 +136,16 @@ export default function TestMatchProfile() {
 
         {/* INFO CARD WITH WAVE */}
         <div 
-          className="mx-4 overflow-hidden"
+          className="mx-4 overflow-hidden cb-shadow-card"
           style={{
-            marginTop: -20,
+            marginTop: -28, // slightly deeper overlap to showcase wave
             borderBottomLeftRadius: RADII.card,
             borderBottomRightRadius: RADII.card,
             backgroundColor: C.card,
             border: `1px solid ${C.border}`,
           }}
         >
-          <WaveTop />
+          <WaveTop spikeHeight={12} dipDepth={28} />
           
           <div className="px-4 pb-7">
             {/* About Section */}
