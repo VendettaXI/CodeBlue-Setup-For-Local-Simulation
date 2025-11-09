@@ -305,29 +305,54 @@
 
 ## 🚀 Getting Started Checklist (FREE)
 
-**Week 1: Foundation**
+**Realistic Timeline: 6-12 weeks** (assuming part-time work, 10-20 hrs/week)
+
+**Week 1-2: Foundation & Learning**
+- [ ] Learn Supabase basics (tutorials, docs)
 - [ ] Create Supabase account (free, no credit card)
 - [ ] Set up PostgreSQL database
 - [ ] Enable Authentication (email/password)
-- [ ] Create `users`, `profiles`, `matches` tables
+- [ ] Create database schema: `users`, `profiles`, `matches`, `messages` tables
+- [ ] Set up Row Level Security (RLS) policies
 
-**Week 2: Core Features**
+**Week 3-5: Core Features**
 - [ ] Build profile CRUD API with Supabase
 - [ ] Set up file storage for photos
-- [ ] Implement like/match system
-- [ ] Test authentication flow
+- [ ] Implement image upload from React app
+- [ ] Build discovery/filtering logic
+- [ ] Implement like/pass/match system
+- [ ] Test authentication flow thoroughly
+- [ ] Handle edge cases (errors, validation)
 
-**Week 3: Messaging**
+**Week 6-8: Messaging & Real-time**
 - [ ] Set up Supabase Realtime subscriptions
-- [ ] Build chat message table
+- [ ] Build chat message table with proper indexes
 - [ ] Implement send/receive messages
-- [ ] Test real-time updates
+- [ ] Add typing indicators (optional)
+- [ ] Test real-time updates across devices
+- [ ] Handle offline scenarios
+- [ ] Optimize query performance
 
-**Week 4: Polish**
+**Week 9-10: Events & Community Features**
+- [ ] Build events CRUD endpoints
+- [ ] Implement RSVP system
+- [ ] Build anonymous vent rooms (if time allows)
+- [ ] Add moderation/reporting features
+
+**Week 11-12: Polish & Launch**
 - [ ] Deploy frontend to Vercel (free)
-- [ ] Connect React app to Supabase
-- [ ] Test end-to-end flows
-- [ ] Launch MVP! 🎉
+- [ ] Connect React app to Supabase backend
+- [ ] End-to-end testing (all user flows)
+- [ ] Fix bugs and edge cases
+- [ ] Performance optimization
+- [ ] Security audit (check RLS policies)
+- [ ] Soft launch to beta users! 🎉
+
+**Total Timeline:** 6-12 weeks (depending on:)
+- Your Supabase/backend experience
+- Full-time vs. part-time work
+- Feature scope (can cut Vent/Events for faster MVP)
+- Team size (solo vs. multiple devs)
 
 **Total Cost:** $0
 
@@ -397,7 +422,11 @@ Frontend:    Vercel (free tier)
 Monitoring:  Sentry (free tier)
 
 Total Cost:  $0/month
-Timeline:    2-4 weeks to build
+Timeline:    6-12 weeks to build (realistically)
+            - 2-3 weeks: Backend setup + core API
+            - 2-4 weeks: Authentication + file upload
+            - 2-3 weeks: Messaging + real-time features
+            - 1-2 weeks: Testing + bug fixes
 Scalability: Up to 10,000 users before paying
 ```
 

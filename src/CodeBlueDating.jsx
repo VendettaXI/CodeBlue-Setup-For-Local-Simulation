@@ -66,6 +66,9 @@ const HomeTab = lazy(() => import('./components/tabs/HomeTab'));
 const ConnectTab = lazy(() => import('./components/tabs/ConnectTab'));
 const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
+// Test screens (lazy-loaded)
+const TestMatchProfile = lazy(() => import('./screens/TestMatchProfile'));
+
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
 // Theme palettes removed (Nov 5, 2025) – single brand palette retained via useCodeBlueTheme
@@ -2106,6 +2109,21 @@ const sampleProfiles = [
             />
           </Section>
 
+          {/* Developer Tools */}
+          <Section title="Developer">
+            <SettingItem
+              icon={Sparkles}
+              label="🧪 Test New Discover Design"
+              description="Preview the new match profile UI (sandbox)"
+              action={
+                <span className="text-xs font-medium px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-300">
+                  TEST
+                </span>
+              }
+              onClick={() => setCurrentScreen('test-match-profile')}
+            />
+          </Section>
+
           {/* Danger Zone */}
           <div className="mx-5 mb-6">
             <button 
@@ -2235,6 +2253,22 @@ const sampleProfiles = [
           </div>
         </div>
       </div>
+    );
+  }
+
+  // TEST SCREEN - New Match Profile Design
+  if (currentScreen === 'test-match-profile') {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading test screen...</p>
+          </div>
+        </div>
+      }>
+        <TestMatchProfile />
+      </Suspense>
     );
   }
 
