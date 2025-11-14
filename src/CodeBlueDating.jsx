@@ -66,9 +66,6 @@ const HomeTab = lazy(() => import('./components/tabs/HomeTab'));
 const ConnectTab = lazy(() => import('./components/tabs/ConnectTab'));
 const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
-// Test screens (lazy-loaded)
-const TestMatchProfile = lazy(() => import('./screens/TestMatchProfile'));
-
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
 // Theme palettes removed (Nov 5, 2025) – single brand palette retained via useCodeBlueTheme
@@ -727,7 +724,12 @@ const sampleProfiles = [
       dealbreakers: ["Smoking"],
       shiftCompatibility: 95,
       commonInterests: 3,
-      mutualConnections: 2
+      mutualConnections: 2,
+      loveLanguage: "Physical touch • Words",
+      pets: "Dogs",
+      smoking: "Never",
+      drinking: "Occasionally",
+      spiritual: "Yes"
     },
     {
       id: 2,
@@ -757,7 +759,12 @@ const sampleProfiles = [
       dealbreakers: [],
       shiftCompatibility: 78,
       commonInterests: 1,
-      mutualConnections: 0
+      mutualConnections: 0,
+      loveLanguage: "Quality time",
+      pets: "Cats",
+      smoking: "Never",
+      drinking: "Socially",
+      spiritual: "Not religious"
     }
   ];
 
@@ -2256,22 +2263,6 @@ const sampleProfiles = [
     );
   }
 
-  // TEST SCREEN - New Match Profile Design
-  if (currentScreen === 'test-match-profile') {
-    return (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading test screen...</p>
-          </div>
-        </div>
-      }>
-        <TestMatchProfile />
-      </Suspense>
-    );
-  }
-
   // Splash Screen
   if (currentScreen === 'splash') {
     return (
@@ -2331,33 +2322,8 @@ const sampleProfiles = [
           className="sticky top-0 z-[var(--z-header)] bg-gradient-to-b from-white to-transparent dark:from-gray-900"
           role="banner"
         >
+          {/* Filter button removed - now in DiscoverTab component */}
           <div className="px-4 py-3 flex justify-center items-center relative">
-            {activeTab === 'discover' && (
-              <button 
-                onClick={() => setShowFilters(!showFilters)}
-                aria-label={showFilters ? "Close filters" : "Open filters (3 active)"}
-                aria-expanded={showFilters}
-                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors border-2 bg-transparent focus:outline-none focus:ring-2"
-                style={{
-                  color: 'var(--cb-nav-container)',
-                  borderColor: 'var(--cb-nav-container)',
-                  '--hover-bg': 'rgba(18,44,52,0.06)'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--hover-bg)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                <span className="text-sm font-medium">Filters</span>
-                <div 
-                  className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border" 
-                  style={{
-                    borderColor: 'var(--cb-nav-container)',
-                    color: 'var(--cb-nav-container)'
-                  }}
-                  aria-hidden="true"
-                >3</div>
-              </button>
-            )}
           </div>
         </header>
 

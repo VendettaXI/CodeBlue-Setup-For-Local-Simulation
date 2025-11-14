@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, Zap, ChevronRight } from 'lucide-react';
 import { MatchCardSkeleton } from '../skeletons/MatchCardSkeleton';
-import TopTabSwitcher from '../test/TopTabSwitcher';
+import TopTabSwitcher from '../navigation/TopTabSwitcher';
 
 export function MatchesTab({ whoLikesYou, myMatches, setSelectedMatch, currentTab = 'matches', onTabChange }) {
   const [loading, setLoading] = useState(true);
@@ -15,16 +15,16 @@ export function MatchesTab({ whoLikesYou, myMatches, setSelectedMatch, currentTa
   }, []);
   return (
     <div>
-      {/* Top Tab Switcher + Filter Button */}
-      <div className="flex items-center justify-between mb-2 px-4 relative">
-        {onTabChange && <TopTabSwitcher activeTab={currentTab} onTabChange={onTabChange} />}
-        <button
-          className="cb-filter-btn ml-auto px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold text-sm absolute right-0 top-0"
-          // Add onClick handler if needed
-        >
-          Filters 3
+      {/* Top Tab Switcher - Centered */}
+      {onTabChange && <TopTabSwitcher activeTab={currentTab} onTabChange={onTabChange} />}
+      
+      {/* Filter Button - Separate row, right-aligned (optional, can be enabled if needed) */}
+      {/* <div className="flex justify-end px-4 mb-2">
+        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          <span>Filters</span>
         </button>
-      </div>
+      </div> */}
+      
       <div className="px-4 sm:px-6 py-4 sm:py-6">
       {/* Who Likes You Section - Responsive */}
       <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 text-white cb-shadow-card">

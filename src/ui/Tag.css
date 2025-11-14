@@ -1,0 +1,33 @@
+@import "./theme-variables.css";
+
+.ui-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.ui-tag-default {
+  border-color: var(--border-light);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.ui-tag-primary {
+  border-color: var(--primary-solid);
+  background: var(--primary-15);
+  color: var(--primary-solid);
+}
+
+.ui-tag-accent {
+  border-color: var(--accent-blue);
+  background: rgba(4, 155, 205, 0.1);
+  color: var(--accent-blue);
+}

@@ -1,0 +1,23 @@
+@import "./theme-variables.css";
+
+.ui-card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  cursor: default;
+}
+
+.ui-card:hover {
+  box-shadow: var(--shadow-hover);
+  transition: box-shadow 0.2s ease;
+}
+
+button.ui-card {
+  cursor: pointer;
+}

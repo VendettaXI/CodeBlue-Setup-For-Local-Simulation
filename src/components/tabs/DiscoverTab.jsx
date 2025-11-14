@@ -29,13 +29,14 @@ import { ProfileHeader } from '../discover/ProfileHeader';
 import { InfoChips } from '../discover/InfoChips';
 import { PromptCard } from '../discover/PromptCard';
 import { VibeTagsList } from '../discover/VibeTagsList';
+import { LifestyleRows } from '../discover/LifestyleRows';
 import { PhotoCardSkeleton } from '../skeletons/PhotoCardSkeleton';
 import { PromptCardSkeleton } from '../skeletons/PromptCardSkeleton';
 import { saveAction } from '../../utils/discoveryPersistence';
 import { useToast } from '../Toast';
-import TopTabSwitcher from '../test/TopTabSwitcher';
-import HeartbeatIcon from '../test/HeartbeatIcon';
-import PulseButton from '../test/PulseButton';
+import TopTabSwitcher from '../navigation/TopTabSwitcher';
+import HeartbeatIcon from '../discover/HeartbeatIcon';
+import PulseButton from '../discover/PulseButton';
 
 export function DiscoverTab({
   sampleProfiles,
@@ -139,14 +140,20 @@ export function DiscoverTab({
   }, [handleAction, showFilters]);
   return (
     <div className="min-h-full">
-      {/* Top Tab Switcher */}
-      <div className="flex items-center justify-between mb-2 px-4 relative">
-        {onTabChange && <TopTabSwitcher activeTab={currentTab} onTabChange={onTabChange} />}
+      {/* Top Tab Switcher - Centered */}
+      {onTabChange && <TopTabSwitcher activeTab={currentTab} onTabChange={onTabChange} />}
+      
+      {/* Filter Button - Separate row, right-aligned */}
+      <div className="flex justify-end px-4 mb-2">
         <button
-          className="cb-filter-btn ml-auto px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold text-sm absolute right-0 top-0"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           onClick={() => setShowFilters(true)}
+          aria-label="Open filters"
         >
-          Filters 3
+          <span>Filters</span>
+          <div className="flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-semibold border border-gray-400 dark:border-gray-500" aria-hidden="true">
+            3
+          </div>
         </button>
       </div>
 
@@ -184,7 +191,7 @@ export function DiscoverTab({
             transition: 'opacity 300ms ease-out, transform 300ms ease-out'
           }}
         >
-          {/* Photo Card with Action Buttons overlayed */}
+          {/* Photo Card with name overlay and right-side action buttons */}
           <div className="relative">
             <PhotoCard
               photos={sampleProfiles[currentMatch].photos}
@@ -211,7 +218,19 @@ export function DiscoverTab({
                 handleAction('up');
               }}
             />
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full flex justify-center pb-4 z-10">
+            
+            {/* Name + Age overlay on photo */}
+            <div className="absolute left-4 bottom-24 right-32 z-20">
+              <h1 
+                className="text-white text-[28px] leading-[34px] font-bold"
+                style={{ textShadow: '0 2px 8px rgba(0,0,0,0.35)' }}
+              >
+                {sampleProfiles[currentMatch].name}, {sampleProfiles[currentMatch].age}
+              </h1>
+            </div>
+            
+            {/* Right-side thumb-zone action buttons */}
+            <div className="absolute right-2.5 top-44 flex flex-col gap-4 items-center z-30">
               <ActionButtons
                 onPass={() => {
                   console.log('❌ Pass (button)');
@@ -226,6 +245,7 @@ export function DiscoverTab({
                   handleAction('right');
                 }}
                 profileName={sampleProfiles[currentMatch].name}
+                orientation="vertical"
               />
             </div>
           </div>
@@ -276,13 +296,16 @@ export function DiscoverTab({
               Lifestyle
             </h2>
             
-            <InfoChips
-              specialty={sampleProfiles[currentMatch].specialty}
+            <LifestyleRows
+              department={sampleProfiles[currentMatch].specialty}
               hospital={sampleProfiles[currentMatch].hospital}
               shift={sampleProfiles[currentMatch].shift}
               distance={sampleProfiles[currentMatch].distance}
-              mutualConnections={sampleProfiles[currentMatch].mutualConnections}
-              responseRate={sampleProfiles[currentMatch].responseRate}
+              loveLanguage={sampleProfiles[currentMatch].loveLanguage}
+              pets={sampleProfiles[currentMatch].pets}
+              smoking={sampleProfiles[currentMatch].smoking}
+              drinking={sampleProfiles[currentMatch].drinking}
+              spiritual={sampleProfiles[currentMatch].spiritual}
             />
 
             <VibeTagsList

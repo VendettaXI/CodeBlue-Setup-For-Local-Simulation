@@ -1,4 +1,28 @@
-// Test component - Pill-style tab switcher with animated slider
+/**
+ * ============================================================================
+ * TopTabSwitcher Component - PRODUCTION VERSION
+ * ============================================================================
+ * 
+ * Animated pill-style tab switcher for Discover/Matches navigation.
+ * Originally from test environment, now integrated into production.
+ * 
+ * FEATURES:
+ * - Animated sliding background (CSS transitions)
+ * - ECG icon for Discover tab
+ * - Heart icon for Matches tab
+ * - Gunmetal color scheme
+ * - Smooth 300ms transitions
+ * 
+ * PROPS:
+ * @param {string} activeTab - Currently active tab ('discover' or 'matches')
+ * @param {function} onTabChange - Callback when tab is changed
+ * 
+ * USED IN:
+ * - DiscoverTab
+ * - MatchesTab
+ * ============================================================================
+ */
+
 import React, { useEffect, useState } from 'react';
 
 const COLORS = {
@@ -8,10 +32,6 @@ const COLORS = {
   white: "#FFFFFF",
 };
 
-/**
- * TopTabSwitcher - Animated pill tab switcher
- * Converted from React Native Reanimated to CSS transitions
- */
 export default function TopTabSwitcher({ activeTab, onTabChange }) {
   const [sliderPos, setSliderPos] = useState(activeTab === "discover" ? 0 : 1);
 

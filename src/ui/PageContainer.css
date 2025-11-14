@@ -1,0 +1,17 @@
+@import "./theme-variables.css";
+
+.page-container {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .page-container {
+    padding: 16px 12px;
+  }
+}

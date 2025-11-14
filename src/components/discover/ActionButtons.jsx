@@ -59,14 +59,15 @@
 
 import React from 'react';
 import { X, Heart } from 'lucide-react';
-import HeartbeatIcon from '../test/HeartbeatIcon';
-import PulseButton from '../test/PulseButton';
+import HeartbeatIcon from './HeartbeatIcon';
+import PulseButton from './PulseButton';
 
 export const ActionButtons = React.memo(function ActionButtons({
   onPass,
   onFavorite,
   onConnect,
-  profileName = ''
+  profileName = '',
+  orientation = 'vertical' // 'vertical' (default) or 'horizontal'
 }) {
   const RADII = { button: 14 };
   const C = {
@@ -76,9 +77,8 @@ export const ActionButtons = React.memo(function ActionButtons({
 
   return (
     <div
-      className="absolute right-2.5 flex flex-col gap-4 items-center pointer-events-auto"
+      className={`flex gap-4 items-center pointer-events-auto ${orientation === 'vertical' ? 'flex-col' : 'flex-row'}`}
       style={{ 
-        top: '176px',
         zIndex: 'var(--z-dropdown, 40)'
       }}
     >

@@ -1,0 +1,59 @@
+@import "./theme-variables.css";
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(15, 25, 33, 0.15);
+}
+
+.icon-button:hover {
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(15, 25, 33, 0.2);
+  transform: scale(1.05);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+/* Sizes */
+.icon-button-default {
+  width: 52px;
+  height: 52px;
+}
+
+.icon-button-small {
+  width: 40px;
+  height: 40px;
+}
+
+.icon-button-large {
+  width: 64px;
+  height: 64px;
+}
+
+/* Variants */
+.icon-button-primary {
+  background: var(--primary-solid);
+  color: white;
+}
+
+.icon-button-primary:hover {
+  background: var(--primary-75);
+}
+
+.icon-button-accent {
+  background: var(--accent-blue);
+  color: white;
+}
+
+.icon-button-accent:hover {
+  background: rgba(4, 155, 205, 0.9);
+}

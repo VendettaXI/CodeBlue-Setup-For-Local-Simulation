@@ -1,3 +1,6 @@
+/* Import UI theme variables */
+@import "./ui/theme-variables.css";
+
 /* Import CodeBlue theme utilities (letter-spacing, tokens, etc.) */
 @import "./styles/codeblue-theme.css";
 

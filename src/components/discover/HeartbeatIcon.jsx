@@ -1,10 +1,28 @@
-// Test component - Animated heartbeat icon with ECG pulse
+/**
+ * ============================================================================
+ * HeartbeatIcon Component - PRODUCTION VERSION
+ * ============================================================================
+ * 
+ * Animated heart icon with ECG pulse line for Superlike/Favorite button.
+ * Originally from test environment, now integrated into production.
+ * 
+ * FEATURES:
+ * - Heart outline with stroke
+ * - Animated ECG pulse line
+ * - CSS-based animation (900ms loop)
+ * - Customizable size and color
+ * 
+ * PROPS:
+ * @param {number} size - Icon size in pixels (default: 28)
+ * @param {string} color - Stroke color (default: gunmetal)
+ * 
+ * USED IN:
+ * - ActionButtons (Favorite/Superlike button)
+ * ============================================================================
+ */
+
 import React, { useEffect, useState } from 'react';
 
-/**
- * HeartbeatIcon - Animated heart with ECG pulse line
- * Converted from React Native Reanimated to CSS animations
- */
 export default function HeartbeatIcon({ size = 28, color = "rgba(15,33,58,0.90)" }) {
   const [animationKey, setAnimationKey] = useState(0);
 

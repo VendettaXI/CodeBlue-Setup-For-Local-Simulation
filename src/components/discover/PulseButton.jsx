@@ -1,10 +1,28 @@
-// Test component - Button with pulse ring animation
+/**
+ * ============================================================================
+ * PulseButton Component - PRODUCTION VERSION
+ * ============================================================================
+ * 
+ * Animated button with expanding pulse ring effect for Favorite action.
+ * Originally from test environment, now integrated into production.
+ * 
+ * FEATURES:
+ * - Expanding ring animation on press
+ * - Scale bounce effect on icon
+ * - CSS-based animations (300ms duration)
+ * - Semi-transparent white background
+ * 
+ * PROPS:
+ * @param {function} onPress - Callback when button is pressed
+ * @param {ReactNode} children - Icon or content to display inside button
+ * 
+ * USED IN:
+ * - ActionButtons (wraps HeartbeatIcon for Favorite button)
+ * ============================================================================
+ */
+
 import React, { useState } from 'react';
 
-/**
- * PulseButton - Animated button with expanding ring effect
- * Converted from React Native Reanimated to CSS animations
- */
 export default function PulseButton({ onPress, children }) {
   const [isPulsing, setIsPulsing] = useState(false);
 

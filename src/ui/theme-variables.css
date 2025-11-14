@@ -1,0 +1,55 @@
+/* Theme Variables - Gunmetal Navy Design System */
+
+:root {
+  /* PRIMARY */
+  --primary: rgba(15, 33, 58, 0.9);
+  --primary-solid: #0F213A;
+  --primary-75: rgba(15, 33, 58, 0.75);
+  --primary-50: rgba(15, 33, 58, 0.5);
+  --primary-25: rgba(15, 33, 58, 0.25);
+  --primary-15: rgba(15, 33, 58, 0.15);
+
+  /* TEXT */
+  --text-primary: rgba(15, 25, 33, 0.95);
+  --text-secondary: #71778A;
+  --text-meta: rgba(15, 25, 33, 0.45);
+
+  /* SURFACES */
+  --background: #FCF9F9;
+  --card: #FFFFFF;
+  --surface: #F2F4F7;
+
+  /* ACCENTS */
+  --accent-blue: #049BCD;
+  --accent-rose: #D87AB4;
+
+  /* BORDERS */
+  --border-light: rgba(15, 25, 33, 0.15);
+  --border-medium: rgba(15, 25, 33, 0.28);
+
+  /* RADIUS */
+  --radius-card: 24px;
+  --radius-button: 14px;
+  --radius-input: 14px;
+
+  /* SHADOWS */
+  --shadow-card: 0 18px 40px rgba(15, 25, 33, 0.12);
+  --shadow-hover: 0 8px 24px rgba(15, 25, 33, 0.18);
+  --shadow-inset: inset 0 0 0 1px rgba(15, 25, 33, 0.08);
+
+  /* SPACING */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+/* Dark mode support (if needed later) */
+[data-theme="dark"] {
+  --background: #0F213A;
+  --card: #1A2B42;
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-meta: rgba(255, 255, 255, 0.45);
+}

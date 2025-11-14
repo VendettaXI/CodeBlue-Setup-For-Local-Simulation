@@ -1,0 +1,39 @@
+@import "./theme-variables.css";
+
+.typography-h1 {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-body {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-meta {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.typography-caption {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--text-meta);
+}
