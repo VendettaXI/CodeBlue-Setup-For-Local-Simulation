@@ -68,7 +68,6 @@ const VentTab = lazy(() => import('./components/tabs/VentTab'));
 
 // Test screens (lazy-loaded)
 const TestMatchProfile = lazy(() => import('./screens/TestMatchProfile'));
-const ProfileCardTemplateExample = lazy(() => import('./screens/ProfileCardTemplateExample'));
 
 // Utilities
 import { getActionHistory, getActionStats, clearHistory } from './utils/discoveryPersistence';
@@ -2123,17 +2122,6 @@ const sampleProfiles = [
               }
               onClick={() => setCurrentScreen('test-match-profile')}
             />
-            <SettingItem
-              icon={Sparkles}
-              label="📋 Profile Card Template"
-              description="Reusable profile card component demo"
-              action={
-                <span className="text-xs font-medium px-2 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300">
-                  NEW
-                </span>
-              }
-              onClick={() => setCurrentScreen('profile-card-template')}
-            />
           </Section>
 
           {/* Danger Zone */}
@@ -2280,22 +2268,6 @@ const sampleProfiles = [
         </div>
       }>
         <TestMatchProfile />
-      </Suspense>
-    );
-  }
-
-  // PROFILE CARD TEMPLATE EXAMPLE
-  if (currentScreen === 'profile-card-template') {
-    return (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading profile card template...</p>
-          </div>
-        </div>
-      }>
-        <ProfileCardTemplateExample />
       </Suspense>
     );
   }
