@@ -22,7 +22,7 @@
  */
 
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { X } from 'lucide-react';
+import { X, Heart } from 'lucide-react';
 import { PhotoCard } from '../discover/PhotoCard';
 import { ActionButtons } from '../discover/ActionButtons';
 import { ProfileHeader } from '../discover/ProfileHeader';
@@ -33,6 +33,9 @@ import { PhotoCardSkeleton } from '../skeletons/PhotoCardSkeleton';
 import { PromptCardSkeleton } from '../skeletons/PromptCardSkeleton';
 import { saveAction } from '../../utils/discoveryPersistence';
 import { useToast } from '../Toast';
+import TopTabSwitcher from '../test/TopTabSwitcher';
+import HeartbeatIcon from '../test/HeartbeatIcon';
+import PulseButton from '../test/PulseButton';
 
 export function DiscoverTab({
   sampleProfiles,
@@ -51,7 +54,9 @@ export function DiscoverTab({
   likedPrompts,
   togglePromptLike,
   promptComments,
-  addPromptComment
+  addPromptComment,
+  currentTab = 'discover',
+  onTabChange
 }) {
   const [loading, setLoading] = useState(true);
   const [transitioning, setTransitioning] = useState(false);
@@ -134,7 +139,16 @@ export function DiscoverTab({
   }, [handleAction, showFilters]);
   return (
     <div className="min-h-full">
-      <div className="h-2"></div>
+      {/* Top Tab Switcher */}
+      <div className="flex items-center justify-between mb-2 px-4 relative">
+        {onTabChange && <TopTabSwitcher activeTab={currentTab} onTabChange={onTabChange} />}
+        <button
+          className="cb-filter-btn ml-auto px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold text-sm absolute right-0 top-0"
+          onClick={() => setShowFilters(true)}
+        >
+          Filters 3
+        </button>
+      </div>
 
       {loading ? (
         <div className="max-w-2xl mx-auto px-0 sm:px-4">
@@ -170,7 +184,7 @@ export function DiscoverTab({
             transition: 'opacity 300ms ease-out, transform 300ms ease-out'
           }}
         >
-          {/* Photo Card with Action Buttons */}
+          {/* Photo Card with Action Buttons overlayed */}
           <div className="relative">
             <PhotoCard
               photos={sampleProfiles[currentMatch].photos}
@@ -197,34 +211,71 @@ export function DiscoverTab({
                 handleAction('up');
               }}
             />
-            
-            <ActionButtons
-              onPass={() => {
-                console.log('❌ Pass (button)');
-                handleAction('left');
-              }}
-              onFavorite={() => {
-                console.log('⭐ Favorite (button)');
-                handleAction('up');
-              }}
-              onConnect={() => {
-                console.log('💙 Connect (button)');
-                handleAction('right');
-              }}
-              profileName={sampleProfiles[currentMatch].name}
-            />
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full flex justify-center pb-4 z-10">
+              <ActionButtons
+                onPass={() => {
+                  console.log('❌ Pass (button)');
+                  handleAction('left');
+                }}
+                onFavorite={() => {
+                  console.log('⭐ Favorite (button)');
+                  handleAction('up');
+                }}
+                onConnect={() => {
+                  console.log('💙 Connect (button)');
+                  handleAction('right');
+                }}
+                profileName={sampleProfiles[currentMatch].name}
+              />
+            </div>
           </div>
 
-          {/* Profile Details Card - Responsive */}
+          {/* Profile Details Card - Responsive with new text arrangement */}
           <article aria-labelledby="profile-title" className="relative -mt-10 mx-4 cb-card rounded-[28px] p-4 sm:p-6 shadow-[0_-4px_24px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_36px_rgba(0,0,0,0.45)] border dark:border-gray-700/60 mb-24 z-40">
-            <ProfileHeader
-              name={sampleProfiles[currentMatch].name}
-              age={sampleProfiles[currentMatch].age}
-              role={sampleProfiles[currentMatch].role}
-              specialty={sampleProfiles[currentMatch].specialty}
-              onMoreClick={() => console.log('More options for', sampleProfiles[currentMatch].name)}
-            />
+            
+            <div className="px-0 pb-3">
+              {/* About Section */}
+              <h2 className="text-xl leading-7 font-semibold mt-2.5 text-gray-900 dark:text-gray-100">
+                About
+              </h2>
+              <p className="mt-2 text-base leading-6 text-gray-900 dark:text-gray-100 opacity-90">
+                {sampleProfiles[currentMatch].prompts[0]?.answer || 'ICU Nurse based in the city. I love sunrise drives after night shifts, low-fi playlists, and weekend coffee walks.'}
+              </p>
 
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {(sampleProfiles[currentMatch].myVibe?.slice(0, 3) || ['ICU Nurse', 'Empathetic', 'Dogs']).map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1.5 rounded-xl text-[13px] leading-[18px] font-medium border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3 sm:space-y-4 mt-4">
+              {sampleProfiles[currentMatch].prompts.slice(0, 2).map((prompt, idx) => (
+                <div 
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                >
+                  <h3 className="text-sm leading-5 font-bold mb-1.5 text-gray-900 dark:text-gray-100">
+                    {prompt.question}
+                  </h3>
+                  <p className="text-[15px] leading-[22px] text-gray-900 dark:text-gray-100 opacity-90">
+                    {prompt.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Lifestyle Section */}
+            <h2 className="text-xl leading-7 font-semibold mt-6 text-gray-900 dark:text-gray-100">
+              Lifestyle
+            </h2>
+            
             <InfoChips
               specialty={sampleProfiles[currentMatch].specialty}
               hospital={sampleProfiles[currentMatch].hospital}
@@ -233,32 +284,6 @@ export function DiscoverTab({
               mutualConnections={sampleProfiles[currentMatch].mutualConnections}
               responseRate={sampleProfiles[currentMatch].responseRate}
             />
-
-            <div className="space-y-3 sm:space-y-4">
-              {sampleProfiles[currentMatch].prompts.map((prompt, idx) => {
-                const pKey = `${sampleProfiles[currentMatch].id}:${idx}`;
-                const isLiked = likedPrompts && likedPrompts.has && likedPrompts.has(pKey);
-                const likeCount = (prompt.likes || 0) + (isLiked ? 1 : 0);
-                return (
-                  <PromptCard
-                    key={idx}
-                    question={prompt.question}
-                    answer={prompt.answer}
-                    type={prompt.type}
-                    duration={prompt.duration}
-                    likes={likeCount}
-                    isLiked={!!isLiked}
-                    index={idx}
-                    onLike={() => togglePromptLike && togglePromptLike(pKey)}
-                    onComment={() => {
-                      setCommentKey(pKey);
-                      setCommentText('');
-                    }}
-                    onPlayVoice={() => console.log('Play voice:', prompt.answer)}
-                  />
-                );
-              })}
-            </div>
 
             <VibeTagsList
               vibes={sampleProfiles[currentMatch].myVibe}

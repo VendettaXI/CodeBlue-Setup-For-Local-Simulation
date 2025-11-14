@@ -2332,29 +2332,6 @@ const sampleProfiles = [
           role="banner"
         >
           <div className="px-4 py-3 flex justify-center items-center relative">
-            <div className="cb-nav-tabs" role="tablist" aria-label="Content sections">
-              {/* Discover tab - Sans-Serif Bold 15px, slightly spaced */}
-              <button 
-                onClick={() => setActiveTab('discover')}
-                role="tab"
-                aria-selected={activeTab === 'discover'}
-                aria-controls="discover-panel"
-                className={`cb-nav-tab cb-nav-tab--discover text-[15px] font-bold cb-slightly-spaced ${activeTab === 'discover' ? 'active' : ''}`}
-              >
-                Discover
-              </button>
-              {/* Matches tab - Sans-Serif Bold 15px, slightly spaced */}
-              <button 
-                onClick={() => setActiveTab('matches')}
-                role="tab"
-                aria-selected={activeTab === 'matches'}
-                aria-controls="matches-panel"
-                className={`cb-nav-tab cb-nav-tab--matches text-[15px] font-bold cb-slightly-spaced ${activeTab === 'matches' ? 'active' : ''}`}
-              >
-                Matches
-              </button>
-            </div>
-            
             {activeTab === 'discover' && (
               <button 
                 onClick={() => setShowFilters(!showFilters)}
@@ -2419,6 +2396,8 @@ const sampleProfiles = [
                   togglePromptLike={togglePromptLike}
                   promptComments={promptComments}
                   addPromptComment={addPromptComment}
+                  currentTab={activeTab}
+                  onTabChange={setActiveTab}
                 />
               </ErrorBoundary>
             )}
@@ -2429,6 +2408,8 @@ const sampleProfiles = [
                   whoLikesYou={whoLikesYou}
                   myMatches={myMatches}
                   setSelectedMatch={setSelectedMatch}
+                  currentTab={activeTab}
+                  onTabChange={setActiveTab}
                 />
               </ErrorBoundary>
             )}

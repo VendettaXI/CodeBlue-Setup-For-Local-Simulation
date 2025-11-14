@@ -58,7 +58,9 @@
  */
 
 import React from 'react';
-import { X, Star, Heart } from 'lucide-react';
+import { X, Heart } from 'lucide-react';
+import HeartbeatIcon from '../test/HeartbeatIcon';
+import PulseButton from '../test/PulseButton';
 
 export const ActionButtons = React.memo(function ActionButtons({
   onPass,
@@ -66,36 +68,67 @@ export const ActionButtons = React.memo(function ActionButtons({
   onConnect,
   profileName = ''
 }) {
+  const RADII = { button: 14 };
+  const C = {
+    gunmetal: "rgba(15,33,58,0.90)",
+    border: "rgba(15,33,58,0.10)",
+  };
+
   return (
     <div
-      className="absolute left-1/2 -translate-x-1/2 bottom-24 flex items-center justify-center gap-6 pointer-events-auto"
-      style={{ zIndex: 'var(--z-dropdown, 40)' }}
+      className="absolute right-2.5 flex flex-col gap-4 items-center pointer-events-auto"
+      style={{ 
+        top: '176px',
+        zIndex: 'var(--z-dropdown, 40)'
+      }}
     >
-      {/* Pass Button (X) - White with subtle shadow */}
+      {/* Pass button */}
       <button
         aria-label="Pass on this profile"
+        className="flex items-center justify-center transition-all duration-300"
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: RADII.button,
+          border: `1px solid ${C.border}`,
+          backgroundColor: 'rgba(255,255,255,0.75)',
+          cursor: 'pointer',
+          boxShadow: '0 0 0 4px rgba(255,255,255,0.5), 0 8px 20px rgba(15,33,58,0.15)',
+        }}
         onClick={onPass}
-        className="flex items-center justify-center rounded-full w-16 h-16 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-100 dark:border-gray-700 shadow-[0_4px_16px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.12),0_4px_8px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:text-gray-900 dark:hover:text-gray-100 hover:scale-110 hover:-translate-y-1 hover:rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
       >
-        <X className="w-7 h-7" />
+        <X size={26} color={C.gunmetal} />
       </button>
 
-      {/* Favorite Button (Star) - Blue gradient with glow */}
-      <button
-        aria-label="Add to favorites"
-        onClick={onFavorite}
-        className="flex items-center justify-center rounded-full w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white shadow-[0_6px_20px_rgba(59,130,246,0.35),0_2px_8px_rgba(37,99,235,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset] dark:shadow-[0_6px_20px_rgba(59,130,246,0.5),0_2px_8px_rgba(37,99,235,0.3)] transition-all duration-300 ease-out hover:shadow-[0_8px_28px_rgba(59,130,246,0.45),0_4px_12px_rgba(37,99,235,0.3)] dark:hover:shadow-[0_8px_28px_rgba(59,130,246,0.6)] hover:from-blue-400 hover:to-blue-500 dark:hover:from-blue-500 dark:hover:to-blue-600 hover:scale-110 hover:-translate-y-1 hover:-rotate-6 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+      {/* Superlike/Favorite with animated heartbeat */}
+      <div
+        className="transition-all duration-300"
+        style={{
+          boxShadow: '0 0 0 4px rgba(255,255,255,0.5), 0 8px 20px rgba(15,33,58,0.15)',
+          borderRadius: RADII.button,
+        }}
       >
-        <Star className="w-7 h-7" />
-      </button>
+        <PulseButton onPress={onFavorite}>
+          <HeartbeatIcon />
+        </PulseButton>
+      </div>
 
-      {/* Connect Button (Heart) - Pink gradient, PRIMARY ACTION (larger) */}
+      {/* Like/Connect button */}
       <button
         aria-label="Send a like and connect"
+        className="flex items-center justify-center transition-all duration-300"
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: RADII.button,
+          border: `1px solid ${C.border}`,
+          backgroundColor: 'rgba(255,255,255,0.75)',
+          cursor: 'pointer',
+          boxShadow: '0 0 0 4px rgba(255,255,255,0.5), 0 8px 20px rgba(15,33,58,0.15)',
+        }}
         onClick={onConnect}
-        className="flex items-center justify-center rounded-full w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 dark:from-pink-600 dark:to-pink-700 text-white shadow-[0_8px_28px_rgba(236,72,153,0.4),0_4px_12px_rgba(219,39,119,0.25),0_0_0_1px_rgba(255,255,255,0.15)_inset] dark:shadow-[0_8px_28px_rgba(236,72,153,0.5),0_4px_12px_rgba(219,39,119,0.35)] transition-all duration-300 ease-out hover:shadow-[0_12px_36px_rgba(236,72,153,0.5),0_6px_16px_rgba(219,39,119,0.35)] dark:hover:shadow-[0_12px_36px_rgba(236,72,153,0.6)] hover:from-pink-400 hover:to-pink-500 dark:hover:from-pink-500 dark:hover:to-pink-600 hover:scale-110 hover:-translate-y-1.5 active:scale-95 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
       >
-        <Heart className="w-8 h-8" />
+        <Heart size={26} color={C.gunmetal} />
       </button>
     </div>
   );
