@@ -1,6 +1,14 @@
 // DiscoverPage.jsx
 import React, { useState } from "react";
-import { Activity, Heart, X, Zap } from "lucide-react";
+import {
+  Activity,
+  Heart,
+  X,
+  Zap,
+  SlidersHorizontal,
+  CheckCircle2,
+} from "lucide-react";
+import PulseAnswerModal from "../components/PulseAnswerModal";
 
 // Inline logo icon: heart + ECG pulse (gunmetal navy)
 const LogoIcon = () => (
@@ -60,9 +68,15 @@ const BrandHeader = () => (
   </div>
 );
 
-// SAMPLE DATA (you already pasted this; keeping it here so file is complete)
+// SAMPLE DATA
+// Each profile has:
+// - hero photo (photoUrl)
+// - glimpses (photos[])
+// - prompts[]  -> Personality & prompts
+// - secretRhythms[] -> "My Secret Rhythms" section
+// - pulseQuestions[] -> Pulse Check grid
 const sampleProfiles = [
-{
+  {
     id: 1,
     name: "Sarah",
     age: 29,
@@ -76,11 +90,11 @@ const sampleProfiles = [
     responseRate: "Usually responds in 2 hours",
     recentlyActive: true,
 
-    // HERO PHOTO – face-centric female nurse
+    // HERO PHOTO – warm, face-centric portrait (option C)
     photoUrl:
-      "https://images.pexels.com/photos/6129683/pexels-photo-6129683.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://images.pexels.com/photos/6129681/pexels-photo-6129681.jpeg?auto=compress&cs=tinysrgb&w=800",
 
-    // GLIMPSES – 4 real lifestyle photos
+    // GLIMPSES – 4 lifestyle photos
     photos: [
       "https://images.pexels.com/photos/1128678/pexels-photo-1128678.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -88,23 +102,64 @@ const sampleProfiles = [
       "https://images.pexels.com/photos/450326/pexels-photo-450326.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
 
+    // "My Secret Rhythms"
+    secretRhythms: [
+      {
+        question: "What resets my mind after a night shift",
+        answer:
+          "Walking rescue dogs while sipping a big cup of vanilla latte and pretending my phone doesn’t exist for an hour.",
+      },
+      {
+        question: "The part of my day I secretly look forward to",
+        answer:
+          "That quiet moment when I finally take my scrubs off, light a candle and catch up on messages from people I care about.",
+      },
+    ],
+
+    // Pulse Check questions (True / False)
+    pulseQuestions: [
+      {
+        id: "s1",
+        label: "Night-shift confession",
+        question:
+          "I’ve definitely had cereal for dinner after a 12-hour shift and called it ‘self care’.",
+        tone: "funny",
+        correctAnswer: true,
+      },
+      {
+        id: "s2",
+        label: "Soft spot",
+        question:
+          "I’d rather cancel plans than miss my Sunday dog walk and coffee ritual.",
+        tone: "romantic",
+        correctAnswer: true,
+      },
+    ],
+
+    // Personality & prompts
     prompts: [
       {
         question: "Typical Sunday",
         answer:
-          "Walking rescue dogs while sipping a big cup of vanilla latte.",
+          "Brunch after a night shift, then disappearing into a good book until I fall asleep on the couch.",
       },
       {
         question: "I'm looking for",
         answer:
-          "Someone who enjoys quiet evenings after chaotic shifts.",
+          "Someone who enjoys quiet evenings after chaotic shifts and doesn’t mind late-night coffee dates.",
       },
     ],
 
     myVibe: ["Coffee", "Yoga", "Calm Energy", "Soft Life"],
+
+    pulseChecks: [
+      "I fall deeper when someone remembers small details.",
+      "I like clingy softness if it's with the right person.",
+      "My humor gets darker when I trust someone.",
+      "I rewatch sweet messages too many times."
+    ],
   },
 
-  // -------------------------------------------------------------
   {
     id: 2,
     name: "Michael",
@@ -123,27 +178,67 @@ const sampleProfiles = [
       "https://images.pexels.com/photos/8460098/pexels-photo-8460098.jpeg?auto=compress&cs=tinysrgb&w=800",
 
     photos: [
-      "https://images.pexels.com/photos/3622645/pexels-photo-3622645.jpeg?auto=compress&cs=tinysrgb&w=600", // coffee counter
-      "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600", // minimalist desk
-      "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy cat
-      "https://images.pexels.com/photos/2117937/pexels-photo-2117937.jpeg?auto=compress&cs=tinysrgb&w=600", // plant aesthetic
+      "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/210205/pexels-photo-210205.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+
+    secretRhythms: [
+      {
+        question: "If you ever wonder where I am",
+        answer:
+          "Probably grabbing a late coffee, listening to a podcast and replaying the wildest case from my shift in my head.",
+      },
+      {
+        question: "My emotional reset button",
+        answer:
+          "An evening run by the river with my favourite playlist, then hot shower and takeout on the sofa.",
+      },
+    ],
+
+    pulseQuestions: [
+      {
+        id: "m1",
+        label: "Plot twist lover",
+        question:
+          "I secretly enjoy when the ER gets a bit chaotic, as long as everyone walks out okay.",
+        tone: "dark",
+        correctAnswer: true,
+      },
+      {
+        id: "m2",
+        label: "Date style",
+        question:
+          "My ideal first date is brunch after a long run, not a fancy dinner.",
+        tone: "romantic",
+        correctAnswer: true,
+      },
     ],
 
     prompts: [
       {
-        question: "Shower thought",
-        answer: "ER days feel long, but the stories last forever.",
+        question: "A shower thought",
+        answer:
+          "ER shifts are plot twists — unpredictable but weirdly addictive.",
       },
       {
         question: "After work you'll find me",
-        answer: "At a cozy café with a book nobody asked me to read.",
+        answer:
+          "Running by the river with a podcast and hunting down the best brunch spot in the neighbourhood.",
       },
     ],
 
-    myVibe: ["Introvert", "Books", "Calm", "Warm Lighting"],
+    myVibe: ["Runner", "Introvert", "Podcasts", "Brunch Lover"],
+
+    pulseChecks: [
+      "I fall deeper when someone remembers small details.",
+      "I like clingy softness if it's with the right person.",
+      "My humor gets darker when I trust someone.",
+      "I rewatch sweet messages too many times."
+    ],
   },
 
-  // -------------------------------------------------------------
   {
     id: 3,
     name: "Aisha",
@@ -162,27 +257,66 @@ const sampleProfiles = [
       "https://images.pexels.com/photos/6129683/pexels-photo-6129683.jpeg?auto=compress&cs=tinysrgb&w=800",
 
     photos: [
-      "https://images.pexels.com/photos/1394882/pexels-photo-1394882.jpeg?auto=compress&cs=tinysrgb&w=600", // soft pastries
-      "https://images.pexels.com/photos/3681649/pexels-photo-3681649.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy café vibes
-      "https://images.pexels.com/photos/3551714/pexels-photo-3551714.jpeg?auto=compress&cs=tinysrgb&w=600", // warm plants
-      "https://images.pexels.com/photos/2062436/pexels-photo-2062436.jpeg?auto=compress&cs=tinysrgb&w=600", // books + mug
+      "https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/1459339/pexels-photo-1459339.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/1445416/pexels-photo-1445416.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/414660/pexels-photo-414660.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+
+    secretRhythms: [
+      {
+        question: "The hour I feel most alive",
+        answer:
+          "That golden 4pm sunlight on the children’s ward when everyone’s finally calm and laughing.",
+      },
+      {
+        question: "My soft routine no one sees",
+        answer:
+          "Face mask, sleepy playlist, journaling three things I’m grateful for and sending one sweet voice note to someone I love.",
+      },
+    ],
+
+    pulseQuestions: [
+      {
+        id: "a1",
+        label: "Kid at heart",
+        question:
+          "I still know the words to at least three cartoon theme songs by heart.",
+        tone: "funny",
+        correctAnswer: true,
+      },
+      {
+        id: "a2",
+        label: "Perfect weekend",
+        question:
+          "My perfect weekend involves sunshine, a picnic blanket and people I love more than any party.",
+        tone: "wholesome",
+        correctAnswer: true,
+      },
     ],
 
     prompts: [
       {
         question: "Best travel story",
-        answer: "A local family in Lisbon taught me how to bake pastel de nata.",
+        answer:
+          "I got adopted by a group of kids during a beach cleanup in Spain and we built the most chaotic sandcastle village.",
       },
       {
         question: "Unusual skill",
-        answer: "I can make any child laugh in under 10 seconds.",
+        answer: "I can calm crying babies AND crying adults.",
       },
     ],
 
-    myVibe: ["Pastries", "Warm", "Outgoing", "Soft Girl"],
+    myVibe: ["Baking", "Soft Life", "Outgoing", "Sunsets"],
+
+    pulseChecks: [
+      "I fall deeper when someone remembers small details.",
+      "I like clingy softness if it's with the right person.",
+      "My humor gets darker when I trust someone.",
+      "I rewatch sweet messages too many times."
+    ],
   },
 
-  // -------------------------------------------------------------
   {
     id: 4,
     name: "Daniel",
@@ -201,196 +335,253 @@ const sampleProfiles = [
       "https://images.pexels.com/photos/9451525/pexels-photo-9451525.jpeg?auto=compress&cs=tinysrgb&w=800",
 
     photos: [
-      "https://images.pexels.com/photos/3759085/pexels-photo-3759085.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy candle desk
-      "https://images.pexels.com/photos/3182778/pexels-photo-3182778.jpeg?auto=compress&cs=tinysrgb&w=600", // warm wood interior
-      "https://images.pexels.com/photos/302901/pexels-photo-302901.jpeg?auto=compress&cs=tinysrgb&w=600", // latte art
-      "https://images.pexels.com/photos/706377/pexels-photo-706377.jpeg?auto=compress&cs=tinysrgb&w=600", // soft shadows
+      "https://images.pexels.com/photos/349730/pexels-photo-349730.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/1000447/pexels-photo-1000447.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+
+    secretRhythms: [
+      {
+        question: "A moment I protect every day",
+        answer:
+          "Making dinner with a podcast playing and my phone in another room. It’s my tiny daily reset.",
+      },
+      {
+        question: "The rhythm I hope someone will share with me",
+        answer:
+          "Slow Sunday mornings: coffee, vinyl records and planning a lazy day together.",
+      },
+    ],
+
+    pulseQuestions: [
+      {
+        id: "d1",
+        label: "Quiet rebel",
+        question:
+          "I’d pick a cosy night cooking at home over a loud night out 9 times out of 10.",
+        tone: "romantic",
+        correctAnswer: true,
+      },
+      {
+        id: "d2",
+        label: "Cat agenda",
+        question:
+          "If my cat doesn’t approve of you, there’s a 90% chance we’re not going on a second date.",
+        tone: "funny",
+        correctAnswer: true,
+      },
     ],
 
     prompts: [
       {
         question: "My friends describe me as",
-        answer: "A calm soul with a surprisingly dark humor streak.",
+        answer:
+          "The calm one with a suspicious ability to fix everything — from meds to broken printers.",
       },
       {
         question: "I'm most grateful for",
-        answer: "Unhurried mornings and people with gentle hearts.",
-      },
-    ],
-
-    myVibe: ["Warm Light", "Coffee", "Minimalist", "Calm Energy"],
-  },
-
-  // -------------------------------------------------------------
-  {
-    id: 5,
-    name: "Elena",
-    age: 33,
-    distance: "5 miles away",
-    location: "St. Mary's Hospital",
-    role: "Radiographer",
-    hospital: "St. Mary's Hospital",
-    specialty: "Medical Imaging",
-    shift: "Mixed Shifts",
-    shiftCompatibility: 91,
-    responseRate: "Replies within 3 hours",
-    recentlyActive: true,
-
-    photoUrl:
-      "https://images.pexels.com/photos/5452206/pexels-photo-5452206.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-    photos: [
-      "https://images.pexels.com/photos/984602/pexels-photo-984602.jpeg?auto=compress&cs=tinysrgb&w=600", // warm mountains
-      "https://images.pexels.com/photos/713046/pexels-photo-713046.jpeg?auto=compress&cs=tinysrgb&w=600", // aesthetic candles
-      "https://images.pexels.com/photos/17679/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600", // cozy hallway
-      "https://images.pexels.com/photos/881127/pexels-photo-881127.jpeg?auto=compress&cs=tinysrgb&w=600", // soft food
-    ],
-
-    prompts: [
-      {
-        question: "Something I learned recently",
-        answer: "Your energy introduces you before you even speak.",
-      },
-      {
-        question: "My ideal Sunday",
-        answer: "A museum visit, candle shopping, and sushi.",
-      },
-    ],
-
-    myVibe: ["Art", "Candle Lover", "Warm", "Soft Minimalist"],
-  },
-
-  // -------------------------------------------------------------
-  {
-    id: 6,
-    name: "Ryan",
-    age: 28,
-    distance: "0.9 miles away",
-    location: "King's College Hospital",
-    role: "Physiotherapist",
-    hospital: "King's College Hospital",
-    specialty: "Orthopedics",
-    shift: "Day Shifts",
-    shiftCompatibility: 89,
-    responseRate: "Replies instantly",
-    recentlyActive: true,
-
-    photoUrl:
-      "https://images.pexels.com/photos/7594403/pexels-photo-7594403.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-    photos: [
-      "https://images.pexels.com/photos/265179/pexels-photo-265179.jpeg?auto=compress&cs=tinysrgb&w=600", // soft forest
-      "https://images.pexels.com/photos/277253/pexels-photo-277253.jpeg?auto=compress&cs=tinysrgb&w=600", // warm dog
-      "https://images.pexels.com/photos/230477/pexels-photo-230477.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy reading
-      "https://images.pexels.com/photos/105030/pexels-photo-105030.jpeg?auto=compress&cs=tinysrgb&w=600", // coffee + notebook
-    ],
-
-    prompts: [
-      {
-        question: "My love language",
-        answer: "Acts of service and warm silence.",
-      },
-      {
-        question: "A perfect date",
-        answer: "Coffee → nature walk → unfiltered conversation.",
-      },
-    ],
-
-    myVibe: ["Dogs", "Soft Life", "Outdoors", "Gentle Energy"],
-  },
-
-  // -------------------------------------------------------------
-  {
-    id: 7,
-    name: "Chloe",
-    age: 30,
-    distance: "2.7 miles away",
-    location: "Queen Charlotte Hospital",
-    role: "Midwife",
-    hospital: "Queen Charlotte Hospital",
-    specialty: "Maternity & Delivery",
-    shift: "Night Shifts",
-    shiftCompatibility: 84,
-    responseRate: "Replies within an hour",
-    recentlyActive: false,
-
-    photoUrl:
-      "https://images.pexels.com/photos/5452207/pexels-photo-5452207.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-    photos: [
-      "https://images.pexels.com/photos/327661/pexels-photo-327661.jpeg?auto=compress&cs=tinysrgb&w=600", // pastries
-      "https://images.pexels.com/photos/349610/pexels-photo-349610.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy café
-      "https://images.pexels.com/photos/196666/pexels-photo-196666.jpeg?auto=compress&cs=tinysrgb&w=600", // flowers aesthetic
-      "https://images.pexels.com/photos/446278/pexels-photo-446278.jpeg?auto=compress&cs=tinysrgb&w=600", // sunlight room
-    ],
-
-    prompts: [
-      {
-        question: "A random fact I love",
         answer:
-          "Babies born at night tend to have calmer temperaments — maybe because it's quiet.",
-      },
-      {
-        question: "My green flag",
-        answer: "Kind voice, warm energy, intentional conversation.",
+          "People who ask 'How are YOU doing?' even when they need support more.",
       },
     ],
 
-    myVibe: ["Soft Girl", "Pastries", "Warm", "Flowers"],
-  },
+    myVibe: ["Music", "Cooking", "Cycling", "Calm Energy"],
 
-  // -------------------------------------------------------------
-  {
-    id: 8,
-    name: "Samuel",
-    age: 35,
-    distance: "6 miles away",
-    location: "London Heart Institute",
-    role: "Cardiologist",
-    hospital: "London Heart Institute",
-    specialty: "Cardiology",
-    shift: "Standard Shifts",
-    shiftCompatibility: 90,
-    responseRate: "Usually replies same day",
-    recentlyActive: true,
-
-    photoUrl:
-      "https://images.pexels.com/photos/8460379/pexels-photo-8460379.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-    photos: [
-      "https://images.pexels.com/photos/245240/pexels-photo-245240.jpeg?auto=compress&cs=tinysrgb&w=600", // wine dinner
-      "https://images.pexels.com/photos/318319/pexels-photo-318319.jpeg?auto=compress&cs=tinysrgb&w=600", // cozy reading
-      "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600", // night lights
-      "https://images.pexels.com/photos/1170656/pexels-photo-1170656.jpeg?auto=compress&cs=tinysrgb&w=600", // warm food aesthetic
+    pulseChecks: [
+      "I fall deeper when someone remembers small details.",
+      "I like clingy softness if it's with the right person.",
+      "My humor gets darker when I trust someone.",
+      "I rewatch sweet messages too many times."
     ],
-
-    prompts: [
-      {
-        question: "An overshare",
-        answer: "I tear up during recovery stories more than I should.",
-      },
-      {
-        question: "My ideal evening",
-        answer: "Soft jazz, warm lighting, and someone worth listening to.",
-      },
-    ],
-
-    myVibe: ["Wine", "Books", "Calm", "Romantic"],
   },
 ];
+
+// Small chip for hospital in vitals
+const HospitalChip = ({ name }) => {
+  if (!name) return null;
+
+  return (
+    <span
+      className="
+        inline-flex items-center gap-1.5
+        px-2.5 py-1
+        rounded-full
+        bg-slate-100
+        text-[11px] text-slate-800
+        max-w-[190px]
+        overflow-hidden
+        whitespace-nowrap
+      "
+    >
+      {/* Mini hospital icon */}
+      <svg
+        viewBox="0 0 20 20"
+        className="w-3.5 h-3.5 text-[#0F213A]"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Building box */}
+        <rect x="4" y="5" width="12" height="11" rx="2" />
+        {/* Door */}
+        <rect x="9" y="11" width="2" height="5" rx="0.8" />
+        {/* Cross */}
+        <path d="M10 7 v3" />
+        <path d="M8.5 8.5 h3" />
+      </svg>
+
+      <span className="truncate">{name}</span>
+    </span>
+  );
+};
+
+// PULSE GRID SECTION
+const PulseGridSection = ({ profile, answeredMap, onOpenQuestion }) => {
+  const questions = profile.pulseQuestions || [];
+  if (!questions.length) return null;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+          <h3 className="text-sm font-semibold text-slate-900">Pulse Check</h3>
+        </div>
+        <span className="text-[11px] text-slate-500">
+          True / False ice-breakers
+        </span>
+      </div>
+
+      <div
+        className="
+          grid 
+          grid-cols-1 
+          gap-3 
+          mt-3
+          [@media(min-width:390px)]:grid-cols-2
+        "
+      >
+        {questions.map((q) => {
+          const answered = !!answeredMap[q.id];
+          return (
+            <div
+              key={q.id}
+              className={`relative rounded-2xl border px-3 py-3.5 bg-slate-50/80 transition-shadow ${
+                answered
+                  ? "border-[#0F213A]/25 shadow-[0_6px_14px_rgba(15,33,58,0.12)]"
+                  : "border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.06)]"
+              }`}
+            >
+              {/* Top row: label + status */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="inline-flex items-center gap-1 px-2 py-[3px] rounded-full bg-white text-[10px] font-medium text-slate-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  {q.label}
+                </span>
+
+                {answered && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-[3px] rounded-full">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Hearts-checked
+                  </span>
+                )}
+              </div>
+
+              {/* Question text */}
+              <p className="text-[13px] text-slate-900 leading-relaxed mb-6">
+                {q.question}
+              </p>
+
+              {/* Bottom row */}
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] text-slate-500">
+                  Tap the pulse to answer
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => onOpenQuestion(q)}
+                  className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border shadow-sm transition-transform active:scale-95 ${
+                    answered
+                      ? "bg-[#0F213A] border-[#0F213A]"
+                      : "bg-white border-slate-200"
+                  }`}
+                >
+                  <Activity
+                    className={`w-4.5 h-4.5 ${
+                      answered ? "text-white" : "text-[#0F213A]"
+                    }`}
+                  />
+                  {/* Tiny premium dot (purely visual for now) */}
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 border border-white" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const DiscoverPage = () => {
   const [activeTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
 
+  // Pulse modal + answers
+  const [pulseModalOpen, setPulseModalOpen] = useState(false);
+  const [activePulseQuestion, setActivePulseQuestion] = useState(null);
+  // shape: { [profileId]: { [questionId]: { answered: true, choice: 'true'|'false' } } }
+  const [answeredPulse, setAnsweredPulse] = useState({});
+
   const profile = sampleProfiles[currentMatch];
 
   const handleNext = () => {
     setCurrentMatch((prev) => (prev + 1) % sampleProfiles.length);
+    // close any open modal when moving to next match
+    setPulseModalOpen(false);
+    setActivePulseQuestion(null);
   };
 
   if (activeTab !== "discover") return null;
+
+  // Decide how many "My Secret Rhythms" prompts to show (1 or 2) – deterministic, not random
+  const rhythmCount =
+    profile.secretRhythms && profile.secretRhythms.length > 0
+      ? Math.min(profile.secretRhythms.length, profile.id % 2 === 0 ? 2 : 1)
+      : 0;
+
+  const handleOpenPulseQuestion = (question) => {
+    setActivePulseQuestion({
+      ...question,
+      profileId: profile.id,
+      profileName: profile.name,
+    });
+    setPulseModalOpen(true);
+  };
+
+  const handleAnswerPulse = (choice) => {
+    if (!activePulseQuestion) return;
+    const { profileId, id } = activePulseQuestion;
+
+    setAnsweredPulse((prev) => {
+      const prevForProfile = prev[profileId] || {};
+      return {
+        ...prev,
+        [profileId]: {
+          ...prevForProfile,
+          [id]: { answered: true, choice },
+        },
+      };
+    });
+
+    setPulseModalOpen(false);
+    setActivePulseQuestion(null);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -401,28 +592,21 @@ const DiscoverPage = () => {
       <div className="px-4 py-3 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-slate-900">Discover</h2>
         <button
-          onClick={() => setShowFilters((s) => !s)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:bg-slate-50 transition-all text-xs"
+          className="inline-flex items-center gap-1.5
+             px-3 py-1.5 rounded-full
+             bg-white/50 backdrop-blur-sm 
+             border border-white/70
+             text-xs font-medium text-gray-700
+             shadow-[0_1px_4px_rgba(0,0,0,0.1)]
+             active:scale-95 transition"
+          onClick={() => setShowFilters((prev) => !prev)}
         >
-          <svg
-            className="w-4 h-4 text-slate-700"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <line x1="4" y1="6" x2="16" y2="6" />
-            <line x1="8" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="18" x2="12" y2="18" />
-            <circle cx="18" cy="6" r="2" />
-            <circle cx="6" cy="12" r="2" />
-            <circle cx="14" cy="18" r="2" />
-          </svg>
-          <span className="font-medium text-slate-800">Filters</span>
+          <SlidersHorizontal className="w-3.5 h-3.5 text-gray-700" />
+          Filters
         </button>
       </div>
 
-      {/* Optional filters row */}
+      {/* Simple filters row */}
       {showFilters && (
         <div className="px-4 pb-2">
           <div className="flex flex-wrap gap-2">
@@ -442,7 +626,7 @@ const DiscoverPage = () => {
         </div>
       )}
 
-      {/* Case file profile view */}
+      {/* CASE FILE PROFILE VIEW */}
       <div className="px-4 pb-24">
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
@@ -464,31 +648,44 @@ const DiscoverPage = () => {
               <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[rgba(15,33,58,0.9)] via-[rgba(15,33,58,0.55)] to-transparent" />
 
               {/* Top-left pills */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-black/35 backdrop-blur-sm text-xs text-white max-w-[260px]">
-                  <span className="inline-flex items-center gap-1 min-w-0">
+              <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
+                {/* ROLE pill (no hospital) */}
+                <div
+                  className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
+                          bg-black/35 backdrop-blur-sm text-xs text-white
+                          max-w-[145px] w-max overflow-hidden"
+                >
+                  <span className="inline-flex items-center gap-1 overflow-hidden">
                     <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
-                    <span className="truncate">
+                    <span className="truncate max-w-[105px]">
                       {profile.role ?? "Healthcare professional"}
                     </span>
                   </span>
-                  {profile.hospital && (
-                    <span className="hidden sm:inline text-white/80 truncate">
-                      · {profile.hospital}
-                    </span>
-                  )}
                 </div>
 
+                {/* SHIFT pill */}
                 {profile.shift && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 backdrop-blur text-[11px] text-slate-100">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    {profile.shift}
+                  <div
+                    className="
+                      pointer-events-auto
+                      inline-flex items-center gap-1.5
+                      px-3 py-[6px]
+                      rounded-full
+                      bg-[rgba(0,0,0,0.28)]
+                      backdrop-blur-sm
+                      text-[11px] text-white leading-tight
+                      max-w-fit
+                    "
+                    style={{ lineHeight: "1.15" }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-amber-300"></span>
+                    <span className="truncate">{profile.shift}</span>
                   </div>
                 )}
               </div>
 
               {/* Top-right compatibility */}
-              <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-white/60 shadow-sm">
+              <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur border border-white/60 shadow-sm">
                 <Zap className="w-4 h-4 text-amber-500" />
                 <span className="text-xs font-medium text-slate-900">
                   {profile.shiftCompatibility ?? 82}% match
@@ -498,34 +695,40 @@ const DiscoverPage = () => {
               {/* View all photos pill */}
               <button
                 type="button"
-                className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur text-xs text-slate-800 shadow-[0_0_12px_rgba(0,0,0,0.18)] border border-slate-200/70"
+                className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
+                            px-3 py-1.5 rounded-full
+                            bg-white/35 backdrop-blur-sm
+                            border border-white/60
+                            text-xs text-white font-medium
+                            shadow-[0_0_12px_rgba(0,0,0,0.25)]
+                            transition-all"
               >
-                <span className="w-1 h-1 rounded-full bg-slate-700" />
-                <span>View all photos</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-white/90"></span>
+                <span className="drop-shadow-sm">View all photos</span>
               </button>
 
               {/* Vertical action rail */}
-              <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-3 pointer-events-none">
+              <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-3.5 pointer-events-none">
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200/80 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
                 >
                   <X className="w-6 h-6 text-slate-700" />
                 </button>
 
                 <button
-                    type="button"
-                    onClick={() => console.log("Heartbeat", profile.name)}
-                    className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200/80 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                  type="button"
+                  onClick={() => console.log("Heartbeat", profile.name)}
+                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
                 >
-                    <Activity className="w-6 h-6 text-[#0F213A]" />
+                  <Activity className="w-6 h-6 text-[#0F213A]" />
                 </button>
 
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200/80 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
                 >
                   <Heart className="w-6 h-6 text-rose-500" />
                 </button>
@@ -557,7 +760,7 @@ const DiscoverPage = () => {
 
             {/* ECG PULSE SEPARATOR */}
             <div className="relative bg-white">
-              <div className="h-6 -mt-1 mb-1 flex items-center justify-center">
+              <div className="h-6 -mt-1 mb-2 flex items-center justify-center">
                 <svg
                   viewBox="0 0 200 24"
                   className="w-40 h-4 text-slate-300"
@@ -575,75 +778,119 @@ const DiscoverPage = () => {
             </div>
 
             {/* BODY – CASE FILE INFO */}
-            <div className="px-5 pb-5 pt-3 space-y-6 bg-white">
+            <div className="px-5 pb-5 pt-1 space-y-6 bg-white">
               {/* Vitals strip */}
-              <div className="flex flex-wrap gap-2 text-[11px] text-slate-700">
-                {/* Verified tag */}
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-800">
+              <div className="space-y-1">
+                {/* PRIMARY ROW */}
+                <div className="flex flex-wrap gap-2 [&>*]:whitespace-nowrap">
+                  {/* Verified */}
+                    <span className="inline-flex items-center gap-1 
+                      px-2 py-[5px] 
+                      rounded-full 
+                      bg-slate-100 
+                      text-[11px] text-slate-800
+                    ">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
                     Verified healthcare professional
-                </span>
+                  </span>
 
-                {/* Shift compatibility */}
-                {typeof profile.shiftCompatibility === "number" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-800">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                    Shift pattern compatible
+                  {/* Hospital */}
+                  {profile.hospital && <HospitalChip name={profile.hospital} />}
+
+                  {/* Shift compatibility */}
+                  {typeof profile.shiftCompatibility === "number" && (
+                    <span className="inline-flex items-center gap-1 
+                      px-2 py-[5px] 
+                      rounded-full 
+                      bg-slate-100 
+                      text-[11px] text-slate-800
+                    ">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                      Shift pattern compatible
                     </span>
-                )}
+                  )}
+                </div>
 
-                {/* Work / life balance */}
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-800">
+                {/* SECONDARY ROW */}
+                <div className="flex flex-wrap gap-2 mt-1 [&>*]:whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1 
+                    px-2 py-[5px] 
+                    rounded-full 
+                    bg-slate-100 
+                    text-[11px] text-slate-800
+                  ">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                     Work/life balance: Medium
-                </span>
+                  </span>
 
-                {/* Response rate */}
-                {profile.responseRate && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-800">
-                    ⏱ {profile.responseRate}
+                  {profile.responseRate && (
+                    <span className="inline-flex items-center gap-1 
+                      px-2 py-[5px] 
+                      rounded-full 
+                      bg-slate-100 
+                      text-[11px] text-slate-800
+                    ">
+                      ⏱ {profile.responseRate}
                     </span>
-                )}
+                  )}
 
-                {/* Recently active */}
-                {profile.recentlyActive && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-emerald-700">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    Recently active
+                  {profile.recentlyActive && (
+                    <span className="
+                      inline-flex items-center gap-1 
+                      px-2 py-[5px] 
+                      rounded-full 
+                      bg-emerald-50 
+                      text-[11px] text-emerald-700
+                    ">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Recently active
                     </span>
-                )}
-              </div>
-
-              {/* Work & schedule – card */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                  <h3 className="text-sm font-semibold text-slate-900">
-                    Work & schedule
-                  </h3>
-                </div>
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3.5 py-3 flex gap-3">
-                  <div className="mt-1 flex-shrink-0 w-7 h-7 rounded-full bg-[#0F213A]/7 flex items-center justify-center">
-                    <Activity className="w-4 h-4 text-[#0F213A]" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                      Role & routine
-                    </p>
-                    <p className="text-sm text-slate-800 leading-relaxed">
-                      {profile.hospital
-                        ? `Working at ${profile.hospital}${
-                            profile.specialty
-                              ? ` in ${profile.specialty.toLowerCase()}`
-                              : ""
-                          }.`
-                        : "Healthcare professional with a demanding schedule."}{" "}
-                      {profile.shift &&
-                        `Mostly on ${profile.shift.toLowerCase()}s, looking for someone who understands irregular hours.`}
-                    </p>
-                  </div>
+                  )}
                 </div>
               </div>
+
+              {/* My Secret Rhythms */}
+              {rhythmCount > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                    <h3 className="text-sm font-semibold text-slate-900">
+                      My Secret Rhythms
+                    </h3>
+                  </div>
+                  <div className="space-y-3">
+                    {profile.secretRhythms
+                      .slice(0, rhythmCount)
+                      .map((r, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 flex gap-2"
+                        >
+                          <div className="mt-1">
+                            <Activity className="w-4 h-4 text-[#0F213A]/80" />
+                          </div>
+                          <div>
+                            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                              {r.question}
+                            </div>
+                            <div className="mt-1 text-sm text-slate-800 leading-relaxed">
+                              {r.answer}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pulse Check grid – BELOW My Secret Rhythms */}
+              {profile.pulseQuestions && profile.pulseQuestions.length > 0 && (
+                <PulseGridSection
+                  profile={profile}
+                  answeredMap={answeredPulse[profile.id] || {}}
+                  onOpenQuestion={handleOpenPulseQuestion}
+                />
+              )}
 
               {/* Personality & prompts */}
               {profile.prompts && profile.prompts.length > 0 && (
@@ -682,20 +929,18 @@ const DiscoverPage = () => {
                     </h3>
                   </div>
                   <div className="flex gap-2 overflow-x-auto pb-1">
-                    {profile.photos.map((ph, idx) =>
-                      typeof ph === "string" && ph.startsWith("http") ? (
-                        <div
-                          key={idx}
-                          className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
-                        >
-                          <img
-                            src={ph}
-                            alt={`${profile.name} glimpse ${idx + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : null
-                    )}
+                    {profile.photos.map((ph, idx) => (
+                      <div
+                        key={idx}
+                        className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
+                      >
+                        <img
+                          src={ph}
+                          alt={`${profile.name}'s glimpse ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -739,6 +984,18 @@ const DiscoverPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Pulse modal (lives at page level so it overlays everything cleanly) */}
+      {pulseModalOpen && activePulseQuestion && (
+        <PulseAnswerModal
+          question={activePulseQuestion.question}
+          onAnswer={handleAnswerPulse}
+          onClose={() => {
+            setPulseModalOpen(false);
+            setActivePulseQuestion(null);
+          }}
+        />
+      )}
     </div>
   );
 };

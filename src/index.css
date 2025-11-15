@@ -27,6 +27,22 @@
 	100% { transform: scale(1); }
 }
 
+/* Slide-up animation for bottom sheets */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.28s ease-out;
+}
+
 /* Shimmer effect for skeletons */
 .cb-shimmer {
 	position: absolute;
