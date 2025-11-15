@@ -1,5 +1,5 @@
 // DiscoverPage.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Activity,
   Heart,
@@ -9,6 +9,9 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import PulseAnswerModal from "../components/PulseAnswerModal";
+import PremiumUpsellModal from "../components/PremiumUpsellModal";
+import { addHeartCheckInboxEvent } from "../utils/inboxEvents";
+import { savePulseAnswer, loadPulseAnswers } from "../utils/pulseStorage";
 
 // Inline logo icon: heart + ECG pulse (gunmetal navy)
 const LogoIcon = () => (
@@ -445,34 +448,41 @@ const PulseGridSection = ({ profile, answeredMap, onOpenQuestion }) => {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between mb-2.5 mt-1">
+        
+        {/* LEFT — MAIN TITLE */}
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-          <h3 className="text-sm font-semibold text-slate-900">Pulse Check</h3>
+          <h3 className="text-sm font-semibold text-slate-900">
+            Pulse Check
+          </h3>
         </div>
-        <span className="text-[11px] text-slate-500">
-          True / False ice-breakers
+
+        {/* RIGHT — SUBTITLE */}
+        <span className="text-[11px] text-slate-500 font-medium tracking-wide">
+          True/False icebreakers
         </span>
+
       </div>
 
       <div
         className="
           grid 
           grid-cols-1 
-          gap-3 
-          mt-3
+          gap-2.5
+          mt-1.5
           [@media(min-width:390px)]:grid-cols-2
         "
       >
-        {questions.map((q) => {
+        {questions.map((q, idx) => {
           const answered = !!answeredMap[q.id];
           return (
             <div
               key={q.id}
-              className={`relative rounded-2xl border px-3 py-3.5 bg-slate-50/80 transition-shadow ${
+              className={`relative rounded-[20px] border px-3.5 py-3.5 bg-slate-50/80 transition-all shadow-[0_2px_8px_rgba(15,33,58,0.04)] hover:shadow-[0_4px_14px_rgba(15,33,58,0.08)] active:scale-[0.98] ${
                 answered
-                  ? "border-[#0F213A]/25 shadow-[0_6px_14px_rgba(15,33,58,0.12)]"
-                  : "border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.06)]"
+                  ? "border-[#0F213A]/25"
+                  : "border-slate-200/80"
               }`}
             >
               {/* Top row: label + status */}
@@ -491,7 +501,7 @@ const PulseGridSection = ({ profile, answeredMap, onOpenQuestion }) => {
               </div>
 
               {/* Question text */}
-              <p className="text-[13px] text-slate-900 leading-relaxed mb-6">
+              <p className="text-[13px] text-slate-800 pr-8 leading-[1.35] font-medium mb-6">
                 {q.question}
               </p>
 
@@ -503,8 +513,14 @@ const PulseGridSection = ({ profile, answeredMap, onOpenQuestion }) => {
 
                 <button
                   type="button"
-                  onClick={() => onOpenQuestion(q)}
-                  className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border shadow-sm transition-transform active:scale-95 ${
+                  onClick={(e) => {
+                    e.currentTarget.classList.add("animate-pulseGlow");
+                    setTimeout(() => {
+                      e.currentTarget.classList.remove("animate-pulseGlow");
+                    }, 400);
+                    onOpenQuestion(q, idx);
+                  }}
+                  className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border shadow-sm transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite] ${
                     answered
                       ? "bg-[#0F213A] border-[#0F213A]"
                       : "bg-white border-slate-200"
@@ -531,14 +547,34 @@ const DiscoverPage = () => {
   const [activeTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
+  // Developer toggle: force premium experience locally
+  const DEV_FORCE_PREMIUM = true; // Set to false to restore upsell flow
 
   // Pulse modal + answers
   const [pulseModalOpen, setPulseModalOpen] = useState(false);
   const [activePulseQuestion, setActivePulseQuestion] = useState(null);
+  const [premiumUpsell, setPremiumUpsell] = useState(false);
   // shape: { [profileId]: { [questionId]: { answered: true, choice: 'true'|'false' } } }
   const [answeredPulse, setAnsweredPulse] = useState({});
 
   const profile = sampleProfiles[currentMatch];
+
+  // Load saved pulse answers for current profile and merge into answeredPulse map
+  useEffect(() => {
+    if (!profile || !profile.id) return;
+    const savedByIndex = loadPulseAnswers(profile.id);
+    if (!savedByIndex || typeof savedByIndex !== "object") return;
+    const idMap = {};
+    if (Array.isArray(profile.pulseQuestions)) {
+      profile.pulseQuestions.forEach((q, idx) => {
+        const a = savedByIndex[idx];
+        if (a) {
+          idMap[q.id] = { answered: true, choice: a.value };
+        }
+      });
+    }
+    setAnsweredPulse((prev) => ({ ...prev, [profile.id]: idMap }));
+  }, [profile.id]);
 
   const handleNext = () => {
     setCurrentMatch((prev) => (prev + 1) % sampleProfiles.length);
@@ -555,18 +591,44 @@ const DiscoverPage = () => {
       ? Math.min(profile.secretRhythms.length, profile.id % 2 === 0 ? 2 : 1)
       : 0;
 
-  const handleOpenPulseQuestion = (question) => {
-    setActivePulseQuestion({
-      ...question,
-      profileId: profile.id,
-      profileName: profile.name,
-    });
-    setPulseModalOpen(true);
+  const handleOpenPulseQuestion = (question, index) => {
+    // Premium gate: replace with real subscription flag when available
+    const isPremium = DEV_FORCE_PREMIUM; // For local testing, set DEV_FORCE_PREMIUM above
+    
+    if (!isPremium) {
+      setPremiumUpsell(true);
+    } else {
+      setActivePulseQuestion({
+        ...question,
+        profileId: profile.id,
+        profileName: profile.name,
+        index,
+      });
+      setPulseModalOpen(true);
+    }
+  };
+
+  const clearPulseAnswersForProfile = () => {
+    try {
+      if (!profile || !profile.id) return;
+      localStorage.removeItem(`pulseAnswers_${profile.id}`);
+      setAnsweredPulse((prev) => ({ ...prev, [profile.id]: {} }));
+      console.log(`Cleared pulse answers for profile ${profile.id}`);
+    } catch (err) {
+      console.error("Failed to clear pulse answers:", err);
+    }
   };
 
   const handleAnswerPulse = (choice) => {
     if (!activePulseQuestion) return;
-    const { profileId, id } = activePulseQuestion;
+    const { profileId, id, profileName, index } = activePulseQuestion;
+
+    // Trigger inbox event (premium users only)
+    // To enable: change isPremium to true in handleOpenPulseQuestion
+    const isPremium = false; // TODO: Get from actual premium status
+    if (isPremium) {
+      addHeartCheckInboxEvent(profileId, "YOU"); // Replace "YOU" with actual current user name
+    }
 
     setAnsweredPulse((prev) => {
       const prevForProfile = prev[profileId] || {};
@@ -578,6 +640,16 @@ const DiscoverPage = () => {
         },
       };
     });
+
+    // Persist this answer by card index for the profile
+    if (typeof index === "number") {
+      const newAnswer = {
+        value: choice,
+        result: "kept", // placeholder for compatibility label if needed later
+        revealed: isPremium,
+      };
+      savePulseAnswer(profileId, index, newAnswer);
+    }
 
     setPulseModalOpen(false);
     setActivePulseQuestion(null);
@@ -591,19 +663,29 @@ const DiscoverPage = () => {
       {/* Discover title + Filters button */}
       <div className="px-4 py-3 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-slate-900">Discover</h2>
-        <button
-          className="inline-flex items-center gap-1.5
-             px-3 py-1.5 rounded-full
-             bg-white/50 backdrop-blur-sm 
-             border border-white/70
-             text-xs font-medium text-gray-700
-             shadow-[0_1px_4px_rgba(0,0,0,0.1)]
-             active:scale-95 transition"
-          onClick={() => setShowFilters((prev) => !prev)}
-        >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-gray-700" />
-          Filters
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="inline-flex items-center gap-1.5
+               px-3 py-1.5 rounded-full
+               bg-white/50 backdrop-blur-sm 
+               border border-white/70
+               text-xs font-medium text-gray-700
+               shadow-[0_1px_4px_rgba(0,0,0,0.1)]
+               active:scale-95 transition"
+            onClick={() => setShowFilters((prev) => !prev)}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-gray-700" />
+            Filters
+          </button>
+          <button
+            type="button"
+            onClick={clearPulseAnswersForProfile}
+            className="text-[11px] text-slate-500 hover:text-slate-700 underline decoration-dotted"
+            title="Clear saved PulseCheck answers for this profile"
+          >
+            Clear Pulse
+          </button>
+        </div>
       </div>
 
       {/* Simple filters row */}
@@ -719,8 +801,14 @@ const DiscoverPage = () => {
 
                 <button
                   type="button"
-                  onClick={() => console.log("Heartbeat", profile.name)}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
+                  onClick={(e) => {
+                    e.currentTarget.classList.add("animate-pulseGlow");
+                    setTimeout(() => {
+                      e.currentTarget.classList.remove("animate-pulseGlow");
+                    }, 400);
+                    console.log("Heartbeat", profile.name);
+                  }}
+                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
                 >
                   <Activity className="w-6 h-6 text-[#0F213A]" />
                 </button>
@@ -993,6 +1081,17 @@ const DiscoverPage = () => {
           onClose={() => {
             setPulseModalOpen(false);
             setActivePulseQuestion(null);
+          }}
+        />
+      )}
+
+      {/* Premium upsell modal */}
+      {premiumUpsell && (
+        <PremiumUpsellModal
+          onClose={() => setPremiumUpsell(false)}
+          onUpgrade={() => {
+            console.log("Redirect to premium purchase");
+            setPremiumUpsell(false);
           }}
         />
       )}
