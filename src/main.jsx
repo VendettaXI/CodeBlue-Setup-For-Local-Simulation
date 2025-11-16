@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import CodeBlueDating from "./CodeBlueDating.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/Toast.jsx";
-import TestPagesDemo from "./pages/TestPagesDemo.jsx";
+import TestPagesDemo from "./test-env/pages/TestPagesDemo.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

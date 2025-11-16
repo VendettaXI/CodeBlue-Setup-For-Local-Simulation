@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   Activity,
   Heart,
+
   X,
   Zap,
   SlidersHorizontal,
@@ -10,8 +11,17 @@ import {
 } from "lucide-react";
 import PulseAnswerModal from "../components/PulseAnswerModal";
 import PremiumUpsellModal from "../components/PremiumUpsellModal";
+import PulseGrid from "../components/PulseGrid";
+
 import { addHeartCheckInboxEvent } from "../utils/inboxEvents";
 import { savePulseAnswer, loadPulseAnswers } from "../utils/pulseStorage";
+
+import {
+  ENABLE_PULSE_CHECK,
+  ENABLE_PREMIUM_GATE,
+  ENABLE_INBOX_EVENTS,
+  CURRENT_USER_NAME,
+} from "../config/flags.js";
 
 // Inline logo icon: heart + ECG pulse (gunmetal navy)
 const LogoIcon = () => (
@@ -159,7 +169,7 @@ const sampleProfiles = [
       "I fall deeper when someone remembers small details.",
       "I like clingy softness if it's with the right person.",
       "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times."
+      "I rewatch sweet messages too many times.",
     ],
   },
 
@@ -238,7 +248,7 @@ const sampleProfiles = [
       "I fall deeper when someone remembers small details.",
       "I like clingy softness if it's with the right person.",
       "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times."
+      "I rewatch sweet messages too many times.",
     ],
   },
 
@@ -316,7 +326,7 @@ const sampleProfiles = [
       "I fall deeper when someone remembers small details.",
       "I like clingy softness if it's with the right person.",
       "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times."
+      "I rewatch sweet messages too many times.",
     ],
   },
 
@@ -395,7 +405,7 @@ const sampleProfiles = [
       "I fall deeper when someone remembers small details.",
       "I like clingy softness if it's with the right person.",
       "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times."
+      "I rewatch sweet messages too many times.",
     ],
   },
 ];
@@ -441,114 +451,13 @@ const HospitalChip = ({ name }) => {
   );
 };
 
-// PULSE GRID SECTION
-const PulseGridSection = ({ profile, answeredMap, onOpenQuestion }) => {
-  const questions = profile.pulseQuestions || [];
-  if (!questions.length) return null;
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between mb-2.5 mt-1">
-        
-        {/* LEFT — MAIN TITLE */}
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-          <h3 className="text-sm font-semibold text-slate-900">
-            Pulse Check
-          </h3>
-        </div>
-
-        {/* RIGHT — SUBTITLE */}
-        <span className="text-[11px] text-slate-500 font-medium tracking-wide">
-          True/False icebreakers
-        </span>
-
-      </div>
-
-      <div
-        className="
-          grid 
-          grid-cols-1 
-          gap-2.5
-          mt-1.5
-          [@media(min-width:390px)]:grid-cols-2
-        "
-      >
-        {questions.map((q, idx) => {
-          const answered = !!answeredMap[q.id];
-          return (
-            <div
-              key={q.id}
-              className={`relative rounded-[20px] border px-3.5 py-3.5 bg-slate-50/80 transition-all shadow-[0_2px_8px_rgba(15,33,58,0.04)] hover:shadow-[0_4px_14px_rgba(15,33,58,0.08)] active:scale-[0.98] ${
-                answered
-                  ? "border-[#0F213A]/25"
-                  : "border-slate-200/80"
-              }`}
-            >
-              {/* Top row: label + status */}
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="inline-flex items-center gap-1 px-2 py-[3px] rounded-full bg-white text-[10px] font-medium text-slate-700">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  {q.label}
-                </span>
-
-                {answered && (
-                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-[3px] rounded-full">
-                    <CheckCircle2 className="w-3 h-3" />
-                    Hearts-checked
-                  </span>
-                )}
-              </div>
-
-              {/* Question text */}
-              <p className="text-[13px] text-slate-800 pr-8 leading-[1.35] font-medium mb-6">
-                {q.question}
-              </p>
-
-              {/* Bottom row */}
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] text-slate-500">
-                  Tap the pulse to answer
-                </span>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.currentTarget.classList.add("animate-pulseGlow");
-                    setTimeout(() => {
-                      e.currentTarget.classList.remove("animate-pulseGlow");
-                    }, 400);
-                    onOpenQuestion(q, idx);
-                  }}
-                  className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border shadow-sm transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite] ${
-                    answered
-                      ? "bg-[#0F213A] border-[#0F213A]"
-                      : "bg-white border-slate-200"
-                  }`}
-                >
-                  <Activity
-                    className={`w-4.5 h-4.5 ${
-                      answered ? "text-white" : "text-[#0F213A]"
-                    }`}
-                  />
-                  {/* Tiny premium dot (purely visual for now) */}
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 border border-white" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 const DiscoverPage = () => {
   const [activeTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
-  // Developer toggle: force premium experience locally
-  const DEV_FORCE_PREMIUM = true; // Set to false to restore upsell flow
+
+  // NEW: collapsed / expanded info card state
+  const [infoExpanded, setInfoExpanded] = useState(false);
 
   // Pulse modal + answers
   const [pulseModalOpen, setPulseModalOpen] = useState(false);
@@ -581,6 +490,7 @@ const DiscoverPage = () => {
     // close any open modal when moving to next match
     setPulseModalOpen(false);
     setActivePulseQuestion(null);
+    setInfoExpanded(false);
   };
 
   if (activeTab !== "discover") return null;
@@ -593,8 +503,8 @@ const DiscoverPage = () => {
 
   const handleOpenPulseQuestion = (question, index) => {
     // Premium gate: replace with real subscription flag when available
-    const isPremium = DEV_FORCE_PREMIUM; // For local testing, set DEV_FORCE_PREMIUM above
-    
+    const isPremium = ENABLE_PREMIUM_GATE;
+
     if (!isPremium) {
       setPremiumUpsell(true);
     } else {
@@ -624,10 +534,9 @@ const DiscoverPage = () => {
     const { profileId, id, profileName, index } = activePulseQuestion;
 
     // Trigger inbox event (premium users only)
-    // To enable: change isPremium to true in handleOpenPulseQuestion
-    const isPremium = false; // TODO: Get from actual premium status
-    if (isPremium) {
-      addHeartCheckInboxEvent(profileId, "YOU"); // Replace "YOU" with actual current user name
+    const isPremium = ENABLE_PREMIUM_GATE; // TODO: Replace with real premium status when available
+    if (ENABLE_INBOX_EVENTS && isPremium) {
+      addHeartCheckInboxEvent(profileId, CURRENT_USER_NAME);
     }
 
     setAnsweredPulse((prev) => {
@@ -677,14 +586,16 @@ const DiscoverPage = () => {
             <SlidersHorizontal className="w-3.5 h-3.5 text-gray-700" />
             Filters
           </button>
-          <button
-            type="button"
-            onClick={clearPulseAnswersForProfile}
-            className="text-[11px] text-slate-500 hover:text-slate-700 underline decoration-dotted"
-            title="Clear saved PulseCheck answers for this profile"
-          >
-            Clear Pulse
-          </button>
+          {ENABLE_PULSE_CHECK && (
+            <button
+              type="button"
+              onClick={clearPulseAnswersForProfile}
+              className="text-[11px] text-slate-500 hover:text-slate-700 underline decoration-dotted"
+              title="Clear saved PulseCheck answers for this profile"
+            >
+              Clear Pulse
+            </button>
+          )}
         </div>
       </div>
 
@@ -711,363 +622,400 @@ const DiscoverPage = () => {
       {/* CASE FILE PROFILE VIEW */}
       <div className="px-4 pb-24">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
-            {/* HERO SECTION */}
-            <div className="relative rounded-t-[26px] overflow-hidden">
-              {profile.photoUrl ? (
-                <img
-                  src={profile.photoUrl}
-                  alt={profile.name}
-                  className="w-full h-[560px] object-cover object-center"
-                />
-              ) : (
-                <div className="w-full h-[560px] bg-slate-200 flex items-center justify-center text-6xl">
-                  {profile.photos?.[0] ?? "🩺"}
-                </div>
-              )}
+          <div className="relative pb-10">
+            {/* HERO CARD – full rounded, own shadow */}
+            <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
+              <div className="relative">
+                {profile.photoUrl ? (
+                  <img
+                    src={profile.photoUrl}
+                    alt={profile.name}
+                    className="w-full h-[560px] object-cover object-center"
+                  />
+                ) : (
+                  <div className="w-full h-[560px] bg-slate-200 flex items-center justify-center text-6xl">
+                    {profile.photos?.[0] ?? "🩺"}
+                  </div>
+                )}
 
-              {/* Bottom gradient */}
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[rgba(15,33,58,0.9)] via-[rgba(15,33,58,0.55)] to-transparent" />
+                {/* Bottom gradient */}
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[rgba(15,33,58,0.9)] via-[rgba(15,33,58,0.55)] to-transparent" />
 
-              {/* Top-left pills */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
-                {/* ROLE pill (no hospital) */}
-                <div
-                  className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
+                {/* Top-left pills */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
+                  {/* ROLE pill (no hospital) */}
+                  <div
+                    className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
                           bg-black/35 backdrop-blur-sm text-xs text-white
                           max-w-[145px] w-max overflow-hidden"
-                >
-                  <span className="inline-flex items-center gap-1 overflow-hidden">
-                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
-                    <span className="truncate max-w-[105px]">
-                      {profile.role ?? "Healthcare professional"}
+                  >
+                    <span className="inline-flex items-center gap-1 overflow-hidden">
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="truncate max-w-[105px]">
+                        {profile.role ?? "Healthcare professional"}
+                      </span>
                     </span>
+                  </div>
+
+                  {/* SHIFT pill */}
+                  {profile.shift && (
+                    <div
+                      className="
+                        pointer-events-auto
+                        inline-flex items-center gap-1.5
+                        px-3 py-[6px]
+                        rounded-full
+                        bg-[rgba(0,0,0,0.28)]
+                        backdrop-blur-sm
+                        text-[11px] text-white leading-tight
+                        max-w-fit
+                      "
+                      style={{ lineHeight: "1.15" }}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-amber-300"></span>
+                      <span className="truncate">{profile.shift}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Top-right compatibility */}
+                <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur border border-white/60 shadow-sm">
+                  <Zap className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs font-medium text-slate-900">
+                    {profile.shiftCompatibility ?? 82}% match
                   </span>
                 </div>
 
-                {/* SHIFT pill */}
-                {profile.shift && (
-                  <div
-                    className="
-                      pointer-events-auto
-                      inline-flex items-center gap-1.5
-                      px-3 py-[6px]
-                      rounded-full
-                      bg-[rgba(0,0,0,0.28)]
-                      backdrop-blur-sm
-                      text-[11px] text-white leading-tight
-                      max-w-fit
-                    "
-                    style={{ lineHeight: "1.15" }}
-                  >
-                    <span className="w-2 h-2 rounded-full bg-amber-300"></span>
-                    <span className="truncate">{profile.shift}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Top-right compatibility */}
-              <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur border border-white/60 shadow-sm">
-                <Zap className="w-4 h-4 text-amber-500" />
-                <span className="text-xs font-medium text-slate-900">
-                  {profile.shiftCompatibility ?? 82}% match
-                </span>
-              </div>
-
-              {/* View all photos pill */}
-              <button
-                type="button"
-                className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
+                {/* View all photos pill */}
+                <button
+                  type="button"
+                  className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
                             px-3 py-1.5 rounded-full
                             bg-white/35 backdrop-blur-sm
                             border border-white/60
                             text-xs text-white font-medium
                             shadow-[0_0_12px_rgba(0,0,0,0.25)]
                             transition-all"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-white/90"></span>
-                <span className="drop-shadow-sm">View all photos</span>
-              </button>
-
-              {/* Vertical action rail */}
-              <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-3.5 pointer-events-none">
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
                 >
-                  <X className="w-6 h-6 text-slate-700" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/90"></span>
+                  <span className="drop-shadow-sm">View all photos</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.currentTarget.classList.add("animate-pulseGlow");
-                    setTimeout(() => {
-                      e.currentTarget.classList.remove("animate-pulseGlow");
-                    }, 400);
-                    console.log("Heartbeat", profile.name);
-                  }}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
-                >
-                  <Activity className="w-6 h-6 text-[#0F213A]" />
-                </button>
+                {/* Vertical action rail */}
+                <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-3.5 pointer-events-none">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="pointer-events-auto w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
+                  >
+                    <X className="w-6 h-6 text-slate-700" />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
-                >
-                  <Heart className="w-6 h-6 text-rose-500" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.currentTarget.classList.add("animate-pulseGlow");
+                      setTimeout(() => {
+                        e.currentTarget.classList.remove("animate-pulseGlow");
+                      }, 400);
+                      console.log("Heartbeat", profile.name);
+                    }}
+                    className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
+                  >
+                    <Activity className="w-6 h-6 text-[#0F213A]" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
+                  >
+                    <Heart className="w-6 h-6 text-rose-500" />
+                  </button>
+                </div>
+
+                {/* Name + basic info on gradient */}
+                <div className="absolute inset-x-0 bottom-0 px-5 pb-4 pt-10 flex flex-col justify-end">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-white text-2xl font-semibold drop-shadow">
+                          {profile.name}, {profile.age}
+                        </span>
+                        {profile.distance && (
+                          <span className="text-white/80 text-xs">
+                            {profile.distance}
+                          </span>
+                        )}
+                      </div>
+                      {profile.location && (
+                        <div className="text-white/80 text-xs mt-1">
+                          {profile.location}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              {/* Name + basic info on gradient */}
-              <div className="absolute inset-x-0 bottom-0 px-5 pb-4 pt-10 flex flex-col justify-end">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-white text-2xl font-semibold drop-shadow">
-                        {profile.name}, {profile.age}
+            {/* FLOATING COLLAPSIBLE INFO CARD */}
+            <div className="relative z-10 -mt-7 px-3">
+              <div className="bg-white rounded-[24px] shadow-[0_18px_40px_rgba(15,33,58,0.18)] border border-slate-100 overflow-hidden">
+                {/* ECG + expand header strip */}
+                <div className="relative bg-white">
+                  <div className="h-7 flex items-center justify-center">
+                    <svg
+                      viewBox="0 0 200 24"
+                      className="w-40 h-4 text-slate-300"
+                      fill="none"
+                    >
+                      <path
+                        d="M0 12 H60 L75 4 L90 20 L105 6 L120 18 H200"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setInfoExpanded((v) => !v)}
+                    className="absolute top-1 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border border-slate-200 text-[11px] text-slate-700 shadow-[0_1px_6px_rgba(15,33,58,0.18)] active:scale-95 transition"
+                  >
+                    <Activity className="w-3.5 h-3.5 text-[#0F213A]" />
+                    <span className="hidden sm:inline">
+                      {infoExpanded ? "Hide full profile" : "Open full profile"}
+                    </span>
+                    <span className="sm:hidden">
+                      {infoExpanded ? "Hide" : "More"}
+                    </span>
+                  </button>
+                </div>
+
+                {/* BODY – CASE FILE INFO */}
+                <div className="px-5 pb-5 pt-2 space-y-6 bg-white">
+                  {/* Vitals strip (always visible) */}
+                  <div className="space-y-1">
+                    {/* PRIMARY ROW */}
+                    <div className="flex flex-wrap gap-2 [&>*]:whitespace-nowrap">
+                      {/* Verified */}
+                      <span
+                        className="inline-flex items-center gap-1 
+                          px-2 py-[5px] 
+                          rounded-full 
+                          bg-slate-100 
+                          text-[11px] text-slate-800
+                        "
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                        Verified healthcare professional
                       </span>
-                      {profile.distance && (
-                        <span className="text-white/80 text-xs">
-                          {profile.distance}
+
+                      {/* Hospital */}
+                      {profile.hospital && (
+                        <HospitalChip name={profile.hospital} />
+                      )}
+
+                      {/* Shift compatibility */}
+                      {typeof profile.shiftCompatibility === "number" && (
+                        <span
+                          className="inline-flex items-center gap-1 
+                            px-2 py-[5px] 
+                            rounded-full 
+                            bg-slate-100 
+                            text-[11px] text-slate-800
+                          "
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                          Shift pattern compatible
                         </span>
                       )}
                     </div>
-                    {profile.location && (
-                      <div className="text-white/80 text-xs mt-1">
-                        {profile.location}
+
+                    {/* SECONDARY ROW */}
+                    <div className="flex flex-wrap gap-2 mt-1 [&>*]:whitespace-nowrap">
+                      <span
+                        className="inline-flex items-center gap-1 
+                          px-2 py-[5px] 
+                          rounded-full 
+                          bg-slate-100 
+                          text-[11px] text-slate-800
+                        "
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                        Work/life balance: Medium
+                      </span>
+
+                      {profile.responseRate && (
+                        <span
+                          className="inline-flex items-center gap-1 
+                            px-2 py-[5px] 
+                            rounded-full 
+                            bg-slate-100 
+                            text-[11px] text-slate-800
+                          "
+                        >
+                          ⏱ {profile.responseRate}
+                        </span>
+                      )}
+
+                      {profile.recentlyActive && (
+                        <span
+                          className="
+                            inline-flex items-center gap-1 
+                            px-2 py-[5px] 
+                            rounded-full 
+                            bg-emerald-50 
+                            text-[11px] text-emerald-700
+                          "
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          Recently active
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* My Secret Rhythms – only when expanded */}
+                  {rhythmCount > 0 && infoExpanded && (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                        <h3 className="text-sm font-semibold text-slate-900">
+                          My Secret Rhythms
+                        </h3>
+                      </div>
+                      <div className="space-y-3">
+                        {profile.secretRhythms
+                          .slice(0, rhythmCount)
+                          .map((r, idx) => (
+                            <div
+                              key={idx}
+                              className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 flex gap-2"
+                            >
+                              <div className="mt-1">
+                                <Activity className="w-4 h-4 text-[#0F213A]/80" />
+                              </div>
+                              <div>
+                                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                                  {r.question}
+                                </div>
+                                <div className="mt-1 text-sm text-slate-800 leading-relaxed">
+                                  {r.answer}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pulse Check grid – only when expanded */}
+                  {ENABLE_PULSE_CHECK &&
+                    infoExpanded &&
+                    profile.pulseQuestions &&
+                    profile.pulseQuestions.length > 0 && (
+                      <PulseGrid
+                        profile={profile}
+                        answeredMap={answeredPulse[profile.id] || {}}
+                        onOpenQuestion={handleOpenPulseQuestion}
+                      />
+                    )}
+
+                  {/* Personality & prompts – only when expanded */}
+                  {profile.prompts &&
+                    profile.prompts.length > 0 &&
+                    infoExpanded && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                          <h3 className="text-sm font-semibold text-slate-900">
+                            Personality & prompts
+                          </h3>
+                        </div>
+                        <div className="space-y-3">
+                          {profile.prompts.slice(0, 2).map((p, idx) => (
+                            <div
+                              key={idx}
+                              className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
+                            >
+                              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                                {p.question}
+                              </div>
+                              <div className="mt-1 text-sm text-slate-800">
+                                {p.answer}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* ECG PULSE SEPARATOR */}
-            <div className="relative bg-white">
-              <div className="h-6 -mt-1 mb-2 flex items-center justify-center">
-                <svg
-                  viewBox="0 0 200 24"
-                  className="w-40 h-4 text-slate-300"
-                  fill="none"
-                >
-                  <path
-                    d="M0 12 H60 L75 4 L90 20 L105 6 L120 18 H200"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            {/* BODY – CASE FILE INFO */}
-            <div className="px-5 pb-5 pt-1 space-y-6 bg-white">
-              {/* Vitals strip */}
-              <div className="space-y-1">
-                {/* PRIMARY ROW */}
-                <div className="flex flex-wrap gap-2 [&>*]:whitespace-nowrap">
-                  {/* Verified */}
-                    <span className="inline-flex items-center gap-1 
-                      px-2 py-[5px] 
-                      rounded-full 
-                      bg-slate-100 
-                      text-[11px] text-slate-800
-                    ">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                    Verified healthcare professional
-                  </span>
-
-                  {/* Hospital */}
-                  {profile.hospital && <HospitalChip name={profile.hospital} />}
-
-                  {/* Shift compatibility */}
-                  {typeof profile.shiftCompatibility === "number" && (
-                    <span className="inline-flex items-center gap-1 
-                      px-2 py-[5px] 
-                      rounded-full 
-                      bg-slate-100 
-                      text-[11px] text-slate-800
-                    ">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                      Shift pattern compatible
-                    </span>
-                  )}
-                </div>
-
-                {/* SECONDARY ROW */}
-                <div className="flex flex-wrap gap-2 mt-1 [&>*]:whitespace-nowrap">
-                  <span className="inline-flex items-center gap-1 
-                    px-2 py-[5px] 
-                    rounded-full 
-                    bg-slate-100 
-                    text-[11px] text-slate-800
-                  ">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    Work/life balance: Medium
-                  </span>
-
-                  {profile.responseRate && (
-                    <span className="inline-flex items-center gap-1 
-                      px-2 py-[5px] 
-                      rounded-full 
-                      bg-slate-100 
-                      text-[11px] text-slate-800
-                    ">
-                      ⏱ {profile.responseRate}
-                    </span>
-                  )}
-
-                  {profile.recentlyActive && (
-                    <span className="
-                      inline-flex items-center gap-1 
-                      px-2 py-[5px] 
-                      rounded-full 
-                      bg-emerald-50 
-                      text-[11px] text-emerald-700
-                    ">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      Recently active
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* My Secret Rhythms */}
-              {rhythmCount > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      My Secret Rhythms
-                    </h3>
-                  </div>
-                  <div className="space-y-3">
-                    {profile.secretRhythms
-                      .slice(0, rhythmCount)
-                      .map((r, idx) => (
-                        <div
-                          key={idx}
-                          className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 flex gap-2"
-                        >
-                          <div className="mt-1">
-                            <Activity className="w-4 h-4 text-[#0F213A]/80" />
-                          </div>
-                          <div>
-                            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                              {r.question}
-                            </div>
-                            <div className="mt-1 text-sm text-slate-800 leading-relaxed">
-                              {r.answer}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Pulse Check grid – BELOW My Secret Rhythms */}
-              {profile.pulseQuestions && profile.pulseQuestions.length > 0 && (
-                <PulseGridSection
-                  profile={profile}
-                  answeredMap={answeredPulse[profile.id] || {}}
-                  onOpenQuestion={handleOpenPulseQuestion}
-                />
-              )}
-
-              {/* Personality & prompts */}
-              {profile.prompts && profile.prompts.length > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      Personality & prompts
-                    </h3>
-                  </div>
-                  <div className="space-y-3">
-                    {profile.prompts.slice(0, 2).map((p, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
-                      >
-                        <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                          {p.question}
-                        </div>
-                        <div className="mt-1 text-sm text-slate-800">
-                          {p.answer}
-                        </div>
+                  {/* Glimpses – visible collapsed & expanded */}
+                  {profile.photos && profile.photos.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                        <h3 className="text-sm font-semibold text-slate-900">
+                          Glimpses
+                        </h3>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Glimpses */}
-              {profile.photos && profile.photos.length > 0 && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      Glimpses
-                    </h3>
-                  </div>
-                  <div className="flex gap-2 overflow-x-auto pb-1">
-                    {profile.photos.map((ph, idx) => (
-                      <div
-                        key={idx}
-                        className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
-                      >
-                        <img
-                          src={ph}
-                          alt={`${profile.name}'s glimpse ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                        />
+                      <div className="flex gap-2 overflow-x-auto pb-1">
+                        {profile.photos.map((ph, idx) => (
+                          <div
+                            key={idx}
+                            className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
+                          >
+                            <img
+                              src={ph}
+                              alt={`${profile.name}'s glimpse ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    </div>
+                  )}
 
-              {/* Their vibe – tags */}
-              {profile.myVibe && profile.myVibe.length > 0 && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      Their vibe
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.myVibe.map((v, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-800"
-                      >
-                        {v}
-                      </span>
-                    ))}
-                  </div>
+                  {/* Their vibe – visible collapsed & expanded */}
+                  {profile.myVibe && profile.myVibe.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                        <h3 className="text-sm font-semibold text-slate-900">
+                          Their vibe
+                        </h3>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.myVibe.map((v, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-800"
+                          >
+                            {v}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Footer */}
-            <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between bg-white/80 backdrop-blur-sm shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-              <div className="text-xs text-slate-500">
-                Case {currentMatch + 1} of {sampleProfiles.length}
+                {/* Footer inside floating card */}
+                <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between bg-white/80 backdrop-blur-sm">
+                  <div className="text-xs text-slate-500">
+                    Case {currentMatch + 1} of {sampleProfiles.length}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-800 hover:bg-slate-100"
+                  >
+                    Next suggested match <span className="text-sm">→</span>
+                  </button>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-800 hover:bg-slate-100"
-              >
-                Next suggested match <span className="text-sm">→</span>
-              </button>
             </div>
           </div>
         </div>
