@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import {
   Activity,
   Heart,
-
   X,
   Zap,
   SlidersHorizontal,
@@ -82,12 +81,6 @@ const BrandHeader = () => (
 );
 
 // SAMPLE DATA
-// Each profile has:
-// - hero photo (photoUrl)
-// - glimpses (photos[])
-// - prompts[]  -> Personality & prompts
-// - secretRhythms[] -> "My Secret Rhythms" section
-// - pulseQuestions[] -> Pulse Check grid
 const sampleProfiles = [
   {
     id: 1,
@@ -102,20 +95,14 @@ const sampleProfiles = [
     shiftCompatibility: 95,
     responseRate: "Usually responds in 2 hours",
     recentlyActive: true,
-
-    // HERO PHOTO – warm, face-centric portrait (option C)
     photoUrl:
       "https://images.pexels.com/photos/6129681/pexels-photo-6129681.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-    // GLIMPSES – 4 lifestyle photos
     photos: [
       "https://images.pexels.com/photos/1128678/pexels-photo-1128678.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/318419/pexels-photo-318419.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/450326/pexels-photo-450326.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
-    // "My Secret Rhythms"
     secretRhythms: [
       {
         question: "What resets my mind after a night shift",
@@ -128,8 +115,6 @@ const sampleProfiles = [
           "That quiet moment when I finally take my scrubs off, light a candle and catch up on messages from people I care about.",
       },
     ],
-
-    // Pulse Check questions (True / False)
     pulseQuestions: [
       {
         id: "s1",
@@ -148,8 +133,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
-    // Personality & prompts
     prompts: [
       {
         question: "Typical Sunday",
@@ -162,17 +145,8 @@ const sampleProfiles = [
           "Someone who enjoys quiet evenings after chaotic shifts and doesn’t mind late-night coffee dates.",
       },
     ],
-
     myVibe: ["Coffee", "Yoga", "Calm Energy", "Soft Life"],
-
-    pulseChecks: [
-      "I fall deeper when someone remembers small details.",
-      "I like clingy softness if it's with the right person.",
-      "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times.",
-    ],
   },
-
   {
     id: 2,
     name: "Michael",
@@ -186,17 +160,14 @@ const sampleProfiles = [
     shiftCompatibility: 88,
     responseRate: "Replies within a day",
     recentlyActive: true,
-
     photoUrl:
       "https://images.pexels.com/photos/8460098/pexels-photo-8460098.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/210205/pexels-photo-210205.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "If you ever wonder where I am",
@@ -209,7 +180,6 @@ const sampleProfiles = [
           "An evening run by the river with my favourite playlist, then hot shower and takeout on the sofa.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "m1",
@@ -228,7 +198,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "A shower thought",
@@ -241,17 +210,8 @@ const sampleProfiles = [
           "Running by the river with a podcast and hunting down the best brunch spot in the neighbourhood.",
       },
     ],
-
     myVibe: ["Runner", "Introvert", "Podcasts", "Brunch Lover"],
-
-    pulseChecks: [
-      "I fall deeper when someone remembers small details.",
-      "I like clingy softness if it's with the right person.",
-      "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times.",
-    ],
   },
-
   {
     id: 3,
     name: "Aisha",
@@ -265,17 +225,14 @@ const sampleProfiles = [
     shiftCompatibility: 92,
     responseRate: "Replies within minutes",
     recentlyActive: true,
-
     photoUrl:
       "https://images.pexels.com/photos/6129683/pexels-photo-6129683.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1459339/pexels-photo-1459339.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1445416/pexels-photo-1445416.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/414660/pexels-photo-414660.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "The hour I feel most alive",
@@ -288,7 +245,6 @@ const sampleProfiles = [
           "Face mask, sleepy playlist, journaling three things I’m grateful for and sending one sweet voice note to someone I love.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "a1",
@@ -307,7 +263,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "Best travel story",
@@ -319,17 +274,8 @@ const sampleProfiles = [
         answer: "I can calm crying babies AND crying adults.",
       },
     ],
-
     myVibe: ["Baking", "Soft Life", "Outgoing", "Sunsets"],
-
-    pulseChecks: [
-      "I fall deeper when someone remembers small details.",
-      "I like clingy softness if it's with the right person.",
-      "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times.",
-    ],
   },
-
   {
     id: 4,
     name: "Daniel",
@@ -343,17 +289,14 @@ const sampleProfiles = [
     shiftCompatibility: 85,
     responseRate: "Usually replies in 1 hour",
     recentlyActive: false,
-
     photoUrl:
       "https://images.pexels.com/photos/9451525/pexels-photo-9451525.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/349730/pexels-photo-349730.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1000447/pexels-photo-1000447.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "A moment I protect every day",
@@ -366,7 +309,6 @@ const sampleProfiles = [
           "Slow Sunday mornings: coffee, vinyl records and planning a lazy day together.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "d1",
@@ -385,7 +327,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "My friends describe me as",
@@ -398,22 +339,13 @@ const sampleProfiles = [
           "People who ask 'How are YOU doing?' even when they need support more.",
       },
     ],
-
     myVibe: ["Music", "Cooking", "Cycling", "Calm Energy"],
-
-    pulseChecks: [
-      "I fall deeper when someone remembers small details.",
-      "I like clingy softness if it's with the right person.",
-      "My humor gets darker when I trust someone.",
-      "I rewatch sweet messages too many times.",
-    ],
   },
 ];
 
-// Small chip for hospital in vitals
+// Small chip for hospital in vitals (we still use this style in expanded card later if needed)
 const HospitalChip = ({ name }) => {
   if (!name) return null;
-
   return (
     <span
       className="
@@ -427,7 +359,6 @@ const HospitalChip = ({ name }) => {
         whitespace-nowrap
       "
     >
-      {/* Mini hospital icon */}
       <svg
         viewBox="0 0 20 20"
         className="w-3.5 h-3.5 text-[#0F213A]"
@@ -437,38 +368,72 @@ const HospitalChip = ({ name }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        {/* Building box */}
         <rect x="4" y="5" width="12" height="11" rx="2" />
-        {/* Door */}
         <rect x="9" y="11" width="2" height="5" rx="0.8" />
-        {/* Cross */}
         <path d="M10 7 v3" />
         <path d="M8.5 8.5 h3" />
       </svg>
-
       <span className="truncate">{name}</span>
     </span>
   );
+};
+
+// Expressive vitals per profile (Row B)
+const getExpressiveVitals = (profile) => {
+  switch (profile.id) {
+    case 1:
+      return [
+        "Warm introvert energy",
+        "Soft spot giver",
+        "Slow & intentional",
+        "Sunday cuddles coded",
+      ];
+    case 2:
+      return [
+        "Plot-twist patient",
+        "Brunch date coded",
+        "Calm in chaos",
+        "Podcast + run ritual",
+      ];
+    case 3:
+      return [
+        "Soft life lover",
+        "Sunset & picnic coded",
+        "Kid-at-heart energy",
+        "Voice-note affection",
+      ];
+    case 4:
+      return [
+        "Quiet anchor energy",
+        "Home-cooking nights",
+        "Cat approval required",
+        "Slow Sunday records",
+      ];
+    default:
+      return [
+        "Soft but grounded",
+        "Values reciprocity",
+        "Emotionally present",
+        "Protects off-duty time",
+      ];
+  }
 };
 
 const DiscoverPage = () => {
   const [activeTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
-
-  // NEW: collapsed / expanded info card state
   const [infoExpanded, setInfoExpanded] = useState(false);
 
   // Pulse modal + answers
   const [pulseModalOpen, setPulseModalOpen] = useState(false);
   const [activePulseQuestion, setActivePulseQuestion] = useState(null);
   const [premiumUpsell, setPremiumUpsell] = useState(false);
-  // shape: { [profileId]: { [questionId]: { answered: true, choice: 'true'|'false' } } }
   const [answeredPulse, setAnsweredPulse] = useState({});
 
   const profile = sampleProfiles[currentMatch];
 
-  // Load saved pulse answers for current profile and merge into answeredPulse map
+  // Load saved pulse answers
   useEffect(() => {
     if (!profile || !profile.id) return;
     const savedByIndex = loadPulseAnswers(profile.id);
@@ -487,7 +452,6 @@ const DiscoverPage = () => {
 
   const handleNext = () => {
     setCurrentMatch((prev) => (prev + 1) % sampleProfiles.length);
-    // close any open modal when moving to next match
     setPulseModalOpen(false);
     setActivePulseQuestion(null);
     setInfoExpanded(false);
@@ -495,16 +459,14 @@ const DiscoverPage = () => {
 
   if (activeTab !== "discover") return null;
 
-  // Decide how many "My Secret Rhythms" prompts to show (1 or 2) – deterministic, not random
+  // How many "My Secret Rhythms" cards when expanded
   const rhythmCount =
     profile.secretRhythms && profile.secretRhythms.length > 0
       ? Math.min(profile.secretRhythms.length, profile.id % 2 === 0 ? 2 : 1)
       : 0;
 
   const handleOpenPulseQuestion = (question, index) => {
-    // Premium gate: replace with real subscription flag when available
     const isPremium = ENABLE_PREMIUM_GATE;
-
     if (!isPremium) {
       setPremiumUpsell(true);
     } else {
@@ -531,10 +493,9 @@ const DiscoverPage = () => {
 
   const handleAnswerPulse = (choice) => {
     if (!activePulseQuestion) return;
-    const { profileId, id, profileName, index } = activePulseQuestion;
+    const { profileId, id, index } = activePulseQuestion;
 
-    // Trigger inbox event (premium users only)
-    const isPremium = ENABLE_PREMIUM_GATE; // TODO: Replace with real premium status when available
+    const isPremium = ENABLE_PREMIUM_GATE;
     if (ENABLE_INBOX_EVENTS && isPremium) {
       addHeartCheckInboxEvent(profileId, CURRENT_USER_NAME);
     }
@@ -550,11 +511,10 @@ const DiscoverPage = () => {
       };
     });
 
-    // Persist this answer by card index for the profile
     if (typeof index === "number") {
       const newAnswer = {
         value: choice,
-        result: "kept", // placeholder for compatibility label if needed later
+        result: "kept",
         revealed: isPremium,
       };
       savePulseAnswer(profileId, index, newAnswer);
@@ -564,12 +524,75 @@ const DiscoverPage = () => {
     setActivePulseQuestion(null);
   };
 
+  // ---------- VITALS DATA (collapsed card) ----------
+  const hospitalShort =
+    profile.hospital?.replace(/Hospital/i, "").trim() || null;
+
+  const basicVitalsRaw = [
+    {
+      key: "verified",
+      label: "Clinically verified",
+      type: "check",
+    },
+    hospitalShort && {
+      key: "hospital",
+      label: hospitalShort,
+      type: "hospital",
+    },
+    profile.shift && {
+      key: "shift",
+      label: profile.shift,
+      type: "shift",
+    },
+    typeof profile.shiftCompatibility === "number" && {
+      key: "match",
+      label: `${profile.shiftCompatibility}% shift match`,
+      type: "zap",
+    },
+    profile.recentlyActive && {
+      key: "recent",
+      label: "Recently active",
+      type: "dot",
+    },
+  ].filter(Boolean);
+
+  const expressiveVitalsRaw = getExpressiveVitals(profile);
+
+  const basicVitals = basicVitalsRaw.slice(0, 4);
+  const expressiveVitals = expressiveVitalsRaw.slice(0, 4);
+
+  const renderBasicIcon = (type) => {
+    switch (type) {
+      case "check":
+        return <CheckCircle2 className="w-[15px] h-[15px]" />;
+      case "hospital":
+        return (
+          <span className="text-[13px] leading-none" aria-hidden="true">
+            🏥
+          </span>
+        );
+      case "shift":
+        return (
+          <span className="text-[13px] leading-none" aria-hidden="true">
+            ☾
+          </span>
+        );
+      case "zap":
+        return <Zap className="w-[15px] h-[15px]" />;
+      case "dot":
+      default:
+        return (
+          <span className="w-2 h-2 rounded-full bg-emerald-400 block" />
+        );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Brand header */}
       <BrandHeader />
 
-      {/* Discover title + Filters button */}
+      {/* Discover title + Filters */}
       <div className="px-4 py-3 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-slate-900">Discover</h2>
         <div className="flex items-center gap-2">
@@ -621,10 +644,10 @@ const DiscoverPage = () => {
 
       {/* CASE FILE PROFILE VIEW */}
       <div className="px-4 pb-24">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto transition-all">
           <div className="relative pb-10">
-            {/* HERO CARD – full rounded, own shadow */}
-            <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
+            {/* HERO CARD */}
+            <div className="bg-white rounded-[32px] shadow-xl border border-slate-100 overflow-hidden">
               <div className="relative">
                 {profile.photoUrl ? (
                   <img
@@ -643,7 +666,6 @@ const DiscoverPage = () => {
 
                 {/* Top-left pills */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
-                  {/* ROLE pill (no hospital) */}
                   <div
                     className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
                           bg-black/35 backdrop-blur-sm text-xs text-white
@@ -657,7 +679,6 @@ const DiscoverPage = () => {
                     </span>
                   </div>
 
-                  {/* SHIFT pill */}
                   {profile.shift && (
                     <div
                       className="
@@ -761,28 +782,13 @@ const DiscoverPage = () => {
 
             {/* FLOATING COLLAPSIBLE INFO CARD */}
             <div className="relative z-10 -mt-7 px-3">
-              <div className="bg-white rounded-[24px] shadow-[0_18px_40px_rgba(15,33,58,0.18)] border border-slate-100 overflow-hidden">
-                {/* ECG + expand header strip */}
-                <div className="relative bg-white">
-                  <div className="h-7 flex items-center justify-center">
-                    <svg
-                      viewBox="0 0 200 24"
-                      className="w-40 h-4 text-slate-300"
-                      fill="none"
-                    >
-                      <path
-                        d="M0 12 H60 L75 4 L90 20 L105 6 L120 18 H200"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+              <div className="bg-white rounded-[32px] shadow-[0_18px_40px_rgba(15,33,58,0.18)] border border-slate-100 overflow-hidden">
+                {/* Top strip with only the toggle button (ECG removed) */}
+                <div className="relative bg-white pt-2 pb-1">
                   <button
                     type="button"
                     onClick={() => setInfoExpanded((v) => !v)}
-                    className="absolute top-1 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border border-slate-200 text-[11px] text-slate-700 shadow-[0_1px_6px_rgba(15,33,58,0.18)] active:scale-95 transition"
+                    className="absolute top-1.5 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border border-slate-200 text-[11px] text-slate-700 shadow-[0_1px_6px_rgba(15,33,58,0.18)] active:scale-95 transition"
                   >
                     <Activity className="w-3.5 h-3.5 text-[#0F213A]" />
                     <span className="hidden sm:inline">
@@ -795,90 +801,81 @@ const DiscoverPage = () => {
                 </div>
 
                 {/* BODY – CASE FILE INFO */}
-                <div className="px-5 pb-5 pt-2 space-y-6 bg-white">
-                  {/* Vitals strip (always visible) */}
-                  <div className="space-y-1">
-                    {/* PRIMARY ROW */}
-                    <div className="flex flex-wrap gap-2 [&>*]:whitespace-nowrap">
-                      {/* Verified */}
-                      <span
-                        className="inline-flex items-center gap-1 
-                          px-2 py-[5px] 
-                          rounded-full 
-                          bg-slate-100 
-                          text-[11px] text-slate-800
-                        "
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                        Verified healthcare professional
-                      </span>
+                <div className="px-5 pb-5 pt-1 flex flex-col gap-5 bg-white">
+                  {/* VITALS STRIP – ALWAYS VISIBLE */}
+                  <div className="pt-1">
+                    <div
+                      className="
+                        flex 
+                        flex-col sm:flex-row 
+                        items-stretch 
+                        gap-3 sm:gap-4
+                      "
+                    >
+                      {/* Row A */}
+                      <div className="flex-1 min-w-[0] flex flex-wrap gap-2 pr-1">
+                        {basicVitals.map((item) => (
+                          <div
+                            key={item.key}
+                            className="
+                              inline-flex items-center gap-1.5 
+                              px-2.5 py-[6px] rounded-full 
+                              bg-slate-100 
+                              text-[10.5px] text-slate-800 
+                              max-w-[140px]
+                            "
+                          >
+                            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#0F213A] text-white shadow-sm flex-shrink-0">
+                              {renderBasicIcon(item.type)}
+                            </span>
+                            <span className="truncate">{item.label}</span>
+                          </div>
+                        ))}
+                      </div>
 
-                      {/* Hospital */}
-                      {profile.hospital && (
-                        <HospitalChip name={profile.hospital} />
-                      )}
-
-                      {/* Shift compatibility */}
-                      {typeof profile.shiftCompatibility === "number" && (
-                        <span
-                          className="inline-flex items-center gap-1 
-                            px-2 py-[5px] 
-                            rounded-full 
-                            bg-slate-100 
-                            text-[11px] text-slate-800
-                          "
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                          Shift pattern compatible
-                        </span>
-                      )}
-                    </div>
-
-                    {/* SECONDARY ROW */}
-                    <div className="flex flex-wrap gap-2 mt-1 [&>*]:whitespace-nowrap">
-                      <span
-                        className="inline-flex items-center gap-1 
-                          px-2 py-[5px] 
-                          rounded-full 
-                          bg-slate-100 
-                          text-[11px] text-slate-800
-                        "
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                        Work/life balance: Medium
-                      </span>
-
-                      {profile.responseRate && (
-                        <span
-                          className="inline-flex items-center gap-1 
-                            px-2 py-[5px] 
-                            rounded-full 
-                            bg-slate-100 
-                            text-[11px] text-slate-800
-                          "
-                        >
-                          ⏱ {profile.responseRate}
-                        </span>
-                      )}
-
-                      {profile.recentlyActive && (
-                        <span
+                      {/* Divider (responsive) */}
+                      {basicVitals.length > 0 && expressiveVitals.length > 0 && (
+                        <div
                           className="
-                            inline-flex items-center gap-1 
-                            px-2 py-[5px] 
-                            rounded-full 
-                            bg-emerald-50 
-                            text-[11px] text-emerald-700
+                            flex items-center justify-center
+                            my-1 
+                            sm:my-0 sm:px-[6px]
                           "
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                          Recently active
-                        </span>
+                          {/* Mobile horizontal */}
+                          <div className="sm:hidden w-full h-[2px] rounded-full bg-slate-200" />
+
+                          {/* Desktop vertical */}
+                          <div className="hidden sm:flex h-11 px-[6px] rounded-full bg-slate-50 border border-slate-100 items-center justify-center">
+                            <div className="w-[2px] h-7 rounded-full bg-slate-200" />
+                          </div>
+                        </div>
                       )}
+
+                      {/* Row B */}
+                      <div className="flex-[1.2] min-w-[0] flex flex-wrap gap-2 pl-1">
+                        {expressiveVitals.map((label, idx) => (
+                          <div
+                            key={`${profile.id}-expr-${idx}`}
+                            className="
+                              inline-flex items-center gap-1.5 
+                              px-2.5 py-[6px] rounded-full 
+                              bg-slate-100 
+                              text-[10.5px] text-slate-800 
+                              max-w-[150px]
+                            "
+                          >
+                            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-900 text-white shadow-sm flex-shrink-0">
+                              <Heart className="w-[15px] h-[15px]" />
+                            </span>
+                            <span className="truncate">{label}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
-                  {/* My Secret Rhythms – only when expanded */}
+                  {/* My Secret Rhythms – expanded */}
                   {rhythmCount > 0 && infoExpanded && (
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
@@ -912,7 +909,7 @@ const DiscoverPage = () => {
                     </div>
                   )}
 
-                  {/* Pulse Check grid – only when expanded */}
+                  {/* Pulse Check grid – expanded */}
                   {ENABLE_PULSE_CHECK &&
                     infoExpanded &&
                     profile.pulseQuestions &&
@@ -924,7 +921,7 @@ const DiscoverPage = () => {
                       />
                     )}
 
-                  {/* Personality & prompts – only when expanded */}
+                  {/* Personality & prompts – expanded */}
                   {profile.prompts &&
                     profile.prompts.length > 0 &&
                     infoExpanded && (
@@ -953,53 +950,57 @@ const DiscoverPage = () => {
                       </div>
                     )}
 
-                  {/* Glimpses – visible collapsed & expanded */}
-                  {profile.photos && profile.photos.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                        <h3 className="text-sm font-semibold text-slate-900">
-                          Glimpses
-                        </h3>
+                  {/* Glimpses – only when expanded */}
+                  {infoExpanded &&
+                    profile.photos &&
+                    profile.photos.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                          <h3 className="text-sm font-semibold text-slate-900">
+                            Glimpses
+                          </h3>
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto pb-1">
+                          {profile.photos.map((ph, idx) => (
+                            <div
+                              key={idx}
+                              className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
+                            >
+                              <img
+                                src={ph}
+                                alt={`${profile.name}'s glimpse ${idx + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex gap-2 overflow-x-auto pb-1">
-                        {profile.photos.map((ph, idx) => (
-                          <div
-                            key={idx}
-                            className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
-                          >
-                            <img
-                              src={ph}
-                              alt={`${profile.name}'s glimpse ${idx + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Their vibe – visible collapsed & expanded */}
-                  {profile.myVibe && profile.myVibe.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                        <h3 className="text-sm font-semibold text-slate-900">
-                          Their vibe
-                        </h3>
+                  {/* Their vibe – only when expanded */}
+                  {infoExpanded &&
+                    profile.myVibe &&
+                    profile.myVibe.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                          <h3 className="text-sm font-semibold text-slate-900">
+                            Their vibe
+                          </h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {profile.myVibe.map((v, idx) => (
+                            <span
+                              key={idx}
+                              className="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-800"
+                            >
+                              {v}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        {profile.myVibe.map((v, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-800"
-                          >
-                            {v}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    )}
                 </div>
 
                 {/* Footer inside floating card */}
@@ -1021,7 +1022,7 @@ const DiscoverPage = () => {
         </div>
       </div>
 
-      {/* Pulse modal (lives at page level so it overlays everything cleanly) */}
+      {/* Pulse modal */}
       {pulseModalOpen && activePulseQuestion && (
         <PulseAnswerModal
           question={activePulseQuestion.question}
