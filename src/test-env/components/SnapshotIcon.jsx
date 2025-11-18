@@ -1,6 +1,11 @@
 // DiscoverPage.jsx
 import React, { useState, useEffect } from "react";
-import { Activity, Heart, X, SlidersHorizontal } from "lucide-react";
+import {
+  Activity,
+  Heart,
+  X,
+  SlidersHorizontal,
+} from "lucide-react";
 
 import {
   TopTabSwitcher,
@@ -8,8 +13,7 @@ import {
   PulseAnswerModal,
   PremiumUpsellModal,
   BrandHeader,
-  SnapshotPill,
-  Toast, // (optional, safe to leave even if unused)
+  Toast
 } from "../components";
 
 import { addHeartCheckInboxEvent } from "../utils/inboxEvents";
@@ -21,6 +25,153 @@ import {
   ENABLE_INBOX_EVENTS,
   CURRENT_USER_NAME,
 } from "../config/flags.js";
+
+// Inline logo icon: heart + ECG pulse (gunmetal navy)
+const LogoIcon = () => (
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#0F213A"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Heart outline */}
+    <path
+      d="
+        M12 20.4
+        c-3.7-3 -6.3-5.4 -8-7.6 
+        C2 10.7 1.7 8.1 3.4 6.3
+        c1.7-1.7 4.5-1.9 6.3 -0.4
+        c0.8 0.7 1.6 1.6 2.1 2.4
+        c0.5 -0.8 1.3 -1.7 2.1 -2.4
+        c1.8 -1.5 4.6 -1.3 6.3 0.4
+        c1.7 1.8 1.4 4.4 0.4 6.5
+        c-1.7 2.2 -4.3 4.6 -8.1 7.6
+      "
+    />
+    {/* ECG pulse, spaced inside heart */}
+    <path
+      d="
+        M5.2 12
+        h3.0
+        l1.0 -2.3
+        l2.0 5.3
+        l2.0 -5.5
+        l1.7 3.8
+        h3.8
+      "
+    />
+  </svg>
+);
+
+
+// --- Snapshot icons -------------------------------------------------
+
+const SnapshotIcon = ({ kind }) => {
+  switch (kind) {
+    case "verified":
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 3 6.5 5.2v5.7c0 4.1 2.3 7.1 5.5 8.1 3.2-1 5.5-4 5.5-8.1V5.2L12 3z" />
+          <path d="m9.5 12 1.6 1.7 3.4-3.4" />
+        </svg>
+      );
+    case "shift":
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M20 12.5A7.5 7.5 0 0 1 11.5 4 6 6 0 1 0 20 12.5z" />
+        </svg>
+      );
+    case "match":
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M13 2 6 13h4l-1 9 7-11h-4z" />
+        </svg>
+      );
+    case "mood":
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="8" />
+          <path d="M9 10h.01M15 10h.01" />
+          <path d="M8.5 14.5c1 .8 2.1 1.2 3.5 1.2s2.5-.4 3.5-1.2" />
+        </svg>
+      );
+    case "intent":
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M11.5 20s-3.3-2.2-5.1-4.5C4.3 13.5 4.2 10.4 6.5 9c1.4-.9 3.1-.3 4 1 .9-1.3 2.6-1.9 4-1 2.3 1.4 2.2 4.5.1 6.5-1.8 2.3-5.1 4.5-5.1 4.5z" />
+        </svg>
+      );
+    default:
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          className="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 21s-4-2.6-6.2-5.4C3.1 13.5 3 9.5 6 8c2-1 4 1 4 1s2-2 4-1c3 1.5 2.9 5.5.2 7.6C16 18.4 12 21 12 21z" />
+        </svg>
+      );
+  }
+};
+
+const SnapshotPill = ({ kind, label }) => (
+  <div className="inline-flex items-center rounded-full bg-slate-100 pr-3 pl-1 py-1">
+    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#0F213A] text-white shadow-[0_3px_10px_rgba(15,33,58,0.45)] mr-1.5">
+      <SnapshotIcon kind={kind} />
+    </div>
+    <span className="text-[11px] text-slate-800 whitespace-nowrap">
+      {label}
+    </span>
+  </div>
+);
 
 // SAMPLE DATA
 const sampleProfiles = [
@@ -95,6 +246,7 @@ const sampleProfiles = [
 
     myVibe: ["Coffee", "Yoga", "Calm Energy", "Soft Life"],
 
+    // Connection snapshot
     snapshotMood: "Warm introvert energy",
     snapshotIntent: "Slow-built long term",
     snapshotExtras: ["Soft spot giver", "Sunday cuddles coded"],
@@ -501,7 +653,9 @@ const DiscoverPage = () => {
         <>
           {/* Discover title + Filters button */}
           <div className="px-4 py-3 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-900">Discover</h2>
+            <h2 className="text-xl font-semibold text-slate-900">
+              Discover
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 className="inline-flex items-center gap-1.5
@@ -603,10 +757,14 @@ const DiscoverPage = () => {
                           style={{ lineHeight: "1.15" }}
                         >
                           <span className="w-2 h-2 rounded-full bg-amber-300"></span>
-                          <span className="truncate">{profile.shift}</span>
+                          <span className="truncate">
+                            {profile.shift}
+                          </span>
                         </div>
                       )}
                     </div>
+
+                    {/* (match badge removed – now part of vitals strip) */}
 
                     {/* View all photos pill */}
                     <button
@@ -620,7 +778,9 @@ const DiscoverPage = () => {
                             transition-all"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-white/90"></span>
-                      <span className="drop-shadow-sm">View all photos</span>
+                      <span className="drop-shadow-sm">
+                        View all photos
+                      </span>
                     </button>
 
                     {/* Vertical action rail */}
@@ -636,7 +796,9 @@ const DiscoverPage = () => {
                       <button
                         type="button"
                         onClick={(e) => {
-                          e.currentTarget.classList.add("animate-pulseGlow");
+                          e.currentTarget.classList.add(
+                            "animate-pulseGlow"
+                          );
                           setTimeout(() => {
                             e.currentTarget.classList.remove(
                               "animate-pulseGlow"
@@ -658,7 +820,7 @@ const DiscoverPage = () => {
                       </button>
                     </div>
 
-                    {/* Name overlay */}
+                    {/* Name overlay – nudged up slightly */}
                     <div className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-14 flex flex-col justify-end">
                       <div className="flex items-center justify-between">
                         <div>
@@ -684,55 +846,51 @@ const DiscoverPage = () => {
                 </div>
 
                 {/* COLLAPSIBLE INFO CARD */}
-                <div className="relative z-10 -mt-6 px-4">
+                <div className="relative z-10 -mt-7 px-3">
                   {!infoExpanded ? (
-                    <div
-                      className="
-                        rounded-[28px] bg-white/92 backdrop-blur-xl border border-slate-200/80
-                        shadow-[0_-12px_25px_rgba(0,0,0,0.18)]
-                        -mt-3 pt-2.5 pb-2 px-4
-                      "
-                    >
-                      {/* More button aligned right */}
-                      <div className="flex justify-end mb-1.5">
-                        <button
-                          onClick={() => setInfoExpanded(true)}
-                          className="
-                            inline-flex items-center gap-1.5 
-                            px-3 py-[5px]
-                            rounded-full bg-[#0F213A]
-                            text-[11px] text-white font-medium
-                            shadow-[0_3px_10px_rgba(15,33,58,0.45)]
-                            active:scale-95 transition
-                          "
-                        >
-                          <Activity className="w-3.5 h-3.5 text-white" />
-                          <span>More</span>
-                        </button>
-                      </div>
+                    // COLLAPSED – dual layer glass
+                    <div className="
+                      rounded-[28px]
+                      bg-white/20
+                      backdrop-blur-2xl
+                      border border-white/60
+                      shadow-[0_25px_60px_rgba(15,33,58,0.40)]
+                    ">
+                      <div className="m-[4px] rounded-[24px] bg-white/90 shadow-[0_12px_28px_rgba(15,33,58,0.22)] px-4 py-2.5">
+                        <div className="flex items-center justify-end mb-2">
+                            <button
+                              type="button"
+                              onClick={() => setInfoExpanded(true)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0F213A] 
+                                        text-[11px] text-white shadow-[0_4px_12px_rgba(15,33,58,0.5)] 
+                                        active:scale-95 transition"
+                            >
+                              <Activity className="w-3.5 h-3.5 text-white" />
+                              <span>More</span>
+                            </button>
+                          </div>
 
-                      {/* TAG ROW A */}
-                      <div className="flex flex-wrap gap-1.5 mb-1">
-                        {rowA.map((tag) => (
-                          <SnapshotPill
-                            key={tag.id}
-                            kind={tag.kind}
-                            label={tag.label}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="h-[1px] bg-slate-200/70 my-1" />
-
-                      {/* TAG ROW B */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {rowB.slice(0, 4).map((tag) => (
-                          <SnapshotPill
-                            key={tag.id}
-                            kind={tag.kind}
-                            label={tag.label}
-                          />
-                        ))}
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap gap-2">
+                            {rowA.map((tag) => (
+                              <SnapshotPill
+                                key={tag.id}
+                                kind={tag.kind}
+                                label={tag.label}
+                              />
+                            ))}
+                          </div>
+                          <div className="h-[1px] bg-slate-100 my-1" />
+                          <div className="flex flex-wrap gap-2">
+                            {rowB.slice(0, 4).map((tag) => (
+                              <SnapshotPill
+                                key={tag.id}
+                                kind={tag.kind}
+                                label={tag.label}
+                              />
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -815,37 +973,42 @@ const DiscoverPage = () => {
                           profile.pulseQuestions.length > 0 && (
                             <PulseGrid
                               profile={profile}
-                              answeredMap={answeredPulse[profile.id] || {}}
+                              answeredMap={
+                                answeredPulse[profile.id] || {}
+                              }
                               onOpenQuestion={handleOpenPulseQuestion}
                             />
                           )}
 
                         {/* Personality & prompts */}
-                        {profile.prompts && profile.prompts.length > 0 && (
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                              <h3 className="text-sm font-semibold text-slate-900">
-                                Personality & prompts
-                              </h3>
-                            </div>
+                        {profile.prompts &&
+                          profile.prompts.length > 0 && (
                             <div className="space-y-3">
-                              {profile.prompts.slice(0, 2).map((p, idx) => (
-                                <div
-                                  key={idx}
-                                  className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
-                                >
-                                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    {p.question}
-                                  </div>
-                                  <div className="mt-1 text-sm text-slate-800">
-                                    {p.answer}
-                                  </div>
-                                </div>
-                              ))}
+                              <div className="flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
+                                <h3 className="text-sm font-semibold text-slate-900">
+                                  Personality & prompts
+                                </h3>
+                              </div>
+                              <div className="space-y-3">
+                                {profile.prompts
+                                  .slice(0, 2)
+                                  .map((p, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
+                                    >
+                                      <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                                        {p.question}
+                                      </div>
+                                      <div className="mt-1 text-sm text-slate-800">
+                                        {p.answer}
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
                         {/* Glimpses – expanded only */}
                         {infoExpanded &&
