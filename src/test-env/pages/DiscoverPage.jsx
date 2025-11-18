@@ -1,28 +1,29 @@
 // DiscoverPage.jsx
 import React, { useState, useEffect } from "react";
-import { Activity, Heart, X, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
 import {
   TopTabSwitcher,
   PulseGrid,
   PulseAnswerModal,
   PremiumUpsellModal,
-  BrandHeader,
-  SnapshotPill,
-  Toast, // (optional, safe to leave even if unused)
 } from "../components";
+
+import HeroCard from "../components/HeroCard";
+import InfoCard from "../components/InfoCard";
 
 import { addHeartCheckInboxEvent } from "../utils/inboxEvents";
 import { savePulseAnswer, loadPulseAnswers } from "../utils/pulseStorage";
 
 import {
-  ENABLE_PULSE_CHECK,
   ENABLE_PREMIUM_GATE,
   ENABLE_INBOX_EVENTS,
   CURRENT_USER_NAME,
 } from "../config/flags.js";
 
-// SAMPLE DATA
+// ----------------------------------
+// SAMPLE PROFILES
+// ----------------------------------
 const sampleProfiles = [
   {
     id: 1,
@@ -37,17 +38,14 @@ const sampleProfiles = [
     shiftCompatibility: 95,
     responseRate: "Usually responds in 2 hours",
     recentlyActive: true,
-
     photoUrl:
       "https://images.pexels.com/photos/6129681/pexels-photo-6129681.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/1128678/pexels-photo-1128678.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/318419/pexels-photo-318419.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/450326/pexels-photo-450326.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "What resets my mind after a night shift",
@@ -60,7 +58,6 @@ const sampleProfiles = [
           "That quiet moment when I finally take my scrubs off, light a candle and catch up on messages from people I care about.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "s1",
@@ -79,7 +76,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "Typical Sunday",
@@ -92,13 +88,10 @@ const sampleProfiles = [
           "Someone who enjoys quiet evenings after chaotic shifts and doesn’t mind late-night coffee dates.",
       },
     ],
-
     myVibe: ["Coffee", "Yoga", "Calm Energy", "Soft Life"],
-
     snapshotMood: "Warm introvert energy",
     snapshotIntent: "Slow-built long term",
     snapshotExtras: ["Soft spot giver", "Sunday cuddles coded"],
-
     pulseChecks: [
       "I fall deeper when someone remembers small details.",
       "I like clingy softness if it's with the right person.",
@@ -107,6 +100,7 @@ const sampleProfiles = [
     ],
   },
 
+  // ----- Michael -----
   {
     id: 2,
     name: "Michael",
@@ -120,17 +114,14 @@ const sampleProfiles = [
     shiftCompatibility: 88,
     responseRate: "Replies within a day",
     recentlyActive: true,
-
     photoUrl:
       "https://images.pexels.com/photos/8460098/pexels-photo-8460098.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/210205/pexels-photo-210205.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "If you ever wonder where I am",
@@ -143,7 +134,6 @@ const sampleProfiles = [
           "An evening run by the river with my favourite playlist, then hot shower and takeout on the sofa.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "m1",
@@ -162,7 +152,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "A shower thought",
@@ -175,15 +164,14 @@ const sampleProfiles = [
           "Running by the river with a podcast and hunting down the best brunch spot in the neighbourhood.",
       },
     ],
-
     myVibe: ["Runner", "Introvert", "Podcasts", "Brunch Lover"],
-
     snapshotMood: "Quiet storm brain",
     snapshotIntent: "Soft but honest",
     snapshotExtras: ["Plot-twist humour", "Brunch over fancy"],
     pulseChecks: [],
   },
 
+  // ----- Aisha -----
   {
     id: 3,
     name: "Aisha",
@@ -197,17 +185,14 @@ const sampleProfiles = [
     shiftCompatibility: 92,
     responseRate: "Replies within minutes",
     recentlyActive: true,
-
     photoUrl:
       "https://images.pexels.com/photos/6129683/pexels-photo-6129683.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1459339/pexels-photo-1459339.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1445416/pexels-photo-1445416.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/414660/pexels-photo-414660.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "The hour I feel most alive",
@@ -220,7 +205,6 @@ const sampleProfiles = [
           "Face mask, sleepy playlist, journaling three things I’m grateful for and sending one sweet voice note to someone I love.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "a1",
@@ -239,7 +223,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "Best travel story",
@@ -251,15 +234,14 @@ const sampleProfiles = [
         answer: "I can calm crying babies AND crying adults.",
       },
     ],
-
     myVibe: ["Baking", "Soft Life", "Outgoing", "Sunsets"],
-
     snapshotMood: "Sunlit softie",
     snapshotIntent: "Playful long term",
     snapshotExtras: ["Chaos but gentle", "Big-sister humour"],
     pulseChecks: [],
   },
 
+  // ----- Daniel -----
   {
     id: 4,
     name: "Daniel",
@@ -273,17 +255,14 @@ const sampleProfiles = [
     shiftCompatibility: 85,
     responseRate: "Usually replies in 1 hour",
     recentlyActive: false,
-
     photoUrl:
       "https://images.pexels.com/photos/9451525/pexels-photo-9451525.jpeg?auto=compress&cs=tinysrgb&w=800",
-
     photos: [
       "https://images.pexels.com/photos/349730/pexels-photo-349730.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/1000447/pexels-photo-1000447.jpeg?auto=compress&cs=tinysrgb&w=600",
       "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&w=600",
     ],
-
     secretRhythms: [
       {
         question: "A moment I protect every day",
@@ -296,7 +275,6 @@ const sampleProfiles = [
           "Slow Sunday mornings: coffee, vinyl records and planning a lazy day together.",
       },
     ],
-
     pulseQuestions: [
       {
         id: "d1",
@@ -315,7 +293,6 @@ const sampleProfiles = [
         correctAnswer: true,
       },
     ],
-
     prompts: [
       {
         question: "My friends describe me as",
@@ -328,9 +305,7 @@ const sampleProfiles = [
           "People who ask 'How are YOU doing?' even when they need support more.",
       },
     ],
-
     myVibe: ["Music", "Cooking", "Cycling", "Calm Energy"],
-
     snapshotMood: "Quiet anchor energy",
     snapshotIntent: "Home-cooking nights",
     snapshotExtras: ["Cat approval required"],
@@ -338,7 +313,9 @@ const sampleProfiles = [
   },
 ];
 
-// build snapshot rows
+// ----------------------------------
+// Build vital tag rows
+// ----------------------------------
 const getConnectionSnapshot = (profile) => {
   const rowA = [
     { id: "verified", kind: "verified", label: "Clinically verified" },
@@ -358,39 +335,30 @@ const getConnectionSnapshot = (profile) => {
 
   const rowB = [];
   if (profile.snapshotMood) {
-    rowB.push({
-      id: "mood",
-      kind: "mood",
-      label: profile.snapshotMood,
-    });
+    rowB.push({ id: "mood", kind: "mood", label: profile.snapshotMood });
   }
   if (profile.snapshotIntent) {
-    rowB.push({
-      id: "intent",
-      kind: "intent",
-      label: profile.snapshotIntent,
-    });
+    rowB.push({ id: "intent", kind: "intent", label: profile.snapshotIntent });
   }
+
   if (Array.isArray(profile.snapshotExtras)) {
-    profile.snapshotExtras.forEach((label, idx) =>
-      rowB.push({
-        id: `extra-${idx}`,
-        kind: "extra",
-        label,
-      })
-    );
+    profile.snapshotExtras.forEach((label, idx) => {
+      rowB.push({ id: `extra-${idx}`, kind: "extra", label });
+    });
   }
 
   return { rowA, rowB };
 };
 
+// ----------------------------------
+// MAIN PAGE
+// ----------------------------------
 const DiscoverPage = () => {
   const [activeTab, setActiveTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
   const [infoExpanded, setInfoExpanded] = useState(false);
 
-  // Pulse modal + answers
   const [pulseModalOpen, setPulseModalOpen] = useState(false);
   const [activePulseQuestion, setActivePulseQuestion] = useState(null);
   const [premiumUpsell, setPremiumUpsell] = useState(false);
@@ -399,23 +367,25 @@ const DiscoverPage = () => {
   const profile = sampleProfiles[currentMatch];
   const { rowA, rowB } = getConnectionSnapshot(profile);
 
-  // Load saved pulse answers for current profile and merge into answeredPulse map
+  // Load saved pulse answers whenever profile changes
   useEffect(() => {
     if (!profile || !profile.id) return;
-    const savedByIndex = loadPulseAnswers(profile.id);
-    if (!savedByIndex || typeof savedByIndex !== "object") return;
+
+    const saved = loadPulseAnswers(profile.id);
+    if (!saved) return;
+
     const idMap = {};
     if (Array.isArray(profile.pulseQuestions)) {
       profile.pulseQuestions.forEach((q, idx) => {
-        const a = savedByIndex[idx];
-        if (a) {
-          idMap[q.id] = { answered: true, choice: a.value };
-        }
+        const a = saved[idx];
+        if (a) idMap[q.id] = { answered: true, choice: a.value };
       });
     }
-    setAnsweredPulse((prev) => ({ ...prev, [profile.id]: idMap }));
-  }, [profile.id]);
 
+    setAnsweredPulse((prev) => ({ ...prev, [profile.id]: idMap }));
+  }, [profile.id, profile]);
+
+  // Next profile
   const handleNext = () => {
     setCurrentMatch((prev) => (prev + 1) % sampleProfiles.length);
     setPulseModalOpen(false);
@@ -423,66 +393,50 @@ const DiscoverPage = () => {
     setInfoExpanded(false);
   };
 
-  // Decide how many "My Secret Rhythms" prompts to show (1 or 2)
+  // How many secret rhythms to show (1 or 2)
   const rhythmCount =
     profile.secretRhythms && profile.secretRhythms.length > 0
       ? Math.min(profile.secretRhythms.length, profile.id % 2 === 0 ? 2 : 1)
       : 0;
 
+  // Open pulse question (with premium gate)
   const handleOpenPulseQuestion = (question, index) => {
-    const isPremium = ENABLE_PREMIUM_GATE;
-
-    if (!isPremium) {
+    if (!ENABLE_PREMIUM_GATE) {
       setPremiumUpsell(true);
-    } else {
-      setActivePulseQuestion({
-        ...question,
-        profileId: profile.id,
-        profileName: profile.name,
-        index,
-      });
-      setPulseModalOpen(true);
+      return;
     }
+
+    setActivePulseQuestion({
+      ...question,
+      profileId: profile.id,
+      index,
+    });
+    setPulseModalOpen(true);
   };
 
-  const clearPulseAnswersForProfile = () => {
-    try {
-      if (!profile || !profile.id) return;
-      localStorage.removeItem(`pulseAnswers_${profile.id}`);
-      setAnsweredPulse((prev) => ({ ...prev, [profile.id]: {} }));
-      console.log(`Cleared pulse answers for profile ${profile.id}`);
-    } catch (err) {
-      console.error("Failed to clear pulse answers:", err);
-    }
-  };
-
+  // Answer pulse
   const handleAnswerPulse = (choice) => {
     if (!activePulseQuestion) return;
-    const { profileId, id, profileName, index } = activePulseQuestion;
+    const { profileId, id, index } = activePulseQuestion;
 
-    const isPremium = ENABLE_PREMIUM_GATE;
-    if (ENABLE_INBOX_EVENTS && isPremium) {
+    if (ENABLE_INBOX_EVENTS && ENABLE_PREMIUM_GATE) {
       addHeartCheckInboxEvent(profileId, CURRENT_USER_NAME);
     }
 
-    setAnsweredPulse((prev) => {
-      const prevForProfile = prev[profileId] || {};
-      return {
-        ...prev,
-        [profileId]: {
-          ...prevForProfile,
-          [id]: { answered: true, choice },
-        },
-      };
-    });
+    setAnsweredPulse((prev) => ({
+      ...prev,
+      [profileId]: {
+        ...(prev[profileId] || {}),
+        [id]: { answered: true, choice },
+      },
+    }));
 
     if (typeof index === "number") {
-      const newAnswer = {
+      savePulseAnswer(profileId, index, {
         value: choice,
         result: "kept",
-        revealed: isPremium,
-      };
-      savePulseAnswer(profileId, index, newAnswer);
+        revealed: ENABLE_PREMIUM_GATE,
+      });
     }
 
     setPulseModalOpen(false);
@@ -491,47 +445,33 @@ const DiscoverPage = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      {/* Brand header */}
-      <BrandHeader />
+      {/* ------------------------------------ */}
+      {/* TOP ROW: Tabs + Filters icon         */}
+      {/* ------------------------------------ */}
+      <div className="px-4 pt-4 pb-2 flex items-center justify-between">
+        <TopTabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Top tab switcher */}
-      <TopTabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Icon-only filter button */}
+        {activeTab === "discover" && (
+          <button
+            type="button"
+            aria-label="Filters"
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full
+                       bg-white/80 backdrop-blur-sm border border-white/80
+                       shadow-[0_2px_8px_rgba(15,33,58,0.18)]
+                       active:scale-95 transition"
+          >
+            <SlidersHorizontal className="w-5 h-5 text-slate-700" />
+          </button>
+        )}
+      </div>
 
       {activeTab === "discover" && (
         <>
-          {/* Discover title + Filters button */}
-          <div className="px-4 py-3 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-900">Discover</h2>
-            <div className="flex items-center gap-2">
-              <button
-                className="inline-flex items-center gap-1.5
-                   px-3 py-1.5 rounded-full
-                   bg-white/50 backdrop-blur-sm 
-                   border border-white/70
-                   text-xs font-medium text-gray-700
-                   shadow-[0_1px_4px_rgba(0,0,0,0.1)]
-                   active:scale-95 transition"
-                onClick={() => setShowFilters((prev) => !prev)}
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-gray-700" />
-                Filters
-              </button>
-              {ENABLE_PULSE_CHECK && (
-                <button
-                  type="button"
-                  onClick={clearPulseAnswersForProfile}
-                  className="text-[11px] text-slate-500 hover:text-slate-700 underline decoration-dotted"
-                  title="Clear saved PulseCheck answers for this profile"
-                >
-                  Clear Pulse
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Simple filters row */}
+          {/* Optional filter chips panel */}
           {showFilters && (
-            <div className="px-4 pb-2">
+            <div className="px-4 pb-3">
               <div className="flex flex-wrap gap-2">
                 <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-800">
                   For you
@@ -549,361 +489,24 @@ const DiscoverPage = () => {
             </div>
           )}
 
-          {/* CASE FILE PROFILE VIEW */}
+          {/* HERO CARD + INFO CARD */}
           <div className="px-4 pb-16">
             <div className="max-w-3xl mx-auto transition-all">
               <div className="relative pb-8">
-                {/* HERO CARD */}
-                <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
-                  <div className="relative">
-                    {profile.photoUrl ? (
-                      <img
-                        src={profile.photoUrl}
-                        alt={profile.name}
-                        className="w-full h-[560px] object-cover object-center"
-                      />
-                    ) : (
-                      <div className="w-full h-[560px] bg-slate-200 flex items-center justify-center text-6xl">
-                        {profile.photos?.[0] ?? "🩺"}
-                      </div>
-                    )}
+                <HeroCard profile={profile} onNext={handleNext} />
 
-                    {/* Bottom gradient */}
-                    <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[rgba(15,33,58,0.9)] via-[rgba(15,33,58,0.55)] to-transparent" />
-
-                    {/* Top-left pills */}
-                    <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
-                      {/* ROLE pill */}
-                      <div
-                        className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
-                          bg-black/35 backdrop-blur-sm text-xs text-white
-                          max-w-[145px] w-max overflow-hidden"
-                      >
-                        <span className="inline-flex items-center gap-1 overflow-hidden">
-                          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
-                          <span className="truncate max-w-[105px]">
-                            {profile.role ?? "Healthcare professional"}
-                          </span>
-                        </span>
-                      </div>
-
-                      {/* SHIFT pill */}
-                      {profile.shift && (
-                        <div
-                          className="
-                            pointer-events-auto
-                            inline-flex items-center gap-1.5
-                            px-3 py-[6px]
-                            rounded-full
-                            bg-[rgba(0,0,0,0.28)]
-                            backdrop-blur-sm
-                            text-[11px] text-white leading-tight
-                            max-w-fit
-                          "
-                          style={{ lineHeight: "1.15" }}
-                        >
-                          <span className="w-2 h-2 rounded-full bg-amber-300"></span>
-                          <span className="truncate">{profile.shift}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* View all photos pill */}
-                    <button
-                      type="button"
-                      className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
-                            px-3 py-1.5 rounded-full
-                            bg-white/35 backdrop-blur-sm
-                            border border-white/60
-                            text-xs text-white font-medium
-                            shadow-[0_0_12px_rgba(0,0,0,0.25)]
-                            transition-all"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/90"></span>
-                      <span className="drop-shadow-sm">View all photos</span>
-                    </button>
-
-                    {/* Vertical action rail */}
-                    <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-3.5 pointer-events-none">
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        className="pointer-events-auto w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
-                      >
-                        <X className="w-6 h-6 text-slate-700" />
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.currentTarget.classList.add("animate-pulseGlow");
-                          setTimeout(() => {
-                            e.currentTarget.classList.remove(
-                              "animate-pulseGlow"
-                            );
-                          }, 400);
-                          console.log("Heartbeat", profile.name);
-                        }}
-                        className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
-                      >
-                        <Activity className="w-6 h-6 text-[#0F213A]" />
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
-                      >
-                        <Heart className="w-6 h-6 text-rose-500" />
-                      </button>
-                    </div>
-
-                    {/* Name overlay */}
-                    <div className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-14 flex flex-col justify-end">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-white text-2xl font-semibold drop-shadow">
-                              {profile.name}, {profile.age}
-                            </span>
-                            {profile.distance && (
-                              <span className="text-white/80 text-xs">
-                                {profile.distance}
-                              </span>
-                            )}
-                          </div>
-                          {profile.location && (
-                            <div className="text-white/80 text-xs mt-1">
-                              {profile.location}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* COLLAPSIBLE INFO CARD */}
-                <div className="relative z-10 -mt-6 px-4">
-                  {!infoExpanded ? (
-                    <div
-                      className="
-                        rounded-[28px] bg-white/92 backdrop-blur-xl border border-slate-200/80
-                        shadow-[0_-12px_25px_rgba(0,0,0,0.18)]
-                        -mt-3 pt-2.5 pb-2 px-4
-                      "
-                    >
-                      {/* More button aligned right */}
-                      <div className="flex justify-end mb-1.5">
-                        <button
-                          onClick={() => setInfoExpanded(true)}
-                          className="
-                            inline-flex items-center gap-1.5 
-                            px-3 py-[5px]
-                            rounded-full bg-[#0F213A]
-                            text-[11px] text-white font-medium
-                            shadow-[0_3px_10px_rgba(15,33,58,0.45)]
-                            active:scale-95 transition
-                          "
-                        >
-                          <Activity className="w-3.5 h-3.5 text-white" />
-                          <span>More</span>
-                        </button>
-                      </div>
-
-                      {/* TAG ROW A */}
-                      <div className="flex flex-wrap gap-1.5 mb-1">
-                        {rowA.map((tag) => (
-                          <SnapshotPill
-                            key={tag.id}
-                            kind={tag.kind}
-                            label={tag.label}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="h-[1px] bg-slate-200/70 my-1" />
-
-                      {/* TAG ROW B */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {rowB.slice(0, 4).map((tag) => (
-                          <SnapshotPill
-                            key={tag.id}
-                            kind={tag.kind}
-                            label={tag.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    // EXPANDED – matte, full profile content
-                    <div className="bg-white rounded-[26px] shadow-[0_18px_40px_rgba(15,33,58,0.18)] border border-slate-100 overflow-hidden">
-                      {/* Header tiny strip with Hide */}
-                      <div className="px-5 pt-3 pb-1 flex justify-end bg-white">
-                        <button
-                          type="button"
-                          onClick={() => setInfoExpanded(false)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 text-[11px] text-slate-700 border border-slate-200 shadow-[0_1px_4px_rgba(15,33,58,0.15)] active:scale-95 transition"
-                        >
-                          <Activity className="w-3.5 h-3.5 text-[#0F213A]" />
-                          <span>Hide</span>
-                        </button>
-                      </div>
-
-                      {/* BODY */}
-                      <div className="px-5 pb-5 pt-1 flex flex-col gap-6 bg-white">
-                        {/* Vitals strip */}
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            {rowA.map((tag) => (
-                              <SnapshotPill
-                                key={tag.id}
-                                kind={tag.kind}
-                                label={tag.label}
-                              />
-                            ))}
-                          </div>
-                          <div className="h-[1px] bg-slate-100" />
-                          <div className="flex flex-wrap gap-2">
-                            {rowB.map((tag) => (
-                              <SnapshotPill
-                                key={tag.id}
-                                kind={tag.kind}
-                                label={tag.label}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* My Secret Rhythms */}
-                        {rhythmCount > 0 && (
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                              <h3 className="text-sm font-semibold text-slate-900">
-                                My Secret Rhythms
-                              </h3>
-                            </div>
-                            <div className="space-y-3">
-                              {profile.secretRhythms
-                                .slice(0, rhythmCount)
-                                .map((r, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 flex gap-2"
-                                  >
-                                    <div className="mt-1">
-                                      <Activity className="w-4 h-4 text-[#0F213A]/80" />
-                                    </div>
-                                    <div>
-                                      <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                        {r.question}
-                                      </div>
-                                      <div className="mt-1 text-sm text-slate-800 leading-relaxed">
-                                        {r.answer}
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Pulse Check grid */}
-                        {ENABLE_PULSE_CHECK &&
-                          profile.pulseQuestions &&
-                          profile.pulseQuestions.length > 0 && (
-                            <PulseGrid
-                              profile={profile}
-                              answeredMap={answeredPulse[profile.id] || {}}
-                              onOpenQuestion={handleOpenPulseQuestion}
-                            />
-                          )}
-
-                        {/* Personality & prompts */}
-                        {profile.prompts && profile.prompts.length > 0 && (
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                              <h3 className="text-sm font-semibold text-slate-900">
-                                Personality & prompts
-                              </h3>
-                            </div>
-                            <div className="space-y-3">
-                              {profile.prompts.slice(0, 2).map((p, idx) => (
-                                <div
-                                  key={idx}
-                                  className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
-                                >
-                                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    {p.question}
-                                  </div>
-                                  <div className="mt-1 text-sm text-slate-800">
-                                    {p.answer}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Glimpses – expanded only */}
-                        {infoExpanded &&
-                          profile.photos &&
-                          profile.photos.length > 0 && (
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                                <h3 className="text-sm font-semibold text-slate-900">
-                                  Glimpses
-                                </h3>
-                              </div>
-                              <div className="flex gap-2 overflow-x-auto pb-1">
-                                {profile.photos.map((ph, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex-shrink-0 w-24 h-24 rounded-[18px] bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
-                                  >
-                                    <img
-                                      src={ph}
-                                      alt={`${profile.name}'s glimpse ${
-                                        idx + 1
-                                      }`}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                        {/* Their vibe – expanded only */}
-                        {infoExpanded &&
-                          profile.myVibe &&
-                          profile.myVibe.length > 0 && (
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#0F213A]" />
-                                <h3 className="text-sm font-semibold text-slate-900">
-                                  Their vibe
-                                </h3>
-                              </div>
-                              <div className="flex flex-wrap gap-2">
-                                {profile.myVibe.map((v, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-800"
-                                  >
-                                    {v}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <InfoCard
+                  infoExpanded={infoExpanded}
+                  rowA={rowA}
+                  rowB={rowB}
+                  profile={profile}
+                  rhythmCount={rhythmCount}
+                  answeredPulse={answeredPulse}
+                  PulseGrid={PulseGrid}
+                  onOpenPulseQuestion={handleOpenPulseQuestion}
+                  onExpand={() => setInfoExpanded(true)}
+                  onCollapse={() => setInfoExpanded(false)}
+                />
               </div>
             </div>
           </div>
@@ -911,7 +514,7 @@ const DiscoverPage = () => {
       )}
 
       {activeTab === "matches" && (
-        <div className="px-4 pt-6 text-center text-sm text-slate-500">
+        <div className="px-4 pt-10 text-center text-sm text-slate-500">
           Matches view coming next ✨
         </div>
       )}
@@ -928,7 +531,7 @@ const DiscoverPage = () => {
         />
       )}
 
-      {/* Premium upsell modal */}
+      {/* Premium upsell */}
       {premiumUpsell && (
         <PremiumUpsellModal
           onClose={() => setPremiumUpsell(false)}

@@ -1,15 +1,16 @@
-// src/components/BrandHeader.jsx
-import React from "react";
+// src/components/BrandHeader.jsx  
+import React from "react";  
 
-// Inline logo icon: heart + ECG pulse (gunmetal navy)
+// Custom CodeBlue brand icon — Heart + ECG
+// Increased to 34px for premium presence
 const LogoIcon = () => (
   <svg
-    width="28"
-    height="28"
+    width="34"
+    height="34"
     viewBox="0 0 24 24"
     fill="none"
     stroke="#0F213A"
-    strokeWidth="1.9"
+    strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -27,7 +28,7 @@ const LogoIcon = () => (
         c-1.7 2.2 -4.3 4.6 -8.1 7.6
       "
     />
-    {/* ECG pulse, spaced inside heart */}
+    {/* ECG pulse */}
     <path
       d="
         M5.2 12
@@ -47,10 +48,12 @@ const BrandHeader = () => (
     <div className="shrink-0">
       <LogoIcon />
     </div>
+
     <div className="flex flex-col leading-tight">
-      <span className="text-[21px] font-semibold text-slate-900">
+      <span className="text-[22px] font-semibold text-slate-900">
         CodeBlue
       </span>
+
       <span className="text-[12px] text-slate-500 -mt-[2px]">
         For healthcare connections
       </span>
