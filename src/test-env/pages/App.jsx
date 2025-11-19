@@ -1,21 +1,40 @@
-// src/App.jsx - Test Environment Router
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import MatchProfile from "./pages/MatchProfile";
+// src/test-env/pages/App.jsx
+import React, { useState } from "react";
 
-function App() {
+import DiscoverPage from "./DiscoverPage";
+import MatchesPage from "./MatchesPage";
+import VentSpace from "./VentSpacePage";
+import ConnectPage from "./ConnectPage";
+
+import BottomNav from "../components/BottomNav";
+
+export default function App() {
+  const [activeRoot, setActiveRoot] = useState("discover");
+
+  const renderScreen = () => {
+    switch (activeRoot) {
+      case "discover":
+        return <DiscoverPage />;
+      case "matches":
+        return <MatchesPage />;
+      case "vent":
+        return <VentSpace />;
+      case "connect":
+        return <ConnectPage />;
+      default:
+        return <DiscoverPage />;
+    }
+  };
+
   return (
-    <Router>
-      <Routes>
-        {/* Home / Discovery */}
-        <Route path="/" element={<Home />} />
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
+      {/* Main dynamic area */}
+      <div className="flex-1 overflow-y-auto">
+        {renderScreen()}
+      </div>
 
-        {/* Profile Preview Page */}
-        <Route path="/profile/:id" element={<MatchProfile />} />
-      </Routes>
-    </Router>
+      {/* Bottom navigation */}
+      <BottomNav active={activeRoot} onChange={setActiveRoot} />
+    </div>
   );
 }
-
-export default App;
