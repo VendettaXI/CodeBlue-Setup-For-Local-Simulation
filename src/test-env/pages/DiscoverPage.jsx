@@ -1,4 +1,12 @@
-// DiscoverPage.jsx
+// src/test-env/pages/DiscoverPage.jsx
+// ------------------------------------------------------
+// Discover feed with full-height hero card + collapsed info card
+// - HeroCard flexes to fill vertical space between header and info strip
+// - Collapsed InfoCard sits consistently above bottom nav
+// - Side margins preserved
+// - No vertical scroll in collapsed mode; scroll only when expanded
+// ------------------------------------------------------
+
 import React, { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
 
@@ -21,9 +29,9 @@ import {
   CURRENT_USER_NAME,
 } from "../config/flags.js";
 
-// ----------------------------------
-// SAMPLE PROFILES
-// ----------------------------------
+// ------------------------------------------------------
+// SAMPLE PROFILES (same as before)
+// ------------------------------------------------------
 const sampleProfiles = [
   {
     id: 1,
@@ -313,9 +321,9 @@ const sampleProfiles = [
   },
 ];
 
-// ----------------------------------
+// ------------------------------------------------------
 // Build vital tag rows
-// ----------------------------------
+// ------------------------------------------------------
 const getConnectionSnapshot = (profile) => {
   const rowA = [
     { id: "verified", kind: "verified", label: "Clinically verified" },
@@ -334,12 +342,10 @@ const getConnectionSnapshot = (profile) => {
   }
 
   const rowB = [];
-  if (profile.snapshotMood) {
+  if (profile.snapshotMood)
     rowB.push({ id: "mood", kind: "mood", label: profile.snapshotMood });
-  }
-  if (profile.snapshotIntent) {
+  if (profile.snapshotIntent)
     rowB.push({ id: "intent", kind: "intent", label: profile.snapshotIntent });
-  }
 
   if (Array.isArray(profile.snapshotExtras)) {
     profile.snapshotExtras.forEach((label, idx) => {
@@ -350,9 +356,9 @@ const getConnectionSnapshot = (profile) => {
   return { rowA, rowB };
 };
 
-// ----------------------------------
+// ------------------------------------------------------
 // MAIN PAGE
-// ----------------------------------
+// ------------------------------------------------------
 const DiscoverPage = () => {
   const [activeTab, setActiveTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
@@ -367,10 +373,9 @@ const DiscoverPage = () => {
   const profile = sampleProfiles[currentMatch];
   const { rowA, rowB } = getConnectionSnapshot(profile);
 
-  // Load saved pulse answers whenever profile changes
+  // Load saved pulse answers
   useEffect(() => {
     if (!profile || !profile.id) return;
-
     const saved = loadPulseAnswers(profile.id);
     if (!saved) return;
 
@@ -383,7 +388,7 @@ const DiscoverPage = () => {
     }
 
     setAnsweredPulse((prev) => ({ ...prev, [profile.id]: idMap }));
-  }, [profile.id, profile]);
+  }, [profile.id]);
 
   // Next profile
   const handleNext = () => {
@@ -393,13 +398,12 @@ const DiscoverPage = () => {
     setInfoExpanded(false);
   };
 
-  // How many secret rhythms to show (1 or 2)
+  // How many "My Secret Rhythms" cards to show (1 or 2)
   const rhythmCount =
     profile.secretRhythms && profile.secretRhythms.length > 0
       ? Math.min(profile.secretRhythms.length, profile.id % 2 === 0 ? 2 : 1)
       : 0;
 
-  // Open pulse question (with premium gate)
   const handleOpenPulseQuestion = (question, index) => {
     if (!ENABLE_PREMIUM_GATE) {
       setPremiumUpsell(true);
@@ -414,7 +418,6 @@ const DiscoverPage = () => {
     setPulseModalOpen(true);
   };
 
-  // Answer pulse
   const handleAnswerPulse = (choice) => {
     if (!activePulseQuestion) return;
     const { profileId, id, index } = activePulseQuestion;
@@ -443,81 +446,100 @@ const DiscoverPage = () => {
     setActivePulseQuestion(null);
   };
 
+  // Root: no scroll when collapsed, scroll when expanded
+  const rootClassName =
+    "min-h-screen bg-[#FAFAFA] px-4" +
+    (infoExpanded ? " overflow-y-auto pt-3" : " overflow-hidden pt-3");
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      {/* ------------------------------------ */}
-      {/* TOP ROW: Tabs + Filters icon         */}
-      {/* ------------------------------------ */}
-      <div className="px-4 pt-4 pb-2 flex items-center justify-between">
-        <TopTabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className={rootClassName}>
+      {/* Inner stack. When collapsed we lock height to viewport minus nav (64px). */}
+      <div
+        className="mx-auto flex max-w-md flex-col gap-4"
+        style={!infoExpanded ? { height: "calc(100vh - 64px)" } : undefined}
+      >
+        {/* -------------------------------------------------- */}
+        {/* TOP: Tabs centered + filter icon on the right      */}
+        {/* -------------------------------------------------- */}
+        <div className="pt-1 pb-1 relative flex items-center justify-center">
+          <TopTabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Icon-only filter button */}
-        {activeTab === "discover" && (
-          <button
-            type="button"
-            aria-label="Filters"
-            onClick={() => setShowFilters((prev) => !prev)}
-            className="inline-flex items-center justify-center w-11 h-11 rounded-full
-                       bg-white/80 backdrop-blur-sm border border-white/80
-                       shadow-[0_2px_8px_rgba(15,33,58,0.18)]
-                       active:scale-95 transition"
-          >
-            <SlidersHorizontal className="w-5 h-5 text-slate-700" />
-          </button>
-        )}
-      </div>
-
-      {activeTab === "discover" && (
-        <>
-          {/* Optional filter chips panel */}
-          {showFilters && (
-            <div className="px-4 pb-3">
-              <div className="flex flex-wrap gap-2">
-                <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-800">
-                  For you
-                </button>
-                <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
-                  New
-                </button>
-                <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
-                  Nearby
-                </button>
-                <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
-                  On call
-                </button>
-              </div>
-            </div>
+          {activeTab === "discover" && (
+            <button
+              type="button"
+              onClick={() => setShowFilters((prev) => !prev)}
+              className="absolute right-0 inline-flex items-center justify-center rounded-full p-1.5 active:scale-95 transition"
+            >
+              <SlidersHorizontal
+                className="w-4 h-4 text-[#0F213A]"
+                strokeWidth={2.2}
+              />
+            </button>
           )}
+        </div>
 
-          {/* HERO CARD + INFO CARD */}
-          <div className="px-4 pb-16">
-            <div className="max-w-3xl mx-auto transition-all">
-              <div className="relative pb-8">
-                <HeroCard profile={profile} onNext={handleNext} />
-
-                <InfoCard
-                  infoExpanded={infoExpanded}
-                  rowA={rowA}
-                  rowB={rowB}
-                  profile={profile}
-                  rhythmCount={rhythmCount}
-                  answeredPulse={answeredPulse}
-                  PulseGrid={PulseGrid}
-                  onOpenPulseQuestion={handleOpenPulseQuestion}
-                  onExpand={() => setInfoExpanded(true)}
-                  onCollapse={() => setInfoExpanded(false)}
-                />
+        {/* -------------------------------------------------- */}
+        {/* DISCOVER TAB                                       */}
+        {/* -------------------------------------------------- */}
+        {activeTab === "discover" && (
+          <div className="flex-1 flex flex-col">
+            {/* Filters row (chips) */}
+            {showFilters && (
+              <div className="pb-2">
+                <div className="flex flex-wrap gap-2">
+                  <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-800">
+                    For you
+                  </button>
+                  <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
+                    New
+                  </button>
+                  <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
+                    Nearby
+                  </button>
+                  <button className="px-3 py-1.5 text-xs rounded-full bg-white border border-slate-200 text-slate-500">
+                    On call
+                  </button>
+                </div>
               </div>
+            )}
+
+            {/* Main stack: Hero flexes, InfoCard pinned below */}
+            <div className="flex-1 flex flex-col justify-between pb-4">
+              {/* HERO TAKES AVAILABLE HEIGHT IN COLLAPSED STATE */}
+              <div
+                className={
+                  infoExpanded ? "min-h-[360px]" : "flex-1 min-h-[360px]"
+                }
+              >
+                <HeroCard profile={profile} onNext={handleNext} />
+              </div>
+
+              {/* COLLAPSED / EXPANDED INFO CARD */}
+              <InfoCard
+                infoExpanded={infoExpanded}
+                rowA={rowA}
+                rowB={rowB}
+                profile={profile}
+                rhythmCount={rhythmCount}
+                answeredPulse={answeredPulse}
+                PulseGrid={PulseGrid}
+                onOpenPulseQuestion={handleOpenPulseQuestion}
+                onExpand={() => setInfoExpanded(true)}
+                onCollapse={() => setInfoExpanded(false)}
+              />
             </div>
           </div>
-        </>
-      )}
+        )}
 
-      {activeTab === "matches" && (
-        <div className="px-4 pt-10 text-center text-sm text-slate-500">
-          Matches view coming next ✨
-        </div>
-      )}
+        {/* -------------------------------------------------- */}
+        {/* MATCHES TAB (placeholder)                          */}
+        {/* -------------------------------------------------- */}
+        {activeTab === "matches" && (
+          <div className="flex-1 flex items-center justify-center px-4 text-center text-sm text-slate-500">
+            Matches view coming next ✨
+          </div>
+        )}
+      </div>
 
       {/* Pulse modal */}
       {pulseModalOpen && activePulseQuestion && (

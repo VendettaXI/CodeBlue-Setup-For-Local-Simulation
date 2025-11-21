@@ -1,18 +1,27 @@
+// HeroCard.jsx
+// ------------------------------------------------------
+// Hero profile card
+// - Now fills available vertical space (parent controls height)
+// - Keeps side margins (no full-width bleed)
+// - 38px rounded corners for a softer, premium bubble
+// ------------------------------------------------------
+
 import React from "react";
 import { Activity, Heart, X } from "lucide-react";
 
 const HeroCard = ({ profile, onNext }) => {
   return (
-    <div className="bg-white rounded-[26px] shadow-xl border border-slate-100 overflow-hidden">
-      <div className="relative">
+    <div className="h-full bg-white rounded-[38px] shadow-[0_18px_40px_rgba(15,33,58,0.26)] border border-slate-100 overflow-hidden">
+      <div className="relative h-full">
+        {/* Main image area fills the entire card height */}
         {profile.photoUrl ? (
           <img
             src={profile.photoUrl}
             alt={profile.name}
-            className="w-full h-[560px] object-cover object-center"
+            className="w-full h-full object-cover object-center"
           />
         ) : (
-          <div className="w-full h-[560px] bg-slate-200 flex items-center justify-center text-6xl">
+          <div className="w-full h-full bg-slate-200 flex items-center justify-center text-6xl">
             {profile.photos?.[0] ?? "🩺"}
           </div>
         )}
@@ -22,11 +31,11 @@ const HeroCard = ({ profile, onNext }) => {
 
         {/* Top-left pills */}
         <div className="absolute top-4 left-4 flex flex-col gap-2 w-[72%] pointer-events-none">
-          {/* Role pill */}
+          {/* ROLE pill */}
           <div
             className="inline-flex items-center gap-2 px-2 py-1 rounded-full 
-                       bg-black/35 backdrop-blur-sm text-xs text-white
-                       max-w-[145px] w-max overflow-hidden"
+              bg-black/35 backdrop-blur-sm text-xs text-white
+              max-w-[145px] w-max overflow-hidden"
           >
             <span className="inline-flex items-center gap-1 overflow-hidden">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
@@ -36,13 +45,19 @@ const HeroCard = ({ profile, onNext }) => {
             </span>
           </div>
 
-          {/* Shift pill */}
+          {/* SHIFT pill */}
           {profile.shift && (
             <div
-              className="pointer-events-auto inline-flex items-center gap-1.5
-                         px-3 py-[6px] rounded-full
-                         bg-[rgba(0,0,0,0.28)] backdrop-blur-sm
-                         text-[11px] text-white leading-tight max-w-fit"
+              className="
+                pointer-events-auto
+                inline-flex items-center gap-1.5
+                px-3 py-[6px]
+                rounded-full
+                bg-[rgba(0,0,0,0.28)]
+                backdrop-blur-sm
+                text-[11px] text-white leading-tight
+                max-w-fit
+              "
               style={{ lineHeight: "1.15" }}
             >
               <span className="w-2 h-2 rounded-full bg-amber-300" />
@@ -55,12 +70,12 @@ const HeroCard = ({ profile, onNext }) => {
         <button
           type="button"
           className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
-                     px-3 py-1.5 rounded-full
-                     bg-white/35 backdrop-blur-sm
-                     border border-white/60
-                     text-xs text-white font-medium
-                     shadow-[0_0_12px_rgba(0,0,0,0.25)]
-                     transition-all"
+                px-3 py-1.5 rounded-full
+                bg-white/35 backdrop-blur-sm
+                border border-white/60
+                text-xs text-white font-medium
+                shadow-[0_0_12px_rgba(0,0,0,0.25)]
+                transition-all"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-white/90" />
           <span className="drop-shadow-sm">View all photos</span>
@@ -72,10 +87,7 @@ const HeroCard = ({ profile, onNext }) => {
           <button
             type="button"
             onClick={onNext}
-            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white
-                       border border-slate-200 flex items-center justify-center
-                       shadow-[0_2px_10px_rgba(0,0,0,0.12)]
-                       hover:scale-105 transition-transform"
+            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
           >
             <X className="w-6 h-6 text-slate-700" />
           </button>
@@ -90,11 +102,7 @@ const HeroCard = ({ profile, onNext }) => {
               }, 400);
               console.log("Heartbeat", profile.name);
             }}
-            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm
-                       border border-slate-200 flex items-center justify-center
-                       shadow-[0_2px_10px_rgba(0,0,0,0.12)]
-                       transition-all active:scale-90 hover:scale-105
-                       animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
+            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-all active:scale-90 hover:scale-105 animate-[premiumPulseLoop_2s_ease-in-out_infinite]"
           >
             <Activity className="w-6 h-6 text-[#0F213A]" />
           </button>
@@ -103,16 +111,13 @@ const HeroCard = ({ profile, onNext }) => {
           <button
             type="button"
             onClick={onNext}
-            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95
-                       border border-slate-200 flex items-center justify-center
-                       shadow-[0_2px_10px_rgba(0,0,0,0.12)]
-                       hover:scale-105 transition-transform"
+            className="pointer-events-auto w-12 h-12 rounded-2xl bg-white/95 border border-slate-200 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform"
           >
             <Heart className="w-6 h-6 text-rose-500" />
           </button>
         </div>
 
-        {/* Name + meta */}
+        {/* Name overlay */}
         <div className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-14 flex flex-col justify-end">
           <div className="flex items-center justify-between">
             <div>

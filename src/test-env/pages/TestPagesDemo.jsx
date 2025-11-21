@@ -1,14 +1,6 @@
 // src/test-env/pages/TestPagesDemo.jsx
 // ------------------------------------------------------
 // ROOT NAVIGATION WRAPPER FOR TEST ENVIRONMENT
-// Displays:
-//  DiscoverPage
-//  MatchesPage
-//  VentSpacePage
-//  ConnectPage
-//  PersonaPage
-//  AppSettingsPage
-// With Bottom Navigation Bar
 // ------------------------------------------------------
 
 import React, { useState } from "react";
@@ -27,9 +19,6 @@ import BottomNav from "../components/BottomNav";
 const TestPagesDemo = () => {
   const [activePage, setActivePage] = useState("discover");
 
-  // ------------------------------------------------------
-  // PAGE SWITCH HANDLER
-  // ------------------------------------------------------
   const renderPage = () => {
     switch (activePage) {
       case "discover":
@@ -49,15 +38,15 @@ const TestPagesDemo = () => {
     }
   };
 
-  // ------------------------------------------------------
-  // PAGE LAYOUT
-  // ------------------------------------------------------
   return (
     <div className="relative min-h-screen bg-[#FAFAFA]">
       {/* ACTIVE PAGE */}
-      <div className="pb-20">{renderPage()}</div>
+      {/* NOTE: only non-discover pages get extra bottom padding now */}
+      <div className={activePage === "discover" ? "" : "pb-20"}>
+        {renderPage()}
+      </div>
 
-      {/* BOTTOM NAVIGATION */}
+      {/* BOTTOM NAVIGATION (fixed at bottom inside BottomNav.jsx) */}
       <BottomNav currentPage={activePage} onNavigate={setActivePage} />
     </div>
   );

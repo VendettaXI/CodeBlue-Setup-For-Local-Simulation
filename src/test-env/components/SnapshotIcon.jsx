@@ -536,7 +536,7 @@ const getConnectionSnapshot = (profile) => {
   return { rowA, rowB };
 };
 
-const DiscoverPage = () => {
+const SnapshotIconPage_DEBUG = () => {
   const [activeTab, setActiveTab] = useState("discover");
   const [showFilters, setShowFilters] = useState(false);
   const [currentMatch, setCurrentMatch] = useState(0);
@@ -1105,4 +1105,4 @@ const DiscoverPage = () => {
   );
 };
 
-export default DiscoverPage;
+export default SnapshotIconPage_DEBUG;
