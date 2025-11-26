@@ -63,7 +63,7 @@ const InfoCard = ({
       {/* COLLAPSED STATE */}
       {/* ------------------------------------------------------ */}
       {!infoExpanded ? (
-        <div className="relative rounded-[28px] bg-white border border-slate-200/70 px-4 pt-3 pb-4">
+        <div className="relative rounded-[38px] bg-white border border-slate-200/70 px-4 pt-3 pb-4">
           {/* "More" pill tab */}
           <button
             onClick={onExpand}
@@ -94,9 +94,9 @@ const InfoCard = ({
         /* ------------------------------------------------------ */
         /* EXPANDED STATE */
         /* ------------------------------------------------------ */
-        <div className="rounded-[26px] bg-white border border-slate-100 shadow-[0_14px_36px_rgba(15,33,58,0.18)] overflow-hidden">
+        <>
           {/* Hide Button */}
-          <div className="px-5 pt-3 pb-2 flex justify-end bg-white">
+          <div className="flex justify-end mb-3">
             <button
               onClick={onCollapse}
               className="inline-flex items-center gap-1.5 px-3 py-[6px] rounded-full bg-slate-50 text-[11px] text-slate-700 border border-slate-200 shadow-[0_2px_6px_rgba(15,33,58,0.12)] active:scale-95 transition"
@@ -106,18 +106,15 @@ const InfoCard = ({
             </button>
           </div>
 
-          {/* Expanded Content */}
-          <div className="px-5 pb-6 pt-2 flex flex-col gap-7 bg-white">
-            {/* Tags */}
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col gap-4">
+            {/* Vitals Section (first) */}
+            <div className="rounded-t-[38px] rounded-b-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
+              <div className="flex flex-wrap gap-2 mb-2">
                 {rowA.map((tag) => (
                   <SnapshotPill key={tag.id} kind={tag.kind} label={tag.label} />
                 ))}
               </div>
-
-              <div className="h-[1px] bg-slate-200/70" />
-
+              <div className="h-[1px] bg-slate-200/70 my-2" />
               <div className="flex flex-wrap gap-2">
                 {rowB.map((tag) => (
                   <SnapshotPill key={tag.id} kind={tag.kind} label={tag.label} />
@@ -127,9 +124,9 @@ const InfoCard = ({
 
             {/* Secret Rhythms */}
             {rhythmCount > 0 && (
-              <div className="space-y-3">
+              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
                 <SectionTitle title="My Secret Rhythms" />
-                <div className="space-y-3">
+                <div className="space-y-3 mt-2">
                   {profile.secretRhythms.slice(0, rhythmCount).map((r, idx) => (
                     <div
                       key={idx}
@@ -152,18 +149,22 @@ const InfoCard = ({
 
             {/* Pulse Grid */}
             {profile.pulseQuestions?.length > 0 && (
-              <PulseGrid
-                profile={profile}
-                answeredMap={answeredPulse[profile.id] || {}}
-                onOpenQuestion={onOpenPulseQuestion}
-              />
+              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
+                <div className="mt-2">
+                  <PulseGrid
+                    profile={profile}
+                    answeredMap={answeredPulse[profile.id] || {}}
+                    onOpenQuestion={onOpenPulseQuestion}
+                  />
+                </div>
+              </div>
             )}
 
             {/* Prompts */}
             {profile.prompts?.length > 0 && (
-              <div className="space-y-3">
+              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
                 <SectionTitle title="Personality & prompts" />
-                <div className="space-y-3">
+                <div className="space-y-3 mt-2">
                   {profile.prompts.slice(0, 2).map((p, idx) => (
                     <div
                       key={idx}
@@ -183,9 +184,9 @@ const InfoCard = ({
 
             {/* Glimpses */}
             {profile.photos?.length > 0 && (
-              <div className="space-y-3">
+              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
                 <SectionTitle title="Glimpses" />
-                <div className="flex gap-3 overflow-x-auto pb-1">
+                <div className="flex gap-3 overflow-x-auto pb-1 mt-2">
                   {profile.photos.map((ph, idx) => (
                     <div
                       key={idx}
@@ -204,9 +205,9 @@ const InfoCard = ({
 
             {/* Vibe */}
             {profile.myVibe?.length > 0 && (
-              <div className="space-y-3">
+              <div className="rounded-b-[38px] rounded-t-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
                 <SectionTitle title="Their vibe" />
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {profile.myVibe.map((v, idx) => (
                     <span
                       key={idx}
@@ -219,7 +220,7 @@ const InfoCard = ({
               </div>
             )}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

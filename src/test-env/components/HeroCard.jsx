@@ -11,7 +11,7 @@ import { Activity, Heart, X } from "lucide-react";
 
 const HeroCard = ({ profile, onNext }) => {
   return (
-    <div className="h-full bg-white rounded-[38px] shadow-[0_18px_40px_rgba(15,33,58,0.26)] border border-slate-100 overflow-hidden">
+    <div className="h-full bg-white rounded-[38px] shadow-[0_18px_40px_rgba(15,33,58,0.26)] overflow-hidden">
       <div className="relative h-full">
         {/* Main image area fills the entire card height */}
         {profile.photoUrl ? (

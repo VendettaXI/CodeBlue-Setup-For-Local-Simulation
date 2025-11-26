@@ -455,7 +455,7 @@ const DiscoverPage = () => {
     <div className={rootClassName}>
       {/* Inner stack. When collapsed we lock height to viewport minus nav (64px). */}
       <div
-        className="mx-auto flex max-w-md flex-col gap-4"
+        className="mx-auto flex w-full max-w-full flex-col gap-2 px-0"
         style={!infoExpanded ? { height: "calc(100vh - 64px)" } : undefined}
       >
         {/* -------------------------------------------------- */}
@@ -508,7 +508,9 @@ const DiscoverPage = () => {
               {/* HERO TAKES AVAILABLE HEIGHT IN COLLAPSED STATE */}
               <div
                 className={
-                  infoExpanded ? "min-h-[360px]" : "flex-1 min-h-[360px]"
+                  infoExpanded
+                    ? "h-[180px] w-full transition-all duration-300"
+                    : "flex-1 min-h-[360px] w-full transition-all duration-300"
                 }
               >
                 <HeroCard profile={profile} onNext={handleNext} />
