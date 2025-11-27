@@ -1,0 +1,1 @@
+The  app version in the test environment (/dev) was in development in a previous chat and development is still in progress. Can you please take a look at the project status and all necessary files and tell me where we have to pickup from?
