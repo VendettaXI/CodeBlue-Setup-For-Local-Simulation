@@ -36,7 +36,7 @@ export default function TopTabSwitcher({ activeTab, onTabChange }) {
   return (
     <div
       className="relative flex items-center p-1 rounded-full shadow-sm"
-      style={{ backgroundColor: COLORS.gunmetalLight }}
+      style={{ backgroundColor: "#E9E3F5" }}
     >
       {/* Animated slider */}
       <div

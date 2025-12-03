@@ -509,14 +509,18 @@ const DiscoverPage = () => {
             <div className="flex-1 flex flex-col justify-between pb-4 min-h-0">
               {/* HERO TAKES AVAILABLE HEIGHT IN COLLAPSED STATE */}
               <motion.div
-                className="w-full flex-1 min-h-0 bg-white rounded-[38px]"
+                className="w-full flex-1 min-h-0 bg-white rounded-[12px]"
                 animate={{
                   height: infoExpanded ? "clamp(160px, 24vh, 220px)" : "100%",
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 30 }}
                 style={{ overflow: "hidden" }}
               >
-                <HeroCard profile={profile} onNext={handleNext} />
+                <HeroCard 
+                  profile={profile} 
+                  onNext={handleNext}
+                  onExpand={() => setInfoExpanded(true)}
+                />
               </motion.div>
 
               {/* COLLAPSED / EXPANDED INFO CARD */}

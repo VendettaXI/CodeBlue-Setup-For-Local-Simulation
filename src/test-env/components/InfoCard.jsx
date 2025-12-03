@@ -34,7 +34,7 @@ const kindToIcon = (kind) => {
 };
 
 const VitalPill = ({ label, Icon }) => (
-  <div className="flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-medium text-slate-800">
+  <div className="flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-medium text-slate-800 bg-white/80 backdrop-blur-sm">
     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(15,33,58,0.98)] text-white">
       <Icon className="h-3.5 w-3.5" />
     </span>
@@ -70,25 +70,9 @@ const InfoCard = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ type: "spring", stiffness: 220, damping: 26 }}
-          className="relative rounded-[38px] bg-white border border-slate-200/70 px-4 pt-3 pb-4"
+          className="relative rounded-[38px] bg-gradient-to-br from-purple-100 via-violet-100 to-purple-50/80 border border-slate-200/70 px-4 pt-3 pb-4"
         >
-          {/* "More" pill tab */}
-          <button
-            onClick={onExpand}
-            className="absolute left-1/2 -translate-x-[calc(50%-8px)] -top-3 px-3 py-1.5 rounded-full text-[11px] font-medium text-white shadow-[0_3px_8px_rgba(15,33,58,0.3)] bg-gradient-to-r from-[#0F213A] via-[#141f2e] to-black active:scale-95 transition"
-            style={{ transform: "translate(-50%, -8px)" }}
-          >
-            <Activity className="inline-block w-3.5 h-3.5 mr-1 align-middle text-white" />
-            More{remainingCount > 0 ? ` · +${remainingCount}` : ""}
-          </button>
-
-          {/* Header */}
-          <div className="mb-3 flex items-center gap-2 justify-start">
-            <span className="h-1.5 w-1.5 rounded-full bg-[rgba(15,33,58,0.86)]" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
-              Vitals at a glance
-            </p>
-          </div>
+          {/* Header removed per request */}
 
           {/* Vital pills grid (2x2) */}
           {/* Vitals output: grid or horizontal scroll if more than 4 total */}
@@ -100,8 +84,8 @@ const InfoCard = ({
               })}
             </div>
           ) : (
-            <div className="relative">
-              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+            <div className="relative -mx-4 px-4">
+              <div className="flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory">
                 {allVitals.map((tag) => {
                   const Icon = kindToIcon(tag.kind);
                   return (
@@ -112,8 +96,8 @@ const InfoCard = ({
                 })}
               </div>
               {/* Edge fades */}
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 rounded-l-[24px] bg-gradient-to-r from-white to-transparent" />
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 rounded-r-[24px] bg-gradient-to-l from-white to-transparent" />
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-12 rounded-l-[24px] bg-gradient-to-r from-purple-100 via-purple-100/70 to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-16 rounded-r-[24px] bg-gradient-to-l from-purple-100 via-purple-100/70 to-transparent" />
             </div>
           )}
         </motion.div>

@@ -14,13 +14,9 @@ export default function BottomNav({ currentPage, onNavigate }) {
     <div
       className="
         fixed bottom-0 inset-x-0 
-        backdrop-blur-xl bg-white/70 
-        border-t border-slate-200/70
         flex justify-around items-center
         h-[64px]
-        rounded-t-[28px]
       "
-      style={{ backgroundColor: COLORS.lavenderTint }}
     >
       <NavBtn
         icon={<Home />}
@@ -62,7 +58,7 @@ export default function BottomNav({ currentPage, onNavigate }) {
 
 function NavBtn({ icon, label, active, onClick }) {
   return (
-    <button className="flex flex-col items-center" onClick={onClick}>
+    <button className="flex items-center justify-center" onClick={onClick}>
       <div
         className={`w-6 h-6 ${
           active ? "text-[#0F213A]" : "text-[rgba(15,33,58,0.45)]"
@@ -70,14 +66,6 @@ function NavBtn({ icon, label, active, onClick }) {
       >
         {React.cloneElement(icon, { className: "w-full h-full" })}
       </div>
-      <span
-        className={`
-          text-[11px] font-medium 
-          ${active ? "text-[#0F213A]" : "text-[rgba(15,33,58,0.45)]"}
-        `}
-      >
-        {label}
-      </span>
     </button>
   );
 }

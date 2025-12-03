@@ -9,9 +9,9 @@
 import React from "react";
 import { Activity, Heart, X } from "lucide-react";
 
-const HeroCard = ({ profile, onNext }) => {
+const HeroCard = ({ profile, onNext, onExpand }) => {
   return (
-    <div className="h-full rounded-[38px] shadow-[0_18px_40px_rgba(15,33,58,0.26)] overflow-hidden">
+    <div className="h-full rounded-[12px] shadow-[0_18px_40px_rgba(15,33,58,0.26)] overflow-hidden">
       <div className="relative h-full">
         {/* Main image area fills the entire card height */}
         {profile.photoUrl ? (
@@ -66,19 +66,20 @@ const HeroCard = ({ profile, onNext }) => {
           )}
         </div>
 
-        {/* View all photos pill */}
+        {/* More button */}
         <button
           type="button"
-          className="absolute bottom-4 right-4 inline-flex items-center gap-1.5
-                px-3 py-1.5 rounded-full
+          onClick={onExpand}
+          className="pointer-events-auto absolute bottom-4 right-4 inline-flex items-center gap-1
+                px-2.5 py-1 rounded-full
                 bg-white/35 backdrop-blur-sm
                 border border-white/60
-                text-xs text-white font-medium
+                text-[11px] text-white font-medium
                 shadow-[0_0_12px_rgba(0,0,0,0.25)]
-                transition-all"
+                active:scale-95 transition-all z-10"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-white/90" />
-          <span className="drop-shadow-sm">View all photos</span>
+          <Activity className="w-3 h-3" />
+          <span className="drop-shadow-sm">Dive</span>
         </button>
 
         {/* Action rail */}
