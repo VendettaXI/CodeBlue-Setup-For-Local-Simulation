@@ -66,7 +66,7 @@ const VentSpacePage = () => {
       className="min-h-screen px-4 pt-3 pb-20"
       style={{
         background:
-          "radial-gradient(circle at top, rgba(15,33,58,0.12), transparent 55%)",
+          "radial-gradient(circle at top, var(--tint-lavender-12), transparent 55%)",
       }}
     >
       <div className="max-w-3xl mx-auto space-y-6">

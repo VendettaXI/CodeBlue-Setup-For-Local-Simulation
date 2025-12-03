@@ -3,7 +3,7 @@
 // ROOT NAVIGATION WRAPPER FOR TEST ENVIRONMENT
 // ------------------------------------------------------
 
-import React, { useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 
 // MAIN PAGES
 import DiscoverPage from "./DiscoverPage";
@@ -15,6 +15,13 @@ import AppSettingsPage from "./AppSettingsPage";
 
 // BOTTOM NAV COMPONENT
 import BottomNav from "../components/BottomNav";
+
+export const NavigationContext = createContext({
+  navigate: (page) => {},
+  currentPage: "discover",
+});
+
+export const useNavigation = () => useContext(NavigationContext);
 
 const TestPagesDemo = () => {
   const [activePage, setActivePage] = useState("discover");
@@ -39,16 +46,18 @@ const TestPagesDemo = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#FAFAFA]">
-      {/* ACTIVE PAGE */}
-      {/* NOTE: only non-discover pages get extra bottom padding now */}
-      <div className={activePage === "discover" ? "" : "pb-20"}>
-        {renderPage()}
-      </div>
+    <NavigationContext.Provider value={{ navigate: (page) => setActivePage(page), currentPage: activePage }}>
+      <div className="relative min-h-screen bg-[#FAFAFA]">
+        {/* ACTIVE PAGE */}
+        {/* NOTE: only non-discover pages get extra bottom padding now */}
+        <div className={activePage === "discover" ? "" : "pb-20"}>
+          {renderPage()}
+        </div>
 
-      {/* BOTTOM NAVIGATION (fixed at bottom inside BottomNav.jsx) */}
-      <BottomNav currentPage={activePage} onNavigate={setActivePage} />
-    </div>
+        {/* BOTTOM NAVIGATION (fixed at bottom inside BottomNav.jsx) */}
+        <BottomNav currentPage={activePage} onNavigate={setActivePage} />
+      </div>
+    </NavigationContext.Provider>
   );
 };
 

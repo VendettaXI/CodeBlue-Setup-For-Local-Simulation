@@ -13,6 +13,7 @@ import {
   Bell,
   Sparkles,
 } from "lucide-react";
+import { useNavigation } from "./TestPagesDemo";
 
 const currentUser = {
   name: "Sarah M.",
@@ -33,6 +34,7 @@ const currentUser = {
 
 const PersonaPage = () => {
   const profileProgress = currentUser.profileCompletion;
+  const { navigate } = useNavigation();
 
   return (
     <div
@@ -58,6 +60,7 @@ const PersonaPage = () => {
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 shadow-sm active:scale-95 transition"
+            onClick={() => navigate("settings")}
           >
             <Settings className="h-4 w-4 text-[#0F213A]" />
             <span>App settings</span>

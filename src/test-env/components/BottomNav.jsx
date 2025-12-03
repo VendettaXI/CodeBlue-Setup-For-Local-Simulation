@@ -6,7 +6,7 @@ import { Home, Heart, Wind, Users, User } from "lucide-react";
 const COLORS = {
   active: "#0F213A",
   inactive: "rgba(15,33,58,0.45)",
-  roseTint: "rgba(248,113,133,0.12)",
+  lavenderTint: "var(--tint-lavender-12)",
 };
 
 export default function BottomNav({ currentPage, onNavigate }) {
@@ -18,8 +18,9 @@ export default function BottomNav({ currentPage, onNavigate }) {
         border-t border-slate-200/70
         flex justify-around items-center
         h-[64px]
+        rounded-t-[28px]
       "
-      style={{ backgroundColor: COLORS.roseTint }}
+      style={{ backgroundColor: COLORS.lavenderTint }}
     >
       <NavBtn
         icon={<Home />}

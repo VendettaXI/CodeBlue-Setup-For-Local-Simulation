@@ -28,7 +28,7 @@ const AppSettingsPage = () => {
       className="min-h-screen px-4 pt-4 pb-24"
       style={{
         background:
-          "radial-gradient(circle at top, rgba(190,24,93,0.06), transparent 60%)",
+          "radial-gradient(circle at top, var(--tint-lavender-8), transparent 60%)",
       }}
     >
       <div className="max-w-3xl mx-auto space-y-6">

@@ -5,8 +5,9 @@
 // --------------------------------------------------------------
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Activity, Shield, Moon, Zap, Heart } from "lucide-react";
-import SnapshotPill from "./SnapshotPill";
+// SnapshotPill deprecated in favor of unified VitalPill styling
 
 const SectionTitle = ({ title }) => (
   <div className="flex items-center gap-2">
@@ -33,8 +34,8 @@ const kindToIcon = (kind) => {
 };
 
 const VitalPill = ({ label, Icon }) => (
-  <div className="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-medium text-slate-800 shadow-[0_4px_12px_rgba(15,33,58,0.12)]">
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(15,33,58,0.98)] text-white shadow-[0_4px_10px_rgba(15,33,58,0.55)]">
+  <div className="flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-medium text-slate-800">
+    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(15,33,58,0.98)] text-white">
       <Icon className="h-3.5 w-3.5" />
     </span>
     <span className="truncate">{label}</span>
@@ -63,7 +64,14 @@ const InfoCard = ({
       {/* COLLAPSED STATE */}
       {/* ------------------------------------------------------ */}
       {!infoExpanded ? (
-        <div className="relative rounded-[38px] bg-white border border-slate-200/70 px-4 pt-3 pb-4">
+        <motion.div
+          layout
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ type: "spring", stiffness: 220, damping: 26 }}
+          className="relative rounded-[38px] bg-white border border-slate-200/70 px-4 pt-3 pb-4"
+        >
           {/* "More" pill tab */}
           <button
             onClick={onExpand}
@@ -83,18 +91,43 @@ const InfoCard = ({
           </div>
 
           {/* Vital pills grid (2x2) */}
-          <div className="grid grid-cols-2 gap-x-3 gap-y-2.5">
-            {visibleVitals.map((tag) => {
-              const Icon = kindToIcon(tag.kind);
-              return <VitalPill key={tag.id} label={tag.label} Icon={Icon} />;
-            })}
-          </div>
-        </div>
+          {/* Vitals output: grid or horizontal scroll if more than 4 total */}
+          {allVitals.length <= 4 ? (
+            <div className="grid grid-cols-2 gap-x-3 gap-y-2.5">
+              {visibleVitals.map((tag) => {
+                const Icon = kindToIcon(tag.kind);
+                return <VitalPill key={tag.id} label={tag.label} Icon={Icon} />;
+              })}
+            </div>
+          ) : (
+            <div className="relative">
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+                {allVitals.map((tag) => {
+                  const Icon = kindToIcon(tag.kind);
+                  return (
+                    <div key={tag.id} className="snap-start">
+                      <VitalPill label={tag.label} Icon={Icon} />
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Edge fades */}
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 rounded-l-[24px] bg-gradient-to-r from-white to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 rounded-r-[24px] bg-gradient-to-l from-white to-transparent" />
+            </div>
+          )}
+        </motion.div>
       ) : (
         /* ------------------------------------------------------ */
         /* EXPANDED STATE */
         /* ------------------------------------------------------ */
-        <>
+        <motion.div
+          layout
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ type: "spring", stiffness: 220, damping: 26 }}
+        >
           {/* Hide Button */}
           <div className="flex justify-end mb-3">
             <button
@@ -110,15 +143,17 @@ const InfoCard = ({
             {/* Vitals Section (first) */}
             <div className="rounded-t-[38px] rounded-b-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
               <div className="flex flex-wrap gap-2 mb-2">
-                {rowA.map((tag) => (
-                  <SnapshotPill key={tag.id} kind={tag.kind} label={tag.label} />
-                ))}
+                {rowA.map((tag) => {
+                  const Icon = kindToIcon(tag.kind);
+                  return <VitalPill key={tag.id} label={tag.label} Icon={Icon} />;
+                })}
               </div>
               <div className="h-[1px] bg-slate-200/70 my-2" />
               <div className="flex flex-wrap gap-2">
-                {rowB.map((tag) => (
-                  <SnapshotPill key={tag.id} kind={tag.kind} label={tag.label} />
-                ))}
+                {rowB.map((tag) => {
+                  const Icon = kindToIcon(tag.kind);
+                  return <VitalPill key={tag.id} label={tag.label} Icon={Icon} />;
+                })}
               </div>
             </div>
 
@@ -220,7 +255,7 @@ const InfoCard = ({
               </div>
             )}
           </div>
-        </>
+        </motion.div>
       )}
     </div>
   );

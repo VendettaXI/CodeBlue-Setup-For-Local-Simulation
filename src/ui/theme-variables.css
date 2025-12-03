@@ -21,7 +21,9 @@
 
   /* ACCENTS */
   --accent-blue: #049BCD;
-  --accent-rose: #D87AB4;
+  --accent-lavender: #A891CD; /* rose purple / lavender */
+  --tint-lavender-12: rgba(168, 145, 205, 0.12);
+  --tint-lavender-8: rgba(168, 145, 205, 0.08);
 
   /* BORDERS */
   --border-light: rgba(15, 25, 33, 0.15);

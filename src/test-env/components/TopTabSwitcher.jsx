@@ -6,7 +6,7 @@ const COLORS = {
   gunmetalLight: "rgba(15,33,58,0.08)",
   textInactive: "rgba(15,33,58,0.6)",
   white: "#FFFFFF",
-  roseAccent: "#F9738F", // soft rose for Matches
+  lavenderAccent: "#A891CD", // lavender for Matches
 };
 
 export default function TopTabSwitcher({ activeTab, onTabChange }) {
@@ -24,12 +24,12 @@ export default function TopTabSwitcher({ activeTab, onTabChange }) {
   const sliderBackground =
     activeTab === "discover"
       ? `linear-gradient(135deg, ${COLORS.gunmetalActive}, ${COLORS.gunmetalActive})`
-      : `linear-gradient(135deg, ${COLORS.roseAccent}, #FB7185)`; // rose fill for Matches
+      : `linear-gradient(135deg, ${COLORS.lavenderAccent}, #B8A0D8)`; // lavender fill for Matches
 
   const sliderShadow =
     activeTab === "discover"
       ? `0 0 0 1px rgba(15,33,58,0.20), 0 6px 18px rgba(15,33,58,0.35)`
-      : `0 0 0 1px rgba(249,113,139,0.30), 0 6px 18px rgba(248,113,133,0.45)`;
+      : `0 0 0 1px rgba(168,145,205,0.30), 0 6px 18px rgba(168,145,205,0.45)`;
 
   // NOTE: no outer padding/centering wrapper here.
   // Parent decides where to place the tab switcher.

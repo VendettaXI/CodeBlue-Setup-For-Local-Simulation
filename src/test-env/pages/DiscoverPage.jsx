@@ -8,6 +8,7 @@
 // ------------------------------------------------------
 
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SlidersHorizontal } from "lucide-react";
 
 import {
@@ -19,6 +20,7 @@ import {
 
 import HeroCard from "../components/HeroCard";
 import InfoCard from "../components/InfoCard";
+import MatchesPage from "./MatchesPage";
 
 import { addHeartCheckInboxEvent } from "../utils/inboxEvents";
 import { savePulseAnswer, loadPulseAnswers } from "../utils/pulseStorage";
@@ -504,31 +506,35 @@ const DiscoverPage = () => {
             )}
 
             {/* Main stack: Hero flexes, InfoCard pinned below */}
-            <div className="flex-1 flex flex-col justify-between pb-4">
+            <div className="flex-1 flex flex-col justify-between pb-4 min-h-0">
               {/* HERO TAKES AVAILABLE HEIGHT IN COLLAPSED STATE */}
-              <div
-                className={
-                  infoExpanded
-                    ? "h-[180px] w-full transition-all duration-300"
-                    : "flex-1 min-h-[360px] w-full transition-all duration-300"
-                }
+              <motion.div
+                className="w-full flex-1 min-h-0 bg-white rounded-[38px]"
+                animate={{
+                  height: infoExpanded ? "clamp(160px, 24vh, 220px)" : "100%",
+                }}
+                transition={{ type: "spring", stiffness: 200, damping: 30 }}
+                style={{ overflow: "hidden" }}
               >
                 <HeroCard profile={profile} onNext={handleNext} />
-              </div>
+              </motion.div>
 
               {/* COLLAPSED / EXPANDED INFO CARD */}
-              <InfoCard
-                infoExpanded={infoExpanded}
-                rowA={rowA}
-                rowB={rowB}
-                profile={profile}
-                rhythmCount={rhythmCount}
-                answeredPulse={answeredPulse}
-                PulseGrid={PulseGrid}
-                onOpenPulseQuestion={handleOpenPulseQuestion}
-                onExpand={() => setInfoExpanded(true)}
-                onCollapse={() => setInfoExpanded(false)}
-              />
+              <AnimatePresence initial={false} mode="popLayout">
+                <InfoCard
+                  key={infoExpanded ? "expanded" : "collapsed"}
+                  infoExpanded={infoExpanded}
+                  rowA={rowA}
+                  rowB={rowB}
+                  profile={profile}
+                  rhythmCount={rhythmCount}
+                  answeredPulse={answeredPulse}
+                  PulseGrid={PulseGrid}
+                  onOpenPulseQuestion={handleOpenPulseQuestion}
+                  onExpand={() => setInfoExpanded(true)}
+                  onCollapse={() => setInfoExpanded(false)}
+                />
+              </AnimatePresence>
             </div>
           </div>
         )}
@@ -536,11 +542,7 @@ const DiscoverPage = () => {
         {/* -------------------------------------------------- */}
         {/* MATCHES TAB (placeholder)                          */}
         {/* -------------------------------------------------- */}
-        {activeTab === "matches" && (
-          <div className="flex-1 flex items-center justify-center px-4 text-center text-sm text-slate-500">
-            Matches view coming next ✨
-          </div>
-        )}
+        {activeTab === "matches" && <MatchesPage />}
       </div>
 
       {/* Pulse modal */}

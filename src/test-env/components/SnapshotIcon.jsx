@@ -162,6 +162,7 @@ const SnapshotIcon = ({ kind }) => {
   }
 };
 
+// Deprecated SnapshotPill: kept only inside this sandbox page for debug visuals
 const SnapshotPill = ({ kind, label }) => (
   <div className="inline-flex items-center rounded-full bg-slate-100 pr-3 pl-1 py-1">
     <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#0F213A] text-white shadow-[0_3px_10px_rgba(15,33,58,0.45)] mr-1.5">

@@ -11,6 +11,7 @@
     "status:open": "powershell -NoProfile -ExecutionPolicy Bypass -Command Start-Process -FilePath PROJECT_STATUS.md"
   },
   "dependencies": {
+    "framer-motion": "^12.23.25",
     "lucide-react": "^0.552.0",
     "phosphor-react": "^1.4.1",
     "react": "^19.1.1",
