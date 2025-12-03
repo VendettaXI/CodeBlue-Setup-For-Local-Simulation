@@ -58,10 +58,15 @@ export default function BottomNav({ currentPage, onNavigate }) {
 
 function NavBtn({ icon, label, active, onClick }) {
   return (
-    <button className="flex items-center justify-center" onClick={onClick}>
+    <button 
+      className="flex items-center justify-center transition-transform" 
+      onClick={onClick}
+      aria-label={label}
+      aria-current={active ? "page" : undefined}
+    >
       <div
-        className={`w-6 h-6 ${
-          active ? "text-[#0F213A]" : "text-[rgba(15,33,58,0.45)]"
+        className={`w-6 h-6 transition-all ${
+          active ? "text-[#0F213A] scale-110" : "text-[rgba(15,33,58,0.45)] scale-100"
         }`}
       >
         {React.cloneElement(icon, { className: "w-full h-full" })}

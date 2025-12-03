@@ -34,7 +34,7 @@ const kindToIcon = (kind) => {
 };
 
 const VitalPill = ({ label, Icon }) => (
-  <div className="flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-medium text-slate-800 bg-white/80 backdrop-blur-sm">
+  <div className="flex items-center gap-2 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-slate-800 bg-white/80 backdrop-blur-sm shadow-sm">
     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(15,33,58,0.98)] text-white">
       <Icon className="h-3.5 w-3.5" />
     </span>
@@ -70,7 +70,8 @@ const InfoCard = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ type: "spring", stiffness: 220, damping: 26 }}
-          className="relative rounded-[38px] bg-gradient-to-br from-purple-100 via-violet-100 to-purple-50/80 border border-slate-200/70 px-4 pt-3 pb-4"
+          onClick={onExpand}
+          className="relative rounded-[38px] bg-gradient-to-br from-purple-100 via-violet-100 to-purple-50/80 border border-slate-200/70 px-4 pt-2 pb-2.5 cursor-pointer"
         >
           {/* Header removed per request */}
 
@@ -166,6 +167,27 @@ const InfoCard = ({
               </div>
             )}
 
+            {/* Glimpses */}
+            {profile.photos?.length > 0 && (
+              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
+                <SectionTitle title="Glimpses" />
+                <div className="flex gap-3 overflow-x-auto no-scrollbar mt-2">
+                  {profile.photos.map((ph, idx) => (
+                    <div
+                      key={idx}
+                      className="flex-shrink-0 w-24 h-24 rounded-[18px] overflow-hidden bg-slate-100 border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
+                    >
+                      <img
+                        src={ph}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Pulse Grid */}
             {profile.pulseQuestions?.length > 0 && (
               <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
@@ -195,27 +217,6 @@ const InfoCard = ({
                       <div className="mt-1 text-sm text-slate-800">
                         {p.answer}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Glimpses */}
-            {profile.photos?.length > 0 && (
-              <div className="rounded-[12px] bg-white border border-slate-100 shadow-sm px-5 py-4">
-                <SectionTitle title="Glimpses" />
-                <div className="flex gap-3 overflow-x-auto pb-1 mt-2">
-                  {profile.photos.map((ph, idx) => (
-                    <div
-                      key={idx}
-                      className="flex-shrink-0 w-24 h-24 rounded-[18px] overflow-hidden bg-slate-100 border border-slate-100 shadow-[0_4px_10px_rgba(15,25,33,0.08)]"
-                    >
-                      <img
-                        src={ph}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
                     </div>
                   ))}
                 </div>
