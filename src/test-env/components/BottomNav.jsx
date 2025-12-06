@@ -3,13 +3,11 @@
 import React from "react";
 import { Home, Heart, Wind, Users, User } from "lucide-react";
 
-const COLORS = {
-  active: "#0F213A",
-  inactive: "rgba(15,33,58,0.45)",
-  lavenderTint: "var(--tint-lavender-12)",
-};
+// Support both legacy prop names (currentPage/onNavigate) and new ones (active/onChange)
+export default function BottomNav({ currentPage, onNavigate, active, onChange }) {
+  const resolvedPage = active ?? currentPage ?? "discover";
+  const resolvedNavigate = onChange ?? onNavigate;
 
-export default function BottomNav({ currentPage, onNavigate }) {
   return (
     <div
       className="
@@ -21,36 +19,36 @@ export default function BottomNav({ currentPage, onNavigate }) {
       <NavBtn
         icon={<Home />}
         label="Discover"
-        active={currentPage === "discover"}
-        onClick={() => onNavigate("discover")}
+        active={resolvedPage === "discover"}
+        onClick={() => resolvedNavigate && resolvedNavigate("discover")}
       />
 
       <NavBtn
         icon={<Heart />}
         label="Matches"
-        active={currentPage === "matches"}
-        onClick={() => onNavigate("matches")}
+        active={resolvedPage === "matches"}
+        onClick={() => resolvedNavigate && resolvedNavigate("matches")}
       />
 
       <NavBtn
         icon={<Wind />}
         label="Vent"
-        active={currentPage === "vent"}
-        onClick={() => onNavigate("vent")}
+        active={resolvedPage === "vent"}
+        onClick={() => resolvedNavigate && resolvedNavigate("vent")}
       />
 
       <NavBtn
         icon={<Users />}
         label="Connect"
-        active={currentPage === "connect"}
-        onClick={() => onNavigate("connect")}
+        active={resolvedPage === "connect"}
+        onClick={() => resolvedNavigate && resolvedNavigate("connect")}
       />
 
       <NavBtn
         icon={<User />}
         label="Persona"
-        active={currentPage === "persona"}
-        onClick={() => onNavigate("persona")}
+        active={resolvedPage === "persona"}
+        onClick={() => resolvedNavigate && resolvedNavigate("persona")}
       />
     </div>
   );

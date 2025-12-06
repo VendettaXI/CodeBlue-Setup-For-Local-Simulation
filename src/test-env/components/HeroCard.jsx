@@ -36,7 +36,6 @@ const HeroCard = ({ profile, onNext, onExpand }) => {
 
   const handleHeartbeat = () => {
     setShowHeartbeat(true);
-    console.log("Heartbeat", profile.name);
   };
 
   const handleHeartbeatComplete = () => {

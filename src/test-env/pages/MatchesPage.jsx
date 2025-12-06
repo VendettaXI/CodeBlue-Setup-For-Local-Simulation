@@ -292,8 +292,8 @@ const MatchesPage = () => {
               onClick={() => setSelectedChat({
                 name: thread.name,
                 avatar: thread.avatar,
-                online: thread.status === "online",
-                role: thread.shiftLabel
+                status: thread.status,
+                shiftLabel: thread.shiftLabel
               })}
               className="w-full rounded-[10px] bg-white px-4 py-3 flex items-center shadow-md active:scale-[0.99] transition-transform"
             >

@@ -407,7 +407,7 @@ const DiscoverPage = () => {
       : 0;
 
   const handleOpenPulseQuestion = (question, index) => {
-    if (!ENABLE_PREMIUM_GATE) {
+    if (ENABLE_PREMIUM_GATE) {
       setPremiumUpsell(true);
       return;
     }
@@ -566,7 +566,6 @@ const DiscoverPage = () => {
         <PremiumUpsellModal
           onClose={() => setPremiumUpsell(false)}
           onUpgrade={() => {
-            console.log("Redirect to premium purchase");
             setPremiumUpsell(false);
           }}
         />

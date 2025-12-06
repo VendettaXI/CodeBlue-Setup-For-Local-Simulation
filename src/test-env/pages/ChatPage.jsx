@@ -242,7 +242,7 @@ const ChatPage = ({ contact, onBack }) => {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Message..."
               className="flex-1 bg-transparent text-[15px] outline-none text-slate-800 placeholder:text-slate-400"
             />
