@@ -1,6 +1,7 @@
 // src/test-env/pages/MatchesPage.jsx
-import React from "react";
-import { Heart, Search } from "lucide-react";
+import React, { useState } from "react";
+import { Heart, Search, X } from "lucide-react";
+import ChatPage from "./ChatPage";
 
 // ---- Sample data ----------------------------------------------------
 
@@ -48,8 +49,10 @@ const chatThreads = [
     lastMessage: "I finally finished my night shift 😭",
     timeAgo: "2m",
     isUnread: true,
+    unreadCount: 3,
     shiftLabel: "Night shift brain",
     status: "online",
+    isTyping: true,
   },
   {
     id: 2,
@@ -59,8 +62,10 @@ const chatThreads = [
     lastMessage: "Sunday brunch sounds perfect ☕",
     timeAgo: "1h",
     isUnread: false,
+    unreadCount: 0,
     shiftLabel: "Post-ED debrief",
     status: "away",
+    isTyping: false,
   },
   {
     id: 3,
@@ -70,8 +75,10 @@ const chatThreads = [
     lastMessage: "How was your on-call? 💛",
     timeAgo: "5m",
     isUnread: true,
+    unreadCount: 1,
     shiftLabel: "Soft life check-in",
     status: "online",
+    isTyping: false,
   },
   {
     id: 4,
@@ -81,8 +88,10 @@ const chatThreads = [
     lastMessage: "Made it home, finally off rota duty.",
     timeAgo: "3h",
     isUnread: false,
+    unreadCount: 0,
     shiftLabel: "Pharmacy calm",
     status: "offline",
+    isTyping: false,
   },
   {
     id: 5,
@@ -92,8 +101,11 @@ const chatThreads = [
     lastMessage: "We owe ourselves a proper debrief 🧠",
     timeAgo: "Yesterday",
     isUnread: true,
+    unreadCount: 12,
     shiftLabel: "Group chat",
     status: "offline",
+    isTyping: false,
+    isGroup: true,
   },
 ];
 
@@ -118,26 +130,73 @@ const OnlineDot = ({ status }) => {
   );
 };
 
+const TypingIndicator = () => (
+  <div className="flex gap-1 items-center">
+    <div className="flex gap-0.5">
+      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "0ms", animationDuration: "1s" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "150ms", animationDuration: "1s" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "300ms", animationDuration: "1s" }} />
+    </div>
+    <span className="text-[11px] text-purple-500 ml-1">typing...</span>
+  </div>
+);
+
 // ---- Main page ------------------------------------------------------
 
 const MatchesPage = () => {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedChat, setSelectedChat] = useState(null);
+
+  // If a chat is selected, show ChatPage
+  if (selectedChat) {
+    return (
+      <ChatPage 
+        contact={selectedChat}
+        onBack={() => setSelectedChat(null)}
+      />
+    );
+  }
+
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#FFFAFC" }} // VERY FAINT ROSE
+      style={{ backgroundColor: "#FDFCFB" }} // SUBTLE WARM WHITE
     >
       <div className="flex-1 px-5 pt-5 pb-24">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-[26px] font-semibold text-slate-900 tracking-tight">
-            Messages
-          </h1>
+          {!searchOpen ? (
+            <h1 className="text-[26px] font-semibold text-[#0F213A] tracking-tight">
+              Messages
+            </h1>
+          ) : (
+            <div className="flex-1 flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+              <Search className="w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search messages..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 text-sm outline-none bg-transparent"
+                autoFocus
+              />
+              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); }}>
+                <X className="w-4 h-4 text-slate-400" />
+              </button>
+            </div>
+          )}
 
           <div className="flex items-center gap-3">
-            <button className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center">
-              <Search className="w-4 h-4 text-slate-500" />
-            </button>
-            <button className="h-9 w-9 rounded-full bg-[#D6406D] shadow-[0_6px_18px_rgba(214,64,109,0.35)] flex items-center justify-center">
+            {!searchOpen && (
+              <button 
+                onClick={() => setSearchOpen(true)}
+                className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center"
+              >
+                <Search className="w-4 h-4 text-slate-500" />
+              </button>
+            )}
+            <button className="h-9 w-9 rounded-full bg-gradient-to-br from-purple-400 to-violet-400 shadow-[0_6px_18px_rgba(168,145,205,0.4)] flex items-center justify-center">
               <Heart className="w-4 h-4 text-white fill-white" />
             </button>
           </div>
@@ -146,8 +205,13 @@ const MatchesPage = () => {
         {/* New Matches — TRUE GRID */}
         <section className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <SectionLabel>New matches</SectionLabel>
-            <button className="text-[12px] font-medium text-[#D6406D]">
+            <div className="flex items-center gap-2">
+              <SectionLabel>New matches</SectionLabel>
+              <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-purple-100 text-[10px] font-semibold text-purple-600">
+                {newMatches.length}
+              </span>
+            </div>
+            <button className="text-[12px] font-medium text-purple-600">
               See all
             </button>
           </div>
@@ -155,14 +219,14 @@ const MatchesPage = () => {
           {/* HARD RESET of old horizontal scroll styles */}
           <div className="w-full overflow-visible !flex-none !block">
 
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-4 gap-4">
               {newMatches.map((match) => (
                 <div key={match.id} className="flex flex-col items-center text-center">
                   
-                  {/* Avatar wrapper */}
+                  {/* Avatar wrapper - rectangular frame */}
                   <div className="relative mb-2">
-                    <div className="h-[70px] w-[70px] rounded-full bg-gradient-to-tr from-[#D6406D] to-[#F28BAA] p-[2px] shadow-[0_8px_20px_rgba(214,64,109,0.28)]">
-                      <div className="h-full w-full rounded-full bg-white overflow-hidden">
+                    <div className="h-[80px] w-[70px] rounded-[12px] bg-gradient-to-br from-purple-200 to-violet-200 p-[2px] shadow-lg">
+                      <div className="h-full w-full rounded-[11px] bg-white overflow-hidden">
                         <img
                           src={match.avatar}
                           className="h-full w-full object-cover"
@@ -170,10 +234,12 @@ const MatchesPage = () => {
                       </div>
                     </div>
 
-                    {match.online && <OnlineDot status="online" />}
+                    {match.online && (
+                      <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-white" />
+                    )}
                   </div>
 
-                  <p className="text-[13px] font-medium text-slate-800 truncate max-w-[72px]">
+                  <p className="text-[13px] font-medium text-[#0F213A] truncate max-w-[72px]">
                     {match.name}
                   </p>
 
@@ -204,7 +270,7 @@ const MatchesPage = () => {
                 style={{
                   width: "70%",
                   background:
-                    "linear-gradient(90deg, #D6406D 0%, #F28BAA 100%)",
+                    "linear-gradient(90deg, #A891CD 0%, #B8A0D8 100%)",
                 }}
               />
             </div>
@@ -223,37 +289,58 @@ const MatchesPage = () => {
           {chatThreads.map((thread) => (
             <button
               key={thread.id}
-              className="w-full rounded-[22px] bg-white px-4 py-3 flex items-center shadow-md active:scale-[0.99] transition-transform"
+              onClick={() => setSelectedChat({
+                name: thread.name,
+                avatar: thread.avatar,
+                online: thread.status === "online",
+                role: thread.shiftLabel
+              })}
+              className="w-full rounded-[10px] bg-white px-4 py-3 flex items-center shadow-md active:scale-[0.99] transition-transform"
             >
               <div className="relative mr-3 shrink-0">
-                <div className="h-[52px] w-[52px] rounded-full bg-slate-200 overflow-hidden">
-                  <img
-                    src={thread.avatar}
-                    alt={thread.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <OnlineDot status={thread.status} />
+                {thread.isGroup ? (
+                  <div className="h-[52px] w-[52px] rounded-full bg-gradient-to-br from-purple-200 to-violet-200 overflow-hidden flex items-center justify-center">
+                    <img
+                      src={thread.avatar}
+                      alt={thread.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-[52px] w-[52px] rounded-full bg-slate-200 overflow-hidden">
+                    <img
+                      src={thread.avatar}
+                      alt={thread.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
+                {!thread.isGroup && <OnlineDot status={thread.status} />}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-[15px] font-semibold text-slate-900 truncate pr-2">
+                  <p className="text-[15px] font-semibold text-[#0F213A] truncate pr-2">
                     {thread.name}
                   </p>
                   <span className="text-[11px] text-slate-400">
                     {thread.timeAgo}
                   </span>
                 </div>
-                <p
-                  className={`text-[13px] truncate ${
-                    thread.isUnread
-                      ? "text-[#D6406D] font-medium"
-                      : "text-slate-500"
-                  }`}
-                >
-                  {thread.lastMessage}
-                </p>
+                
+                {thread.isTyping ? (
+                  <TypingIndicator />
+                ) : (
+                  <p
+                    className={`text-[13px] truncate ${
+                      thread.isUnread
+                        ? "text-purple-600 font-medium"
+                        : "text-slate-500"
+                    }`}
+                  >
+                    {thread.lastMessage}
+                  </p>
+                )}
 
                 <div className="mt-1 flex items-center gap-2">
                   <span className="inline-flex items-center rounded-full bg-slate-50 px-2 py-[2px] text-[11px] text-slate-500">
@@ -262,8 +349,10 @@ const MatchesPage = () => {
                 </div>
               </div>
 
-              {thread.isUnread && (
-                <span className="ml-3 h-2.5 w-2.5 rounded-full bg-[#D6406D]" />
+              {thread.isUnread && thread.unreadCount > 0 && (
+                <span className="ml-3 h-5 min-w-[20px] px-1.5 rounded-full bg-purple-500 text-white text-[11px] font-semibold flex items-center justify-center">
+                  {thread.unreadCount > 9 ? "9+" : thread.unreadCount}
+                </span>
               )}
             </button>
           ))}
