@@ -29,28 +29,32 @@ const circles = [
     title: "Night Shift Survivors",
     members: "14.8k healthcare workers",
     desc: "A safe circle for exhausted night warriors — decompress, laugh, breathe.",
-    icon: <Activity className="h-5 w-5 text-rose-600" />,
+    icon: <Activity className="h-5 w-5 text-white" />,
+    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
   },
   {
     id: 2,
     title: "Soft Life Nurses Club",
     members: "9.2k nurses",
     desc: "Intentional rest, gentle routines, emotional softness & healthy boundaries.",
-    icon: <Coffee className="h-5 w-5 text-rose-600" />,
+    icon: <Coffee className="h-5 w-5 text-white" />,
+    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
   },
   {
     id: 3,
     title: "Healthcare Couples Lounge",
     members: "5.4k couples",
     desc: "For CodeBlue couples to keep bonding, date, play & stay emotionally connected.",
-    icon: <HeartHandshake className="h-5 w-5 text-rose-600" />,
+    icon: <HeartHandshake className="h-5 w-5 text-white" />,
+    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
   },
   {
     id: 4,
     title: "Fitness & Scrubs",
     members: "7.7k workers",
     desc: "Shift-friendly workouts, body care, healthy meal ideas & group fitness buddies.",
-    icon: <Flame className="h-5 w-5 text-rose-600" />,
+    icon: <Flame className="h-5 w-5 text-white" />,
+    gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
   },
 ];
 
@@ -59,8 +63,7 @@ const ConnectPage = () => {
     <div
       className="min-h-screen px-4 pt-3 pb-20"
       style={{
-        background:
-          "radial-gradient(circle at top, rgba(190,24,93,0.065), transparent 60%)",
+        backgroundColor: "#F8F7FA",
       }}
     >
       <div className="max-w-3xl mx-auto space-y-6">
@@ -68,65 +71,60 @@ const ConnectPage = () => {
         {/* HEADER                                             */}
         {/* -------------------------------------------------- */}
         <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-xs font-medium tracking-wide text-rose-500/80">
-              CONNECT • DISCOVER CIRCLES
-            </span>
-            <h1 className="mt-1 text-[21px] font-semibold text-slate-900">
-              Find your people 🤍
-            </h1>
-            <p className="mt-[2px] text-xs text-slate-500">
-              Soft communities made for healthcare workers.
-            </p>
-          </div>
+          <h1 className="text-lg font-semibold text-[#0F213A]">
+            Find your people 🤍
+          </h1>
 
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-rose-100 bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-800 shadow-[0_3px_14px_rgba(15,33,58,0.18)] active:scale-95 transition"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-purple-200 bg-white/90 px-4 py-2 text-xs font-medium text-[#0F213A] shadow-[0_4px_16px_rgba(168,145,205,0.2)] hover:bg-purple-50 hover:border-purple-300 active:scale-95 transition-all"
           >
-            <Compass className="h-4 w-4 text-rose-600" />
+            <Compass className="h-4 w-4 text-purple-600" />
             Explore
           </button>
         </div>
 
         {/* -------------------------------------------------- */}
-        {/* FEATURED TOP STRIPE                                */}
+        {/* YOUR CONNECTION VIBE (styled like VentSpace quick vent card) */}
         {/* -------------------------------------------------- */}
-        <div className="rounded-[22px] overflow-hidden shadow-[0_10px_28px_rgba(15,33,58,0.15)] border border-slate-100 bg-white">
-          <div className="px-5 py-4 flex items-center justify-between bg-gradient-to-r from-[#0F213A] to-[#1b3353] text-white">
-            <div>
-              <h3 className="text-[15px] font-semibold">Your Connection Vibe</h3>
-              <p className="text-[11px] text-white/80 mt-[2px]">
-                What you're naturally drawn to right now.
-              </p>
+        <div className="rounded-[22px] border border-slate-200 bg-white/90 shadow-[0_8px_26px_rgba(15,33,58,0.15)] p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#0F213A]" />
+              <h3 className="text-sm font-semibold text-[#0F213A]">
+                Your Connection Vibe
+              </h3>
             </div>
-
-            <Sparkles className="h-6 w-6 text-white/90" />
+            <Sparkles className="h-5 w-5 text-purple-600/70" />
           </div>
 
-          <div className="px-5 py-5 space-y-3 bg-white">
-            <button className="flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-3 text-left hover:bg-slate-50 transition">
-              <div>
-                <div className="text-[13px] font-medium text-slate-900">
+          <p className="text-xs text-slate-500">
+            What you're naturally drawn to right now.
+          </p>
+
+          <div className="space-y-2">
+            <button className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-3 hover:bg-purple-50/60 hover:border-purple-300/60 hover:scale-[1.01] transition-all duration-300">
+              <div className="text-left">
+                <div className="text-sm font-medium text-[#0F213A]">
                   Soft social circles for emotional rest
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-xs text-[#0F213A]/60 mt-0.5">
                   You match well with calm & emotionally aware groups.
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-400" />
+              <ChevronRight className="h-5 w-5 text-purple-500 flex-shrink-0 ml-2" />
             </button>
 
-            <button className="flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-3 text-left hover:bg-slate-50 transition">
-              <div>
-                <div className="text-[13px] font-medium text-slate-900">
+            <button className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-3 hover:bg-purple-50/60 hover:border-purple-300/60 hover:scale-[1.01] transition-all duration-300">
+              <div className="text-left">
+                <div className="text-sm font-medium text-[#0F213A]">
                   Shift-friendly connection routines
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-xs text-[#0F213A]/60 mt-0.5">
                   Evening chats, slow weekends, soft bonding.
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-400" />
+              <ChevronRight className="h-5 w-5 text-purple-500 flex-shrink-0 ml-2" />
             </button>
           </div>
         </div>
@@ -135,38 +133,45 @@ const ConnectPage = () => {
         {/* DISCOVER CIRCLES — GRID                           */}
         {/* -------------------------------------------------- */}
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-            <Users className="h-4 w-4 text-[#0F213A]" />
+          <h2 className="text-sm font-semibold text-[#0F213A] flex items-center gap-2">
+            <Users className="h-4 w-4 text-purple-600" />
             Healthcare circles you might like
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[280px]">
             {circles.map((c) => (
               <button
                 key={c.id}
-                className="group rounded-2xl border border-slate-200 bg-white shadow-[0_6px_18px_rgba(15,33,58,0.12)] p-4 text-left hover:bg-rose-50/40 hover:border-rose-200 transition"
+                className="group h-full rounded-[10px] border border-white/30 shadow-[0_8px_24px_rgba(0,0,0,0.12)] p-5 text-left hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)] hover:scale-[1.02] transition-all duration-300 flex flex-col relative overflow-hidden"
+                style={{ background: c.gradient }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-rose-50 p-2 shadow-[0_0_0_1px_rgba(190,24,93,0.18)]">
-                    {c.icon}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[14px] font-semibold text-slate-900">
-                      {c.title}
-                    </span>
-                    <span className="text-[11px] text-slate-500">
-                      {c.members}
-                    </span>
-                  </div>
-                </div>
+                {/* Overlay for depth */}
+                <div className="absolute inset-0 bg-black/5" />
 
-                <p className="mt-3 text-[12px] leading-relaxed text-slate-700">
-                  {c.desc}
-                </p>
+                {/* Content */}
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="rounded-xl bg-white/25 backdrop-blur-sm p-2.5 flex-shrink-0">
+                      {c.icon}
+                    </div>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <span className="text-[15px] font-bold text-white line-clamp-2 drop-shadow-md">
+                        {c.title}
+                      </span>
+                      <span className="text-[11px] text-white/80 mt-0.5">
+                        {c.members}
+                      </span>
+                    </div>
+                  </div>
 
-                <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-rose-600">
-                  Join circle
-                  <ChevronRight className="h-3.5 w-3.5" />
+                  <p className="flex-1 text-[13px] leading-relaxed text-white/90 line-clamp-5 mb-3">
+                    {c.desc}
+                  </p>
+
+                  <div className="mt-auto inline-flex items-center gap-1.5 text-[12px] font-semibold text-white">
+                    Join circle
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
                 </div>
               </button>
             ))}
@@ -177,42 +182,45 @@ const ConnectPage = () => {
         {/* EVENTS PREVIEW (future expansion)                  */}
         {/* -------------------------------------------------- */}
         <section className="mt-6 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-[#0F213A]" />
+          <h2 className="text-sm font-semibold text-[#0F213A] flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-purple-600" />
             Upcoming soft-life events
           </h2>
 
           <button
             type="button"
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-[0_6px_18px_rgba(15,33,58,0.12)] hover:bg-rose-50/40 transition"
+            className="w-full rounded-[10px] border border-white/30 px-4 py-5 text-left shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-all duration-300 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}
           >
-            <div className="flex items-center justify-between">
+            <div className="absolute inset-0 bg-black/5" />
+            <div className="relative z-10 flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-slate-900">
+                <div className="text-[13px] font-semibold text-white drop-shadow-md">
                   Healthcare coffee chats ☕
                 </div>
-                <div className="text-[11px] text-slate-500 mt-[2px]">
+                <div className="text-[11px] text-white/80 mt-[2px]">
                   Sunday · Soft conversations · London
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-400" />
+              <ChevronRight className="h-5 w-5 text-white" />
             </div>
           </button>
 
           <button
             type="button"
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-[0_6px_18px_rgba(15,33,58,0.12)] hover:bg-rose-50/40 transition"
+            className="w-full rounded-[10px] border border-white/30 px-4 py-5 text-left shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-all duration-300 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" }}
           >
-            <div className="flex items-center justify-between">
+            <div className="relative z-10 flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-slate-900">
+                <div className="text-[13px] font-semibold text-white drop-shadow-md">
                   Night shift cool-down walks 🌙
                 </div>
-                <div className="text-[11px] text-slate-500 mt-[2px]">
+                <div className="text-[11px] text-white/80 mt-[2px]">
                   Wednesdays · Thames River · Calm energy
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-400" />
+              <ChevronRight className="h-5 w-5 text-white" />
             </div>
           </button>
         </section>

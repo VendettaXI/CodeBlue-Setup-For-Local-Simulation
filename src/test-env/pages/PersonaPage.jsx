@@ -45,17 +45,9 @@ const PersonaPage = () => {
 
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-xs font-medium tracking-wide text-[#0F213A]/70">
-              PROFILE OVERVIEW
-            </span>
-            <h1 className="mt-1 text-[21px] font-semibold text-slate-900">
-              Hey, {currentUser.name.split(" ")[0]} 👋
-            </h1>
-            <p className="text-xs text-slate-500">
-              This is how your CodeBlue presence looks and feels.
-            </p>
-          </div>
+          <h1 className="text-lg font-semibold text-slate-900">
+            Hey, {currentUser.name.split(" ")[0]} 👋
+          </h1>
 
           <button
             type="button"

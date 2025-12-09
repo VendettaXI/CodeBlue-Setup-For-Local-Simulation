@@ -27,8 +27,7 @@ const AppSettingsPage = () => {
     <div
       className="min-h-screen px-4 pt-4 pb-24"
       style={{
-        background:
-          "radial-gradient(circle at top, var(--tint-lavender-8), transparent 60%)",
+        backgroundColor: "#F8F7FA",
       }}
     >
       <div className="max-w-3xl mx-auto space-y-6">
@@ -36,16 +35,10 @@ const AppSettingsPage = () => {
         {/* -------------------------------------------------- */}
         {/* HEADER */}
         {/* -------------------------------------------------- */}
-        <div className="flex flex-col mb-1">
-          <span className="text-xs font-medium tracking-wide text-[#0F213A]/70">
-            APP • SETTINGS
-          </span>
-          <h1 className="mt-1 text-[21px] font-semibold text-[#0F213A]">
+        <div className="mb-1">
+          <h1 className="text-lg font-semibold text-[#0F213A]">
             Control your space ⚙️
           </h1>
-          <p className="text-xs text-slate-500">
-            Your preferences, notifications and boundaries in one place.
-          </p>
         </div>
 
         {/* -------------------------------------------------- */}

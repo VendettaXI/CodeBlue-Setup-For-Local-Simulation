@@ -450,7 +450,7 @@ const DiscoverPage = () => {
 
   // Root: no scroll when collapsed, scroll when expanded
   const rootClassName =
-    "min-h-screen bg-[#FAFAFA] px-4" +
+    "min-h-screen bg-[#F8F7FA] px-4" +
     (infoExpanded ? " overflow-y-auto pt-3" : " overflow-hidden pt-3");
 
   return (

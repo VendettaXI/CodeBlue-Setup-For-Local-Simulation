@@ -161,7 +161,7 @@ const MatchesPage = () => {
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#FDFCFB" }} // SUBTLE WARM WHITE
+      style={{ backgroundColor: "#F8F7FA" }}
     >
       <div className="flex-1 px-5 pt-5 pb-24">
         {/* Header */}
@@ -295,7 +295,7 @@ const MatchesPage = () => {
                 status: thread.status,
                 shiftLabel: thread.shiftLabel
               })}
-              className="w-full rounded-[10px] bg-white px-4 py-3 flex items-center shadow-md active:scale-[0.99] transition-transform"
+              className="w-full rounded-[10px] bg-white px-4 py-3 flex items-center border border-slate-200/70 shadow-[0_6px_18px_rgba(15,33,58,0.08)] active:scale-[0.99] transition-transform"
             >
               <div className="relative mr-3 shrink-0">
                 {thread.isGroup ? (

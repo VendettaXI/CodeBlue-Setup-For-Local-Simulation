@@ -84,8 +84,11 @@ const ROOMS = [
     description: "When today just hit different",
     memberCount: 12,
     emoji: "💪",
-    color: "#FF6B6B",
+    bgGradient: "linear-gradient(135deg, #FF6B6B 0%, #FFB88C 100%)",
     type: "group",
+    lastMessage: "I held it together until I got to the car...",
+    activity: "high",
+    activeMembers: ["N_12", "D_45", "T_7"],
   },
   {
     id: "patient-emotions",
@@ -93,8 +96,11 @@ const ROOMS = [
     description: "Processing the human side of care",
     memberCount: 8,
     emoji: "🤍",
-    color: "#A891CD",
+    bgGradient: "linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 100%)",
     type: "group",
+    lastMessage: "That moment when they say thank you hits different",
+    activity: "medium",
+    activeMembers: ["N_23", "C_8"],
   },
   {
     id: "burnout-talk",
@@ -102,8 +108,11 @@ const ROOMS = [
     description: "Let's be real about the pressure",
     memberCount: 15,
     emoji: "🔥",
-    color: "#FF8C42",
+    bgGradient: "linear-gradient(135deg, #EF4444 0%, #FB923C 100%)",
     type: "group",
+    lastMessage: "Three double shifts this week. I'm running on fumes.",
+    activity: "high",
+    activeMembers: ["D_3", "N_67", "S_19", "N_41"],
   },
   {
     id: "mental-health",
@@ -111,8 +120,11 @@ const ROOMS = [
     description: "Your wellbeing matters",
     memberCount: 10,
     emoji: "🧠",
-    color: "#6C63FF",
+    bgGradient: "linear-gradient(135deg, #818CF8 0%, #A78BFA 100%)",
     type: "group",
+    lastMessage: "Remember: you can't pour from an empty cup",
+    activity: "medium",
+    activeMembers: ["T_12", "N_5", "D_28"],
   },
 ];
 
@@ -146,34 +158,113 @@ const sampleMessages = [
 // ==========================================================
 // Component: Room Card
 // ==========================================================
-const RoomCard = ({ room, onJoin }) => (
-  <motion.button
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={() => onJoin(room)}
-    className="w-full text-left rounded-[16px] border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition"
-  >
-    <div className="flex items-start justify-between mb-2">
-      <div className="flex items-center gap-3">
-        <div
-          className="text-2xl h-10 w-10 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: `${room.color}20` }}
-        >
-          {room.emoji}
-        </div>
+const RoomCard = ({ room, onJoin }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Activity-based glow intensity
+  const glowIntensity = {
+    high: "0 0 20px rgba(168, 145, 205, 0.4)",
+    medium: "0 0 12px rgba(168, 145, 205, 0.25)",
+    low: "0 0 6px rgba(168, 145, 205, 0.15)",
+  };
+
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4, scale: 1.02 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      onClick={() => onJoin(room)}
+      className="relative w-full h-full text-left rounded-[12px] overflow-hidden shadow-lg transition-all duration-300"
+      style={{
+        background: room.bgGradient,
+        boxShadow: glowIntensity[room.activity] || glowIntensity.low,
+      }}
+    >
+      {/* SVG Noise Overlay */}
+      <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none">
+        <filter id={`noise-${room.id}`}>
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter={`url(#noise-${room.id})`} />
+      </svg>
+
+      {/* Card Content */}
+      <div className="relative z-10 p-5 flex flex-col h-full justify-between">
+        {/* Top Section */}
         <div>
-          <h3 className="text-sm font-semibold text-[#0F213A]">{room.name}</h3>
-          <p className="text-xs text-slate-500">{room.description}</p>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="text-3xl">{room.emoji}</div>
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-white drop-shadow-md">
+                {room.name}
+              </h3>
+              <p className="text-xs text-white/90">{room.description}</p>
+            </div>
+          </div>
+
+          {/* Activity Indicator */}
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm">
+              <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              <span className="text-[10px] font-medium text-white">
+                {room.memberCount} active
+              </span>
+            </div>
+          </div>
         </div>
+
+        {/* Hover Message Preview */}
+        <AnimatePresence>
+          {isHovered && room.lastMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-3 p-3 rounded-xl bg-white/90 backdrop-blur-sm"
+            >
+              <p className="text-xs text-slate-700 italic line-clamp-2">
+                "{room.lastMessage}"
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Active Members Avatars */}
+        {room.activeMembers && room.activeMembers.length > 0 && (
+          <div className="flex items-center gap-1 mt-2">
+            {room.activeMembers.slice(0, 4).map((member, idx) => (
+              <motion.div
+                key={member}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: idx * 0.1 }}
+                className="w-6 h-6 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border border-white/50"
+              >
+                <span className="text-[8px] font-bold text-white">
+                  {member.split("_")[0][0]}
+                </span>
+              </motion.div>
+            ))}
+            {room.activeMembers.length > 4 && (
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="w-6 h-6 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border border-white/50"
+              >
+                <span className="text-[8px] font-bold text-white">
+                  +{room.activeMembers.length - 4}
+                </span>
+              </motion.div>
+            )}
+          </div>
+        )}
       </div>
-      <ChevronRight className="w-4 h-4 text-slate-400" />
-    </div>
-    <div className="flex items-center gap-2 text-xs text-slate-500">
-      <Users className="w-3 h-3" />
-      <span>{room.memberCount} active</span>
-    </div>
-  </motion.button>
-);
+    </motion.button>
+  );
+};
 
 // ==========================================================
 // Component: Ephemeral Message with Delete Timer
@@ -424,8 +515,7 @@ const VentSpacePage = () => {
     <div
       className="min-h-screen pb-20"
       style={{
-        background:
-          "radial-gradient(circle at top, var(--tint-lavender-12), transparent 55%)",
+        backgroundColor: "#F8F7FA",
       }}
     >
       {/* ========== BROWSE VIEW ========== */}
@@ -433,17 +523,9 @@ const VentSpacePage = () => {
         <div className="px-4 pt-3 max-w-3xl mx-auto space-y-6">
           {/* HEADER */}
           <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-xs font-medium tracking-wide text-[#0F213A]/70">
-                VENT • SAFE SPACE
-              </span>
-              <h1 className="mt-1 text-[24px] font-semibold text-[#0F213A]">
-                Let it out softly 💚
-              </h1>
-              <p className="text-xs text-slate-500">
-                Anonymous emotional release for healthcare workers.
-              </p>
-            </div>
+            <h1 className="text-lg font-semibold text-[#0F213A]">
+              Let it out softly 💚
+            </h1>
 
             <div className="rounded-full border border-[#0F213A]/20 bg-white px-3 py-1.5 text-xs shadow-sm flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#0F213A]" />
@@ -478,10 +560,10 @@ const VentSpacePage = () => {
                 <button
                   key={idx}
                   onClick={() => setSelectedMood(emoji)}
-                  className={`h-10 w-10 rounded-full flex items-center justify-center text-lg transition ${
+                  className={`h-10 w-10 rounded-full flex items-center justify-center text-lg transition-all ${
                     selectedMood === emoji
-                      ? "ring-2 ring-purple-500 scale-110"
-                      : "border border-slate-200 hover:border-purple-300"
+                      ? "ring-2 ring-purple-500 scale-110 bg-purple-50"
+                      : "border-2 border-slate-200 hover:border-purple-300 hover:bg-purple-50"
                   }`}
                 >
                   {emoji}
@@ -518,9 +600,16 @@ const VentSpacePage = () => {
               </button>
             </div>
 
-            <div className="space-y-2">
-              {ROOMS.map((room) => (
-                <RoomCard key={room.id} room={room} onJoin={handleJoinRoom} />
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[280px]">
+              {ROOMS.map((room, index) => (
+                <motion.div
+                  key={room.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <RoomCard room={room} onJoin={handleJoinRoom} />
+                </motion.div>
               ))}
             </div>
           </div>
