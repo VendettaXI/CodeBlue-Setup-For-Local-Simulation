@@ -54,7 +54,7 @@ export default function TopTabSwitcher({ activeTab, onTabChange }) {
       <button
         type="button"
         onClick={() => onTabChange("discover")}
-        className="relative flex items-center justify-center gap-1.5 rounded-full focus:outline-none"
+        className="relative flex items-center justify-center rounded-full focus:outline-none"
         style={{
           width: segmentWidth,
           height: segmentHeight,
@@ -68,25 +68,13 @@ export default function TopTabSwitcher({ activeTab, onTabChange }) {
         }}
       >
         <span>Discover</span>
-        <svg width={24} height={11} viewBox="0 0 24 12">
-          <path
-            d="M1 6h4l1.4-4 2.4 8 2-6 2 4h8"
-            stroke={
-              activeTab === "discover" ? COLORS.white : COLORS.textInactive
-            }
-            strokeWidth={1.6}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-        </svg>
       </button>
 
       {/* Matches tab */}
       <button
         type="button"
         onClick={() => onTabChange("matches")}
-        className="relative flex items-center justify-center gap-1.5 rounded-full focus:outline-none"
+        className="relative flex items-center justify-center rounded-full focus:outline-none"
         style={{
           width: segmentWidth,
           height: segmentHeight,
@@ -100,18 +88,6 @@ export default function TopTabSwitcher({ activeTab, onTabChange }) {
         }}
       >
         <span>Matches</span>
-        <svg width={20} height={12} viewBox="0 0 24 24">
-          <path
-            d="M12 21s-4-2.6-6.2-5.4C3.1 13.5 3 9.5 6 8c2-1 4 1 4 1s2-2 4-1c3 1.5 2.9 5.5.2 7.6C16 18.4 12 21 12 21z"
-            stroke={
-              activeTab === "matches" ? COLORS.white : COLORS.textInactive
-            }
-            strokeWidth={1.6}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-        </svg>
       </button>
     </div>
   );

@@ -1,6 +1,9 @@
 // src/test-env/pages/PersonaPage.jsx
 // ------------------------------------------------------
-// OPTION B – Premium Profile Home (clean gunmetal version)
+// OPTION B – Premium Profile Home (gunmetal + lavender)
+// - Gunmetal (#0F213A) as primary
+// - Lavender (#A891CD) for accents and secondary actions
+// - Clean, premium aesthetic with soft colors
 // ------------------------------------------------------
 
 import React from "react";
@@ -38,20 +41,20 @@ const PersonaPage = () => {
 
   return (
     <div
-      className="min-h-screen px-4 pb-20 pt-3"
-      style={{ backgroundColor: "#FAFAFA" }} // ← CLEAN
+      className="min-h-screen px-4 pb-24 pt-3"
+      style={{ backgroundColor: "#F8F7FA" }}
     >
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl mx-auto space-y-3">
 
         {/* Header */}
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-slate-900">
-            Hey, {currentUser.name.split(" ")[0]} 👋
+            Hey, {currentUser.name.split(" ")[0]}
           </h1>
 
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 shadow-sm active:scale-95 transition"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 shadow-sm active:scale-95 transition hover:bg-slate-50"
             onClick={() => navigate("settings")}
           >
             <Settings className="h-4 w-4 text-[#0F213A]" />
@@ -61,7 +64,8 @@ const PersonaPage = () => {
 
         {/* HERO CARD */}
         <section className="rounded-[26px] border border-slate-100 bg-white shadow-md overflow-hidden">
-          <div className="bg-gradient-to-r from-[#0F213A] via-[#1b3353] to-[#0F213A] px-5 pt-4 pb-4">
+          {/* Hero gradient header - gunmetal primary */}
+          <div className="bg-gradient-to-r from-[#0F213A] via-[#1b3353] to-[#0F213A] px-4 pt-3 pb-3">
             <div className="flex items-center gap-4">
 
               {/* Avatar */}
@@ -130,7 +134,7 @@ const PersonaPage = () => {
               {/* Preview */}
               <button
                 type="button"
-                className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] text-white active:scale-95 transition"
+                className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] text-white active:scale-95 transition hover:bg-white/15"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 Preview profile
@@ -139,7 +143,7 @@ const PersonaPage = () => {
           </div>
 
           {/* Body */}
-          <div className="px-5 pb-5 pt-4 space-y-5 bg-white">
+          <div className="px-4 pb-4 pt-3 space-y-5 bg-white">
 
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-3 text-xs">
@@ -151,14 +155,14 @@ const PersonaPage = () => {
             {/* Quick actions */}
             <div className="flex flex-wrap gap-2">
               <PrimaryButton icon={PenSquare} label="Edit profile" />
-              <OutlineButton icon={Settings} label="Profile settings" />
-              <RoseButton icon={Bell} label="App controls" />
+              <SecondaryButton icon={Settings} label="Profile settings" />
+              <AccentButton icon={Bell} label="App controls" />
             </div>
           </div>
         </section>
 
         {/* ABOUT */}
-        <section className="rounded-[22px] border border-slate-100 bg-white px-4 py-4 shadow">
+        <section className="rounded-[22px] border border-slate-100 bg-white px-3 py-3 shadow">
           <Section title="About you" />
           <p className="text-sm leading-relaxed text-slate-700 mt-2">
             {currentUser.bio}
@@ -166,7 +170,7 @@ const PersonaPage = () => {
         </section>
 
         {/* SAFETY */}
-        <section className="rounded-[22px] border border-slate-100 bg-white px-4 py-4 shadow space-y-3">
+        <section className="rounded-[22px] border border-slate-100 bg-white px-3 py-3 shadow space-y-3">
           <Section title="Safety & controls" icon={ShieldCheck} />
           <SafetyItem
             title="Profile visibility"
@@ -186,12 +190,12 @@ const PersonaPage = () => {
   );
 };
 
-// — Helper Components (unchanged but using gunmetal)
+// — Helper Components (gunmetal + lavender color scheme)
 
 const QuickStat = ({ label, value }) => (
-  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5">
+  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5 hover:bg-slate-100/50 transition">
     <div className="text-[11px] font-semibold text-slate-500">{label}</div>
-    <div className="mt-1 text-base font-semibold text-slate-900">{value}</div>
+    <div className="mt-1 text-base font-semibold text-[#0F213A]">{value}</div>
   </div>
 );
 
@@ -203,9 +207,9 @@ const Section = ({ title, icon: Icon }) => (
 );
 
 const SafetyItem = ({ title, desc }) => (
-  <button className="flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-left">
+  <button className="flex w-full items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-left hover:bg-slate-100/50 transition">
     <div>
-      <div className="text-[12px] font-medium text-slate-900">{title}</div>
+      <div className="text-[12px] font-medium text-[#0F213A]">{title}</div>
       <div className="text-[11px] text-slate-600">{desc}</div>
     </div>
     <ChevronRight className="h-4 w-4 text-slate-400" />
@@ -213,21 +217,21 @@ const SafetyItem = ({ title, desc }) => (
 );
 
 const PrimaryButton = ({ icon: Icon, label }) => (
-  <button className="inline-flex items-center gap-1.5 rounded-full bg-[#0F213A] px-3.5 py-1.5 text-[11px] text-white">
+  <button className="inline-flex items-center gap-1.5 rounded-full bg-[#0F213A] px-3.5 py-1.5 text-[11px] font-medium text-white hover:bg-[#0F213A]/90 active:scale-95 transition shadow-sm">
     <Icon className="h-3.5 w-3.5" />
     {label}
   </button>
 );
 
-const OutlineButton = ({ icon: Icon, label }) => (
-  <button className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-[11px] text-slate-800">
+const SecondaryButton = ({ icon: Icon, label }) => (
+  <button className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-[11px] font-medium text-slate-800 hover:bg-slate-50 active:scale-95 transition">
     <Icon className="h-3.5 w-3.5 text-slate-600" />
     {label}
   </button>
 );
 
-const RoseButton = ({ icon: Icon, label }) => (
-  <button className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50/60 px-3.5 py-1.5 text-[11px] text-rose-700">
+const AccentButton = ({ icon: Icon, label }) => (
+  <button className="inline-flex items-center gap-1.5 rounded-full border border-[#A891CD]/40 bg-[rgba(168,145,205,0.1)] px-3.5 py-1.5 text-[11px] font-medium text-[#0F213A] hover:bg-[rgba(168,145,205,0.15)] active:scale-95 transition">
     <Icon className="h-3.5 w-3.5" />
     {label}
   </button>

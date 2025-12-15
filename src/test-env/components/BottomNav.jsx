@@ -41,9 +41,9 @@ export default function BottomNav({ currentPage, onNavigate, active, onChange })
   return (
     <div
       className="
-        fixed bottom-0 inset-x-0 
+        fixed bottom-0 inset-x-0 z-40
         flex justify-around items-center
-        h-[64px]
+        h-[64px] bg-white/95 backdrop-blur-md border-t border-slate-200/50
       "
     >
       <NavBtn

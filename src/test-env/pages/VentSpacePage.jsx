@@ -176,7 +176,7 @@ const RoomCard = ({ room, onJoin }) => {
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={() => onJoin(room)}
-      className="relative w-full h-full text-left rounded-[12px] overflow-hidden shadow-lg transition-all duration-300"
+      className="relative w-full h-full text-left rounded-[10px] overflow-hidden shadow-lg transition-all duration-300"
       style={{
         background: room.bgGradient,
         boxShadow: glowIntensity[room.activity] || glowIntensity.low,
@@ -192,7 +192,7 @@ const RoomCard = ({ room, onJoin }) => {
       </svg>
 
       {/* Card Content */}
-      <div className="relative z-10 p-5 flex flex-col h-full justify-between">
+      <div className="relative z-10 p-4 flex flex-col h-full justify-between">
         {/* Top Section */}
         <div>
           <div className="flex items-center gap-3 mb-3">
@@ -513,18 +513,19 @@ const VentSpacePage = () => {
 
   return (
     <div
-      className="min-h-screen pb-20"
+      className="min-h-screen pb-24"
       style={{
         backgroundColor: "#F8F7FA",
       }}
     >
       {/* ========== BROWSE VIEW ========== */}
       {view === "browse" && (
-        <div className="px-4 pt-3 max-w-3xl mx-auto space-y-6">
+        <div className="px-4 pt-3 max-w-3xl mx-auto space-y-3">
           {/* HEADER */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between"
+          >
             <h1 className="text-lg font-semibold text-[#0F213A]">
-              Let it out softly 💚
+              Let It Out Softly
             </h1>
 
             <div className="rounded-full border border-[#0F213A]/20 bg-white px-3 py-1.5 text-xs shadow-sm flex items-center gap-2">
@@ -534,7 +535,7 @@ const VentSpacePage = () => {
           </div>
 
           {/* QUICK VENT FORM */}
-          <div className="rounded-[22px] border border-slate-200 bg-white/90 shadow-[0_8px_26px_rgba(15,33,58,0.15)] p-5 space-y-3">
+          <div className="rounded-[22px] border border-slate-200 bg-white/90 shadow-[0_8px_26px_rgba(15,33,58,0.15)] p-4 space-y-3">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-4 w-4 text-[#0F213A]" />
               <h2 className="text-sm font-semibold text-[#0F213A]">
@@ -600,7 +601,7 @@ const VentSpacePage = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[280px]">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 auto-rows-[280px]">
               {ROOMS.map((room, index) => (
                 <motion.div
                   key={room.id}

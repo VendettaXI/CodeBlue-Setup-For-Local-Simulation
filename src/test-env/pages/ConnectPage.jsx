@@ -61,18 +61,18 @@ const circles = [
 const ConnectPage = () => {
   return (
     <div
-      className="min-h-screen px-4 pt-3 pb-20"
+      className="min-h-screen px-4 pt-3 pb-24"
       style={{
         backgroundColor: "#F8F7FA",
       }}
     >
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-3">
         {/* -------------------------------------------------- */}
         {/* HEADER                                             */}
         {/* -------------------------------------------------- */}
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-[#0F213A]">
-            Find your people 🤍
+            Find Your People
           </h1>
 
           <button
@@ -87,7 +87,7 @@ const ConnectPage = () => {
         {/* -------------------------------------------------- */}
         {/* YOUR CONNECTION VIBE (styled like VentSpace quick vent card) */}
         {/* -------------------------------------------------- */}
-        <div className="rounded-[22px] border border-slate-200 bg-white/90 shadow-[0_8px_26px_rgba(15,33,58,0.15)] p-5 space-y-3">
+        <div className="rounded-[22px] border border-slate-200 bg-white/90 shadow-[0_8px_26px_rgba(15,33,58,0.15)] p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-[#0F213A]" />
@@ -95,7 +95,6 @@ const ConnectPage = () => {
                 Your Connection Vibe
               </h3>
             </div>
-            <Sparkles className="h-5 w-5 text-purple-600/70" />
           </div>
 
           <p className="text-xs text-slate-500">
@@ -138,11 +137,11 @@ const ConnectPage = () => {
             Healthcare circles you might like
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[280px]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 auto-rows-[280px]">
             {circles.map((c) => (
               <button
                 key={c.id}
-                className="group h-full rounded-[10px] border border-white/30 shadow-[0_8px_24px_rgba(0,0,0,0.12)] p-5 text-left hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)] hover:scale-[1.02] transition-all duration-300 flex flex-col relative overflow-hidden"
+                className="group h-full rounded-[10px] border border-white/30 shadow-[0_8px_24px_rgba(0,0,0,0.12)] p-4 text-left hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)] hover:scale-[1.02] transition-all duration-300 flex flex-col relative overflow-hidden"
                 style={{ background: c.gradient }}
               >
                 {/* Overlay for depth */}

@@ -71,7 +71,8 @@ const InfoCard = ({
           exit={{ opacity: 0, y: 12 }}
           transition={{ type: "spring", stiffness: 220, damping: 26 }}
           onClick={onExpand}
-          className="relative rounded-[38px] bg-gradient-to-br from-purple-100 via-violet-100 to-purple-50/80 border border-slate-200/70 px-4 pt-2 pb-2.5 cursor-pointer"
+          className="relative rounded-[38px] border border-slate-200/70 px-4 pt-2 pb-2.5 cursor-pointer"
+          style={{ backgroundColor: `rgba(168,145,205,0.45)` }}
         >
           {/* Header removed per request */}
 
@@ -112,6 +113,7 @@ const InfoCard = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ type: "spring", stiffness: 220, damping: 26 }}
+          className="mb-24"
         >
           {/* Hide Button */}
           <div className="flex justify-end mb-3">

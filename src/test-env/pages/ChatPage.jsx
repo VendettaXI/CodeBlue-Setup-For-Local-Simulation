@@ -141,9 +141,9 @@ const ChatPage = ({ contact, onBack }) => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-[#F8F7FA]">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm">
+    <div className="h-screen flex flex-col bg-[#F8F7FA] relative">
+      {/* Header - Fixed Top */}
+      <div className="absolute top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 px-3 py-2.5 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <button 
             onClick={onBack}
@@ -191,7 +191,7 @@ const ChatPage = ({ contact, onBack }) => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="absolute top-14 left-0 right-0 bottom-32 overflow-y-auto px-4 py-4">
         {/* Date divider */}
         <div className="flex items-center justify-center mb-6">
           <span className="px-3 py-1 rounded-full bg-white text-[11px] text-slate-500 shadow-sm">
@@ -214,7 +214,7 @@ const ChatPage = ({ contact, onBack }) => {
             exit={{ opacity: 0 }}
             className="flex justify-start mb-3"
           >
-            <div className="bg-white rounded-[18px] px-4 py-3 shadow-sm">
+            <div className="bg-white rounded-[18px] px-3 py-2.5 shadow-sm">
               <div className="flex gap-1">
                 <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }} />
                 <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -227,8 +227,8 @@ const ChatPage = ({ contact, onBack }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="bg-white border-t border-slate-200 px-4 py-3 safe-area-bottom">
+      {/* Input Area - Fixed Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-3 py-2.5 safe-area-bottom">
         <div className="flex items-end gap-2">
           {/* Attachment button */}
           <button className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center active:scale-95 transition shrink-0">
@@ -236,7 +236,7 @@ const ChatPage = ({ contact, onBack }) => {
           </button>
 
           {/* Input field */}
-          <div className="flex-1 bg-slate-50 rounded-[20px] px-4 py-2 flex items-center gap-2">
+          <div className="flex-1 bg-slate-50 rounded-[20px] px-3 py-1.5 flex items-center gap-2">
             <input
               ref={inputRef}
               type="text"

@@ -12,7 +12,7 @@ import { Activity, Heart, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import HeartbeatAnimation from "./HeartbeatAnimation";
 
-const HeroCard = ({ profile, onNext, onExpand }) => {
+const HeroCard = ({ profile, onNext, onExpand, infoExpanded }) => {
   const photos = profile.photos && profile.photos.length > 0 
     ? profile.photos 
     : profile.photoUrl 
@@ -149,14 +149,15 @@ const HeroCard = ({ profile, onNext, onExpand }) => {
           )}
         </div>
 
-        {/* More button */}
+        {/* More button - hidden when info expanded */}
+        {!infoExpanded && (
         <button
           type="button"
           onClick={onExpand}
           className="pointer-events-auto absolute bottom-4 right-4 inline-flex items-center gap-1
                 px-2.5 py-1 rounded-full
-                bg-white/35 backdrop-blur-sm
-                border border-white/60
+                bg-[#0F213A]/90 backdrop-blur-sm
+                border border-[#0F213A]/40
                 text-[11px] text-white font-medium
                 shadow-[0_0_12px_rgba(0,0,0,0.25)]
                 active:scale-95 transition-all z-20"
@@ -164,6 +165,7 @@ const HeroCard = ({ profile, onNext, onExpand }) => {
           <Activity className="w-3 h-3" />
           <span className="drop-shadow-sm">Dive</span>
         </button>
+        )}
 
         {/* Action rail */}
         <div className="absolute inset-y-0 right-4 flex flex-col items-center justify-center gap-4 pointer-events-none z-20">

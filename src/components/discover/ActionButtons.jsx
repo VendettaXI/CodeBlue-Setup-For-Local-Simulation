@@ -97,7 +97,7 @@ export const ActionButtons = React.memo(function ActionButtons({
         }}
         onClick={onPass}
       >
-        <X size={26} color={C.gunmetal} />
+        <X size={26} color={C.gunmetal} strokeWidth={2.5} />
       </button>
 
       {/* Superlike/Favorite with animated heartbeat */}
@@ -128,7 +128,7 @@ export const ActionButtons = React.memo(function ActionButtons({
         }}
         onClick={onConnect}
       >
-        <Heart size={26} color={C.gunmetal} />
+        <Heart size={26} color={C.gunmetal} strokeWidth={2.5} />
       </button>
     </div>
   );

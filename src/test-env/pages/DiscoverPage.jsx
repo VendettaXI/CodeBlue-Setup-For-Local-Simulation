@@ -520,6 +520,7 @@ const DiscoverPage = () => {
                   profile={profile} 
                   onNext={handleNext}
                   onExpand={() => setInfoExpanded(true)}
+                  infoExpanded={infoExpanded}
                 />
               </motion.div>
 

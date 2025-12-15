@@ -1,6 +1,6 @@
 // src/test-env/pages/MatchesPage.jsx
 import React, { useState } from "react";
-import { Heart, Search, X } from "lucide-react";
+import { Heart, Search, X, ChevronRight } from "lucide-react";
 import ChatPage from "./ChatPage";
 
 // ---- Sample data ----------------------------------------------------
@@ -165,10 +165,10 @@ const MatchesPage = () => {
     >
       <div className="flex-1 px-5 pt-5 pb-24">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-3">
           {!searchOpen ? (
             <h1 className="text-[26px] font-semibold text-[#0F213A] tracking-tight">
-              Messages
+              Matches
             </h1>
           ) : (
             <div className="flex-1 flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
@@ -202,59 +202,58 @@ const MatchesPage = () => {
           </div>
         </div>
 
-        {/* New Matches — TRUE GRID */}
-        <section className="mb-6">
-          <div className="flex items-center justify-between mb-3">
+        {/* New Matches — Horizontal preview card */}
+        <section className="mb-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <SectionLabel>New matches</SectionLabel>
               <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-purple-100 text-[10px] font-semibold text-purple-600">
                 {newMatches.length}
               </span>
             </div>
-            <button className="text-[12px] font-medium text-purple-600">
+            <button className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white/85 px-3 py-1 text-[12px] font-semibold text-[#0F213A] shadow-sm hover:-translate-y-0.5 transition">
               See all
+              <ChevronRight className="h-3.5 w-3.5 text-purple-500" />
             </button>
           </div>
 
-          {/* HARD RESET of old horizontal scroll styles */}
-          <div className="w-full overflow-visible !flex-none !block">
-
-            <div className="grid grid-cols-4 gap-4">
+          {/* Horizontal scrollable container */}
+          <div className="rounded-[8px] shadow-lg overflow-x-auto overflow-y-hidden" style={{ backgroundColor: "rgba(168, 145, 205, 0.35)", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+            <div className="inline-flex gap-2.5 p-3.5 min-w-min">
               {newMatches.map((match) => (
-                <div key={match.id} className="flex flex-col items-center text-center">
-                  
-                  {/* Avatar wrapper - rectangular frame */}
-                  <div className="relative mb-2">
-                    <div className="h-[80px] w-[70px] rounded-[12px] bg-gradient-to-br from-purple-200 to-violet-200 p-[2px] shadow-lg">
-                      <div className="h-full w-full rounded-[11px] bg-white overflow-hidden">
-                        <img
-                          src={match.avatar}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    </div>
+                <button
+                  key={match.id}
+                  className="relative w-[120px] h-[180px] flex-shrink-0 rounded-[6px] overflow-hidden shadow-[0_6px_18px_rgba(0,0,0,0.25)] bg-slate-200/80 text-left group active:scale-[0.96] transition">
+                >
+                  <img
+                    src={match.avatar}
+                    alt={match.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
 
-                    {match.online && (
-                      <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-white" />
-                    )}
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#0F213A]/80 opacity-85 group-hover:opacity-95 transition" />
+
+                  {match.online && (
+                    <span className="absolute top-2.5 left-2.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-white/80" />
+                  )}
+
+                  <div className="absolute inset-x-0 bottom-0 p-3 space-y-0.5">
+                    <p className="text-[13px] font-semibold text-white drop-shadow-md truncate">
+                      {match.name}
+                    </p>
+                    <p className="text-[11px] text-white/80 truncate">
+                      {match.role}
+                    </p>
                   </div>
-
-                  <p className="text-[13px] font-medium text-[#0F213A] truncate max-w-[72px]">
-                    {match.name}
-                  </p>
-
-                  <p className="text-[11px] text-slate-400 truncate max-w-[72px]">
-                    {match.role}
-                  </p>
-                </div>
+                </button>
               ))}
             </div>
-
           </div>
         </section>
 
         {/* Rhythm banner */}
-        <section className="mb-6">
+        <section className="mb-3">
           <div className="rounded-[20px] bg-white shadow-lg px-4 py-4">
             <p className="text-[14px] font-semibold text-slate-900 mb-1">
               You&apos;re approaching your rhythm limit
@@ -278,8 +277,8 @@ const MatchesPage = () => {
         </section>
 
         {/* Chats */}
-        <section className="space-y-3">
-          <div className="flex items-center justify-between mb-2">
+        <section className="space-y-2">
+          <div className="flex items-center justify-between mb-1.5">
             <SectionLabel>Chats</SectionLabel>
             <p className="text-[12px] text-slate-400">
               {chatThreads.length} active
@@ -295,7 +294,7 @@ const MatchesPage = () => {
                 status: thread.status,
                 shiftLabel: thread.shiftLabel
               })}
-              className="w-full rounded-[10px] bg-white px-4 py-3 flex items-center border border-slate-200/70 shadow-[0_6px_18px_rgba(15,33,58,0.08)] active:scale-[0.99] transition-transform"
+              className="w-full rounded-[10px] bg-white px-3 py-2.5 flex items-center border border-slate-200/70 active:scale-[0.99] transition-transform"
             >
               <div className="relative mr-3 shrink-0">
                 {thread.isGroup ? (
